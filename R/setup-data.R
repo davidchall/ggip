@@ -31,10 +31,7 @@ address_to_pixel <- function(data, canvas_network, pixel_prefix, curve) {
 
   validate_plot_params(canvas_network, pixel_prefix, curve)
 
-  data$x <- as.integer(is_within(data$ip, ip_network("0.0.0.0/1")))
-  data$y <- as.integer(is_within(data$ip, ip_network("0.0.0.0/1")))
-
-  data
+  cbind(data, address_to_cartesian(data$ip, canvas_network, pixel_prefix))
 }
 
 

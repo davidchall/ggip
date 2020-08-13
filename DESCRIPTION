@@ -12,10 +12,17 @@ License: MIT + file LICENSE
 Imports: 
     ggplot2,
     ipaddress,
+    Rcpp,
     rlang,
     tidyr
 Suggests: 
     testthat
+LinkingTo: 
+    AsioHeaders,
+    ipaddress,
+    Rcpp
+Remotes:
+    davidchall/ipaddress
 Encoding: UTF-8
 LazyData: true
 Roxygen: list(markdown = TRUE)
