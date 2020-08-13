@@ -1,5 +1,5 @@
 Package: ggip
-Title: What the Package Does (One Line, Title Case)
+Title: Data visualization for IP addresses and networks
 Version: 0.0.0.9000
 Authors@R: 
     person(given = "David",
@@ -12,7 +12,8 @@ License: MIT + file LICENSE
 Imports: 
     ggplot2,
     ipaddress,
-    rlang
+    rlang,
+    tidyr
 Suggests: 
     testthat
 Encoding: UTF-8
