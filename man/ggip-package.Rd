@@ -8,6 +8,15 @@
 \description{
 What the package does (one paragraph).
 }
+\seealso{
+Useful links:
+\itemize{
+  \item \url{https://davidchall.github.io/ggip}
+  \item \url{https://github.com/davidchall/ggip}
+  \item Report bugs at \url{https://github.com/davidchall/ggip/issues}
+}
+
+}
 \author{
 \strong{Maintainer}: David Hall \email{david.hall.physics@gmail.com} (\href{https://orcid.org/0000-0002-2193-0480}{ORCID})
 
