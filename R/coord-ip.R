@@ -16,12 +16,17 @@ coord_ip <- function(network = ip_network("0.0.0.0/0"),
                      pixel_prefix = 16,
                      curve = c("hilbert", "morton"),
                      expand = FALSE) {
-  lim <- c(0, 2 ^ curve_order - 1)
+
+  validate_coord_params(network, pixel_prefix, curve)
+
+  curve_order <- as.integer((pixel_prefix - prefix_length(network)) / 2)
+  lim <- as.integer(c(0, 2 ^ curve_order - 1))
 
   ggplot2::ggproto(NULL, CoordIp,
     network = network,
     pixel_prefix = pixel_prefix,
     curve = curve,
+    curve_order = curve_order,
     limits = list(x = lim, y = lim),
     expand = expand
   )
@@ -73,17 +78,12 @@ CoordIp <- ggplot2::ggproto("CoordIp", ggplot2::CoordFixed,
   # internally as the plot is built. These are stored here.
   params = list(),
 
-  get_curve_order = function(self) {
-    as.integer((self$pixel_prefix - prefix_length(self$network)) / 2)
-  },
-
   setup_params = function(self, data) {
-    validate_coord_params(self$network, self$pixel_prefix, self$curve)
-
     list(
       network = self$network,
       pixel_prefix = self$pixel_prefix,
-      curve = self$curve
+      curve = self$curve,
+      curve_order = self$curve_order
     )
   }
 )

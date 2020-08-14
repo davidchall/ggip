@@ -75,10 +75,11 @@ StatIpHeatmap <- ggplot2::ggproto("StatIpHeatmap", ggplot2::Stat,
       tapply_df(data$z, list(x = data$x, y = data$y), f, drop = drop)
     }
 
-    x_max <- 2 ^ coord$get_curve_order() - 1
+    x_range <- seq(coord$limits$x[1], coord$limits$x[2])
+    y_range <- seq(coord$limits$y[1], coord$limits$y[2])
     tidyr::complete(
       out,
-      tidyr::expand(out, x = 0:x_max, y = 0:x_max),
+      tidyr::expand(out, x = x_range, y = y_range),
       fill = list(value = 0)
     )
   }
