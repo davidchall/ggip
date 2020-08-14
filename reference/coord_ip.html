@@ -122,7 +122,8 @@ grid using a space-filling curve.</p>
     <pre class="usage"><span class='fu'>coord_ip</span>(
   <span class='kw'>network</span> <span class='kw'>=</span> <span class='fu'>ip_network</span>(<span class='st'>"0.0.0.0/0"</span>),
   <span class='kw'>pixel_prefix</span> <span class='kw'>=</span> <span class='fl'>16</span>,
-  <span class='kw'>curve</span> <span class='kw'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(<span class='st'>"hilbert"</span>, <span class='st'>"morton"</span>)
+  <span class='kw'>curve</span> <span class='kw'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(<span class='st'>"hilbert"</span>, <span class='st'>"morton"</span>),
+  <span class='kw'>expand</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>
 )</pre>
 
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
@@ -143,6 +144,12 @@ corresponding network. The default value is 16.</p></td>
       <th>curve</th>
       <td><p>A string to choose the space-filling curve. Choices are
 <code>"hilbert"</code> (default) and <code>"morton"</code>.</p></td>
+    </tr>
+    <tr>
+      <th>expand</th>
+      <td><p>If <code>TRUE</code>, the default, adds a small expansion factor to
+the limits to ensure that data and axes don't overlap. If <code>FALSE</code>,
+limits are taken exactly from the data or <code>xlim</code>/<code>ylim</code>.</p></td>
     </tr>
     </table>
 
