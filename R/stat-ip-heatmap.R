@@ -52,6 +52,9 @@ StatIpHeatmap <- ggplot2::ggproto("StatIpHeatmap", ggplot2::Stat,
   compute_layer = function(self, data, params, layout) {
     # add coord to the params, so it can be forwarded to compute_group()
     params$coord <- layout$coord
+
+    data <- cbind(data, address_to_cartesian(data$ip, layout$coord$network, layout$coord$pixel_prefix))
+
     ggproto_parent(Stat, self)$compute_layer(data, params, layout)
   },
 
@@ -61,8 +64,6 @@ StatIpHeatmap <- ggplot2::ggproto("StatIpHeatmap", ggplot2::Stat,
     if (is_formula(fun)) {
       fun <- as_function(fun)
     }
-
-    data <- cbind(data, address_to_cartesian(data$ip, coord$network, coord$pixel_prefix))
 
     out <- if (is_scalar_character(fun) && fun == "count") {
       tapply_df(data$x, list(x = data$x, y = data$y), length, drop = drop)

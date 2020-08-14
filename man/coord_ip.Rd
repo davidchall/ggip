@@ -2,22 +2,26 @@
 % Please edit documentation in R/coord-ip.R
 \name{coord_ip}
 \alias{coord_ip}
-\title{Map IP data onto Cartesian coordinate system}
+\title{Map IP data onto Cartesian coordinates}
 \usage{
 coord_ip(
   network = ip_network("0.0.0.0/0"),
-  pixel_prefix = 16L,
+  pixel_prefix = 16,
   curve = c("hilbert", "morton")
 )
 }
 \arguments{
-\item{network}{An \code{\link[ipaddress:ip_network]{ipaddress::ip_network}} scalar}
+\item{network}{An \code{\link[ipaddress:ip_network]{ipaddress::ip_network}} scalar that determines the
+network shown by the plot. The default shows the entire IPv4 address space.}
 
-\item{pixel_prefix}{An integer scalar}
+\item{pixel_prefix}{An integer scalar that determines the number of addresses
+represented by a single pixel. It sets the prefix length of the
+corresponding network. The default value is 16.}
 
-\item{curve}{A string indicating the space-filling curve used to map IP data
-to the Cartesian plane. Choices are \code{"hilbert"} (default) and \code{"morton"}.}
+\item{curve}{A string to choose the space-filling curve. Choices are
+\code{"hilbert"} (default) and \code{"morton"}.}
 }
 \description{
-Map IP data onto Cartesian coordinate system
+A coordinate system that maps a range of address space onto a two-dimensional
+grid using a space-filling curve.
 }
