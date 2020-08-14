@@ -6,7 +6,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>Function reference • ggip</title>
+<title>Map IP data onto Cartesian coordinates — coord_ip • ggip</title>
 
 
 <!-- jquery -->
@@ -39,7 +39,9 @@
 
 
 
-<meta property="og:title" content="Function reference" />
+<meta property="og:title" content="Map IP data onto Cartesian coordinates — coord_ip" />
+<meta property="og:description" content="A coordinate system that maps a range of address space onto a two-dimensional
+grid using a space-filling curve." />
 
 
 
@@ -58,7 +60,7 @@
   </head>
 
   <body data-spy="scroll" data-target="#toc">
-    <div class="container template-reference-index">
+    <div class="container template-reference-topic">
       <header>
       <div class="navbar navbar-default navbar-fixed-top" role="navigation">
   <div class="container">
@@ -105,54 +107,47 @@
       </header>
 
 <div class="row">
-  <div class="contents col-md-9">
+  <div class="col-md-9 contents">
     <div class="page-header">
-      <h1>Reference</h1>
+    <h1>Map IP data onto Cartesian coordinates</h1>
+    <small class="dont-index">Source: <a href='https://github.com/davidchall/ggip/blob/master/R/coord-ip.R'><code>R/coord-ip.R</code></a></small>
+    <div class="hidden name"><code>coord_ip.Rd</code></div>
     </div>
 
-    <table class="ref-index">
+    <div class="ref-description">
+    <p>A coordinate system that maps a range of address space onto a two-dimensional
+grid using a space-filling curve.</p>
+    </div>
 
-    <colgroup>
-      
-      <col class="alias" />
-      <col class="title" />
-    </colgroup>
+    <pre class="usage"><span class='fu'>coord_ip</span>(
+  <span class='kw'>network</span> <span class='kw'>=</span> <span class='fu'>ip_network</span>(<span class='st'>"0.0.0.0/0"</span>),
+  <span class='kw'>pixel_prefix</span> <span class='kw'>=</span> <span class='fl'>16</span>,
+  <span class='kw'>curve</span> <span class='kw'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(<span class='st'>"hilbert"</span>, <span class='st'>"morton"</span>)
+)</pre>
 
-    <tbody>
-      <tr>
-        <th colspan="2">
-          <h2 id="section-all-functions" class="hasAnchor"><a href="#section-all-functions" class="anchor"></a>All functions</h2>
-          <p class="section-desc"></p>
-        </th>
-      </tr>
-      
-      
-    </tbody><tbody>
-      
-      
-      <tr>
-        
-        <td>
-          <p><code><a href="coord_ip.html">coord_ip()</a></code> </p>
-        </td>
-        <td><p>Map IP data onto Cartesian coordinates</p></td>
-      </tr><tr>
-        
-        <td>
-          <p><code><a href="stat_ip_heatmap.html">stat_ip_heatmap()</a></code> </p>
-        </td>
-        <td><p>Heatmap of IP data</p></td>
-      </tr><tr>
-        
-        <td>
-          <p><code><a href="theme_ip.html">theme_ip_light()</a></code> <code><a href="theme_ip.html">theme_ip_dark()</a></code> </p>
-        </td>
-        <td><p>Themes for IP heatmaps</p></td>
-      </tr>
-    </tbody>
+    <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
+    <table class="ref-arguments">
+    <colgroup><col class="name" /><col class="desc" /></colgroup>
+    <tr>
+      <th>network</th>
+      <td><p>An <code><a href='https://davidchall.github.io/ipaddress/reference/ip_network.html'>ipaddress::ip_network</a></code> scalar that determines the
+network shown by the plot. The default shows the entire IPv4 address space.</p></td>
+    </tr>
+    <tr>
+      <th>pixel_prefix</th>
+      <td><p>An integer scalar that determines the number of addresses
+represented by a single pixel. It sets the prefix length of the
+corresponding network. The default value is 16.</p></td>
+    </tr>
+    <tr>
+      <th>curve</th>
+      <td><p>A string to choose the space-filling curve. Choices are
+<code>"hilbert"</code> (default) and <code>"morton"</code>.</p></td>
+    </tr>
     </table>
-  </div>
 
+
+  </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">
     <nav id="toc" data-toggle="toc" class="sticky-top">
       <h2 data-toc-skip>Contents</h2>

@@ -123,9 +123,6 @@
   <span class='kw'>geom</span> <span class='kw'>=</span> <span class='st'>"raster"</span>,
   <span class='kw'>position</span> <span class='kw'>=</span> <span class='st'>"identity"</span>,
   <span class='no'>...</span>,
-  <span class='kw'>canvas_network</span> <span class='kw'>=</span> <span class='kw'>NULL</span>,
-  <span class='kw'>pixel_prefix</span> <span class='kw'>=</span> <span class='kw'>NULL</span>,
-  <span class='kw'>curve</span> <span class='kw'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(<span class='st'>"hilbert"</span>, <span class='st'>"morton"</span>),
   <span class='kw'>fun</span> <span class='kw'>=</span> <span class='st'>"count"</span>,
   <span class='kw'>fun.args</span> <span class='kw'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/list.html'>list</a></span>(),
   <span class='kw'>drop</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>,
@@ -173,19 +170,6 @@ a call to a position adjustment function.</p></td>
 often aesthetics, used to set an aesthetic to a fixed value, like
 <code>colour = "red"</code> or <code>size = 3</code>. They may also be parameters
 to the paired geom/stat.</p></td>
-    </tr>
-    <tr>
-      <th>canvas_network</th>
-      <td><p>An <code><a href='https://davidchall.github.io/ipaddress/reference/ip_network.html'>ipaddress::ip_network</a></code> scalar</p></td>
-    </tr>
-    <tr>
-      <th>pixel_prefix</th>
-      <td><p>An integer scalar</p></td>
-    </tr>
-    <tr>
-      <th>curve</th>
-      <td><p>A string indicating the space-filling curve used to map IP data
-to the Cartesian plane. Choices are <code>"hilbert"</code> (default) and <code>"morton"</code>.</p></td>
     </tr>
     <tr>
       <th>fun</th>
