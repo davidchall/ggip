@@ -16,10 +16,13 @@ coord_ip <- function(network = ip_network("0.0.0.0/0"),
                      pixel_prefix = 16,
                      curve = c("hilbert", "morton"),
                      expand = FALSE) {
+  lim <- c(0, 2 ^ curve_order - 1)
+
   ggplot2::ggproto(NULL, CoordIp,
     network = network,
     pixel_prefix = pixel_prefix,
     curve = curve,
+    limits = list(x = lim, y = lim),
     expand = expand
   )
 }
