@@ -9,18 +9,12 @@
 #'
 #' @inheritParams ggplot2::layer
 #' @inheritParams ggplot2::geom_point
-#' @param canvas_network An [`ipaddress::ip_network`] scalar
-#' @param pixel_prefix An integer scalar
-#' @param curve A string indicating the space-filling curve used to map IP data
-#'   to the Cartesian plane. Choices are `"hilbert"` (default) and `"morton"`.
 #' @param fun Summary function
 #' @param fun.args A list of extra arguments to pass to `fun`
 #' @param drop if `TRUE` removes all cells with 0 counts.
 #' @export
 stat_ip_heatmap <- function(mapping = NULL, data = NULL, geom = "raster",
                             position = "identity", ...,
-                            canvas_network = NULL, pixel_prefix = NULL,
-                            curve = c("hilbert", "morton"),
                             fun = "count", fun.args = list(), drop = TRUE,
                             na.rm = FALSE, show.legend = NA,
                             inherit.aes = TRUE) {
@@ -29,9 +23,6 @@ stat_ip_heatmap <- function(mapping = NULL, data = NULL, geom = "raster",
     position = position, show.legend = show.legend, inherit.aes = inherit.aes,
     params = list(
       na.rm = na.rm,
-      canvas_network = canvas_network,
-      pixel_prefix = pixel_prefix,
-      curve = curve,
       fun = fun,
       fun.args = fun.args,
       drop = drop,
@@ -47,23 +38,31 @@ StatIpHeatmap <- ggplot2::ggproto("StatIpHeatmap", ggplot2::Stat,
 
   extra_params = c(
     "na.rm",
-    "fun", "fun.args", "drop",
-    "canvas_network", "pixel_prefix", "curve"
+    "fun", "fun.args", "drop"
   ),
 
-  setup_params = function(data, params) {
-    params <- default_coord_params(data, params)
-    params
-  },
-
   setup_data = function(data, params) {
-    # use 'ip' column to populate 'x' and 'y' columns with grid values
-    address_to_pixel(data, params$canvas_network, params$pixel_prefix, params$curve)
+    if (!is_ip_address(data$ip)) {
+      abort("'ip' aesthetic must be an ip_address vector")
+    }
+
+    data
   },
 
-  compute_group = function(data, scales,
+  compute_layer = function(self, data, params, layout) {
+    if (!inherits(layout$coord, "CoordIp")) {
+      abort("Must call coord_ip() when using ggip")
+    }
+
+    data <- cbind(data, address_to_cartesian(data$ip, layout$coord$network, layout$coord$pixel_prefix))
+
+    # add coord to the params, so it can be forwarded to compute_group()
+    params$coord <- layout$coord
+    ggproto_parent(Stat, self)$compute_layer(data, params, layout)
+  },
+
+  compute_group = function(data, scales, coord,
                            fun = "count", fun.args = list(), drop = TRUE,
-                           curve_order,
                            ...) {
     if (is_formula(fun)) {
       fun <- as_function(fun)
@@ -76,9 +75,10 @@ StatIpHeatmap <- ggplot2::ggproto("StatIpHeatmap", ggplot2::Stat,
       tapply_df(data$z, list(x = data$x, y = data$y), f, drop = drop)
     }
 
+    x_max <- 2 ^ coord$get_curve_order() - 1
     tidyr::complete(
       out,
-      tidyr::expand(out, x = 1:2^curve_order, y = 1:2^curve_order),
+      tidyr::expand(out, x = 0:x_max, y = 0:x_max),
       fill = list(value = 0)
     )
   }
