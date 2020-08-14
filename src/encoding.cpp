@@ -61,6 +61,7 @@ DataFrame address_to_cartesian(List address_r, List canvas_network_r, int pixel_
     pixel_n_bits = 32 - pixel_prefix;
   }
   unsigned int curve_order = (pixel_prefix - canvas_prefix) / 2;
+  unsigned int range = (1 << curve_order) - 1;
 
   for (std::size_t i=0; i<vsize; ++i) {
     if (i % 10000 == 0) {
@@ -81,7 +82,7 @@ DataFrame address_to_cartesian(List address_r, List canvas_network_r, int pixel_
         encode_hilbert(pixel_int, curve_order, &x, &y);
 
         out_x[i] = x;
-        out_y[i] = y;
+        out_y[i] = range - y;
       } else {
         out_x[i] = NA_INTEGER;
         out_y[i] = NA_INTEGER;
@@ -94,7 +95,7 @@ DataFrame address_to_cartesian(List address_r, List canvas_network_r, int pixel_
         encode_hilbert(pixel_int, curve_order, &x, &y);
 
         out_x[i] = x;
-        out_y[i] = y;
+        out_y[i] = range - y;
       } else {
         out_x[i] = NA_INTEGER;
         out_y[i] = NA_INTEGER;
