@@ -25,29 +25,37 @@ coord_ip <- function(network = ip_network("0.0.0.0/0"),
 
 validate_coord_params <- function(network, pixel_prefix, curve) {
   if (!(is_ip_network(network) && length(network) == 1)) {
-    abort("'network' must be an ip_network scalar")
+    abort("`network` must be an ip_network scalar")
   }
 
-  if (!is_scalar_integerish(pixel_prefix)) {
-    abort("'pixel_prefix' must be an integer scalar")
+  if (!is_scalar_integerish(pixel_prefix) || pixel_prefix < 0) {
+    abort("`pixel_prefix` must be a positive integer scalar")
   }
 
   if (pixel_prefix < 0 || pixel_prefix > max_prefix_length(network)) {
-    version <- ifelse(is_ipv6(network), "IPv6", "IPv4")
-    abort(sprintf("'pixel_prefix' is invalid for %s", version))
+    abort(sprintf(
+      "`pixel_prefix` cannot be greater than %i for %s",
+      max_prefix_length(network),
+      ifelse(is_ipv6(network), "IPv6", "IPv4")
+    ))
   }
 
   n_bits <- pixel_prefix - prefix_length(network)
   if (n_bits < 0) {
-    abort("'pixel_prefix' must be greater than 'network'")
+    abort("`pixel_prefix` must be greater than prefix_length(`network`)")
   }
 
   if (n_bits %% 2 != 0) {
-    abort("Attempted to display odd number of bits")
+    abort("The difference between prefix_length(`network`) and `pixel_prefix` cannot be odd")
   }
 
   if (n_bits > 24) {
-    abort("Too much data (shrink 'network' or reduce 'pixel_prefix')")
+    n_pixels <- 2 ^ (n_bits / 2)
+    abort(paste0(
+      "The difference between prefix_length(`network`) and `pixel_prefix` is too big.",
+      "\n",
+      "Current parameters would result in plot with ", n_pixels, "x", n_pixels, " pixels"
+    ))
   }
 
   curve <- arg_match(curve, c("hilbert", "morton"))
