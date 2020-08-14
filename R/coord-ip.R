@@ -10,15 +10,17 @@
 #'   corresponding network. The default value is 16.
 #' @param curve A string to choose the space-filling curve. Choices are
 #'   `"hilbert"` (default) and `"morton"`.
+#' @inheritParams ggplot2::coord_fixed
 #' @export
 coord_ip <- function(network = ip_network("0.0.0.0/0"),
                      pixel_prefix = 16,
-                     curve = c("hilbert", "morton")) {
+                     curve = c("hilbert", "morton"),
+                     expand = FALSE) {
   ggplot2::ggproto(NULL, CoordIp,
     network = network,
     pixel_prefix = pixel_prefix,
     curve = curve,
-    expand = FALSE
+    expand = expand
   )
 }
 

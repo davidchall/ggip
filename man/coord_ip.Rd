@@ -7,7 +7,8 @@
 coord_ip(
   network = ip_network("0.0.0.0/0"),
   pixel_prefix = 16,
-  curve = c("hilbert", "morton")
+  curve = c("hilbert", "morton"),
+  expand = FALSE
 )
 }
 \arguments{
@@ -20,6 +21,10 @@ corresponding network. The default value is 16.}
 
 \item{curve}{A string to choose the space-filling curve. Choices are
 \code{"hilbert"} (default) and \code{"morton"}.}
+
+\item{expand}{If \code{TRUE}, the default, adds a small expansion factor to
+the limits to ensure that data and axes don't overlap. If \code{FALSE},
+limits are taken exactly from the data or \code{xlim}/\code{ylim}.}
 }
 \description{
 A coordinate system that maps a range of address space onto a two-dimensional
