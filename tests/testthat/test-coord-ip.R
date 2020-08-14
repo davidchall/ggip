@@ -1,4 +1,4 @@
-test_that("input validation", {
+test_that("input validation of coord_ip() parameters", {
   valid1 <- ip_network("0.0.0.0/0")
   valid2 <- 16
   valid3 <- "hilbert"
@@ -51,4 +51,10 @@ test_that("input validation", {
     validate_coord_params(valid1, 32, valid3),
     "Current parameters would result in plot with 65536x65536 pixels"
   )
+})
+
+test_that("ipaddress classes passed through ggplot unscaled", {
+  expect_equal(ggplot2::scale_type(ip_address()), "identity")
+  expect_equal(ggplot2::scale_type(ip_network()), "identity")
+  expect_equal(ggplot2::scale_type(ip_interface()), "identity")
 })
