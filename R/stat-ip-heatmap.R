@@ -50,11 +50,14 @@ StatIpHeatmap <- ggplot2::ggproto("StatIpHeatmap", ggplot2::Stat,
   },
 
   compute_layer = function(self, data, params, layout) {
-    # add coord to the params, so it can be forwarded to compute_group()
-    params$coord <- layout$coord
+    if (!inherits(layout$coord, "CoordIp")) {
+      abort("Must call coord_ip() when using ggip")
+    }
 
     data <- cbind(data, address_to_cartesian(data$ip, layout$coord$network, layout$coord$pixel_prefix))
 
+    # add coord to the params, so it can be forwarded to compute_group()
+    params$coord <- layout$coord
     ggproto_parent(Stat, self)$compute_layer(data, params, layout)
   },
 
