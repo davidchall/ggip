@@ -10,9 +10,6 @@ stat_ip_heatmap(
   geom = "raster",
   position = "identity",
   ...,
-  canvas_network = NULL,
-  pixel_prefix = NULL,
-  curve = c("hilbert", "morton"),
   fun = "count",
   fun.args = list(),
   drop = TRUE,
@@ -51,13 +48,6 @@ a call to a position adjustment function.}
 often aesthetics, used to set an aesthetic to a fixed value, like
 \code{colour = "red"} or \code{size = 3}. They may also be parameters
 to the paired geom/stat.}
-
-\item{canvas_network}{An \code{\link[ipaddress:ip_network]{ipaddress::ip_network}} scalar}
-
-\item{pixel_prefix}{An integer scalar}
-
-\item{curve}{A string indicating the space-filling curve used to map IP data
-to the Cartesian plane. Choices are \code{"hilbert"} (default) and \code{"morton"}.}
 
 \item{fun}{Summary function}
 
