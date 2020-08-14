@@ -50,7 +50,7 @@ StatIpHeatmap <- ggplot2::ggproto("StatIpHeatmap", ggplot2::Stat,
   },
 
   compute_layer = function(self, data, params, layout) {
-    if (!inherits(layout$coord, "CoordIp")) {
+    if (!is_CoordIp(layout$coord)) {
       abort("Must call coord_ip() when using ggip")
     }
 

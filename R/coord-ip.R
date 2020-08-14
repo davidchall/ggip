@@ -85,6 +85,8 @@ CoordIp <- ggplot2::ggproto("CoordIp", ggplot2::CoordFixed,
   }
 )
 
+is_CoordIp <- function(x) inherits(x, "CoordIp")
+
 
 # ggplot2 scales -----------------------------------------------------------
 
