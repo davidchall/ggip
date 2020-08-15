@@ -18,23 +18,23 @@ BEGIN_RCPP
     return rcpp_result_gen;
 END_RCPP
 }
-// network_to_boundingbox
-DataFrame network_to_boundingbox(List network_r, List canvas_network_r, int pixel_prefix);
-RcppExport SEXP _ggip_network_to_boundingbox(SEXP network_rSEXP, SEXP canvas_network_rSEXP, SEXP pixel_prefixSEXP) {
+// network_to_cartesian
+DataFrame network_to_cartesian(List network_r, List canvas_network_r, int pixel_prefix);
+RcppExport SEXP _ggip_network_to_cartesian(SEXP network_rSEXP, SEXP canvas_network_rSEXP, SEXP pixel_prefixSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
     Rcpp::traits::input_parameter< List >::type network_r(network_rSEXP);
     Rcpp::traits::input_parameter< List >::type canvas_network_r(canvas_network_rSEXP);
     Rcpp::traits::input_parameter< int >::type pixel_prefix(pixel_prefixSEXP);
-    rcpp_result_gen = Rcpp::wrap(network_to_boundingbox(network_r, canvas_network_r, pixel_prefix));
+    rcpp_result_gen = Rcpp::wrap(network_to_cartesian(network_r, canvas_network_r, pixel_prefix));
     return rcpp_result_gen;
 END_RCPP
 }
 
 static const R_CallMethodDef CallEntries[] = {
     {"_ggip_address_to_cartesian", (DL_FUNC) &_ggip_address_to_cartesian, 3},
-    {"_ggip_network_to_boundingbox", (DL_FUNC) &_ggip_network_to_boundingbox, 3},
+    {"_ggip_network_to_cartesian", (DL_FUNC) &_ggip_network_to_cartesian, 3},
     {NULL, NULL, 0}
 };
 

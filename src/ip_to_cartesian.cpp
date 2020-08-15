@@ -28,18 +28,17 @@ DataFrame address_to_cartesian(List address_r, List canvas_network_r, int pixel_
   IntegerVector out_x(vsize);
   IntegerVector out_y(vsize);
 
+  // setup mapping from IP space to plotting canvas
   bool canvas_ipv6 = canvas_network.is_ipv6[0];
-  unsigned int canvas_prefix, bits_pixel2host;
+  AddressMapping mapping;
   if (canvas_ipv6) {
-    canvas_prefix = canvas_network.network_v6[0].prefix_length();
-    bits_pixel2host = 128 - pixel_prefix;
+    mapping.space_bits = 128;
+    mapping.canvas_bits = 128 - canvas_network.network_v6[0].prefix_length();
   } else {
-    canvas_prefix = canvas_network.network_v4[0].prefix_length();
-    bits_pixel2host = 32 - pixel_prefix;
+    mapping.space_bits = 32;
+    mapping.canvas_bits = 32 - canvas_network.network_v4[0].prefix_length();
   }
-  int bits_canvas2pixel = pixel_prefix - canvas_prefix;
-  unsigned int curve_order = (pixel_prefix - canvas_prefix) / 2;
-  unsigned int range = (1 << curve_order) - 1;
+  mapping.pixel_bits = mapping.space_bits - pixel_prefix;
 
   for (std::size_t i=0; i<vsize; ++i) {
     if (i % 10000 == 0) {
@@ -52,18 +51,9 @@ DataFrame address_to_cartesian(List address_r, List canvas_network_r, int pixel_
     } else if (address.is_ipv6[i]) {
       if (address_in_network(address.address_v6[i], canvas_network.network_v6[0])) {
         uint32_t x, y;
-
-        address_to_xy(
-          address.address_v6[i],
-          encode_hilbert,
-          canvas_prefix,
-          bits_canvas2pixel,
-          bits_pixel2host,
-          &x, &y
-        );
-
+        address_to_xy(address.address_v6[i], mapping, encode_hilbert, &x, &y);
         out_x[i] = x;
-        out_y[i] = range - y;
+        out_y[i] = y;
       } else {
         out_x[i] = NA_INTEGER;
         out_y[i] = NA_INTEGER;
@@ -71,18 +61,9 @@ DataFrame address_to_cartesian(List address_r, List canvas_network_r, int pixel_
     } else {
       if (address_in_network(address.address_v4[i], canvas_network.network_v4[0])) {
         uint32_t x, y;
-
-        address_to_xy(
-          address.address_v4[i],
-          encode_hilbert,
-          canvas_prefix,
-          bits_canvas2pixel,
-          bits_pixel2host,
-          &x, &y
-        );
-
+        address_to_xy(address.address_v4[i], mapping, encode_hilbert, &x, &y);
         out_x[i] = x;
-        out_y[i] = range - y;
+        out_y[i] = y;
       } else {
         out_x[i] = NA_INTEGER;
         out_y[i] = NA_INTEGER;
@@ -98,7 +79,7 @@ DataFrame address_to_cartesian(List address_r, List canvas_network_r, int pixel_
 
 
 // [[Rcpp::export]]
-DataFrame network_to_boundingbox(List network_r, List canvas_network_r, int pixel_prefix) {
+DataFrame network_to_cartesian(List network_r, List canvas_network_r, int pixel_prefix) {
   IpNetworkVector network(network_r);
   IpNetworkVector canvas_network(canvas_network_r);
 
@@ -113,18 +94,17 @@ DataFrame network_to_boundingbox(List network_r, List canvas_network_r, int pixe
   IntegerVector out_ymin(vsize);
   IntegerVector out_ymax(vsize);
 
+  // setup mapping from IP space to plotting canvas
   bool canvas_ipv6 = canvas_network.is_ipv6[0];
-  unsigned int canvas_prefix, bits_total;
+  AddressMapping mapping;
   if (canvas_ipv6) {
-    canvas_prefix = canvas_network.network_v6[0].prefix_length();
-    bits_total = 128;
+    mapping.space_bits = 128;
+    mapping.canvas_bits = 128 - canvas_network.network_v6[0].prefix_length();
   } else {
-    canvas_prefix = canvas_network.network_v4[0].prefix_length();
-    bits_total = 32;
+    mapping.space_bits = 32;
+    mapping.canvas_bits = 32 - canvas_network.network_v4[0].prefix_length();
   }
-  unsigned int bits_pixel2host = bits_total - pixel_prefix;
-  unsigned int curve_order = (pixel_prefix - canvas_prefix) / 2;
-  unsigned int y_range = (1 << curve_order) - 1;
+  mapping.pixel_bits = mapping.space_bits - pixel_prefix;
 
   for (std::size_t i=0; i<vsize; ++i) {
     if (i % 10000 == 0) {
@@ -138,19 +118,11 @@ DataFrame network_to_boundingbox(List network_r, List canvas_network_r, int pixe
       out_ymax[i] = NA_INTEGER;
     } else if (network.is_ipv6[i]) {
       if (is_subnet(network.network_v6[i], canvas_network.network_v6[0])) {
-        BoundingBox bbox = network_to_bbox(
-          network.network_v6[i],
-          encode_hilbert,
-          canvas_prefix,
-          network.network_v6[i].prefix_length() - canvas_prefix,
-          bits_total - network.network_v6[i].prefix_length() - bits_pixel2host,
-          bits_pixel2host
-        );
-
+        BoundingBox bbox = network_to_bbox(network.network_v6[i], mapping, encode_hilbert);
         out_xmin[i] = bbox.xmin;
-        out_ymin[i] = y_range - bbox.ymax;
+        out_ymin[i] = bbox.ymax;
         out_xmax[i] = bbox.xmax;
-        out_ymax[i] = y_range - bbox.ymin;
+        out_ymax[i] = bbox.ymin;
       } else {
         out_xmin[i] = NA_INTEGER;
         out_xmax[i] = NA_INTEGER;
@@ -159,19 +131,11 @@ DataFrame network_to_boundingbox(List network_r, List canvas_network_r, int pixe
       }
     } else {
       if (is_subnet(network.network_v4[i], canvas_network.network_v4[0])) {
-        BoundingBox bbox = network_to_bbox(
-          network.network_v4[i],
-          encode_hilbert,
-          canvas_prefix,
-          network.network_v4[i].prefix_length() - canvas_prefix,
-          bits_total - network.network_v4[i].prefix_length() - bits_pixel2host,
-          bits_pixel2host
-        );
-
+        BoundingBox bbox = network_to_bbox(network.network_v4[i], mapping, encode_hilbert);
         out_xmin[i] = bbox.xmin;
-        out_ymin[i] = y_range - bbox.ymax;
+        out_ymin[i] = bbox.ymax;
         out_xmax[i] = bbox.xmax;
-        out_ymax[i] = y_range - bbox.ymin;
+        out_ymax[i] = bbox.ymin;
       } else {
         out_xmin[i] = NA_INTEGER;
         out_xmax[i] = NA_INTEGER;

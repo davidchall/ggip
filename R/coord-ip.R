@@ -99,7 +99,7 @@ CoordIp <- ggplot2::ggproto("CoordIp", ggplot2::CoordFixed,
       if ("network" %in% colnames(layer_data) && is_ip_network(layer_data$network)) {
         layer_data <- cbind(
           layer_data,
-          network_to_boundingbox(layer_data$network, params$network, params$pixel_prefix)
+          network_to_cartesian(layer_data$network, params$network, params$pixel_prefix)
         )
       }
       layer_data

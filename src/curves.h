@@ -13,6 +13,10 @@ inline void encode_hilbert(uint32_t s, int order, uint32_t *x, uint32_t *y) {
 
     state = (0x3E6B94C1 >> 2 * row) & 3;
   }
+
+  // invert y-axis
+  unsigned int y_range = (1 << order) - 1;
+  *y = y_range - *y;
 }
 
 #endif
