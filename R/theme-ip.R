@@ -18,7 +18,6 @@ theme_ip_light <- function(base_size = 11, base_family = "") {
     base_family = base_family
   ) %+replace%
     theme(
-      aspect.ratio = 1,
       axis.text = element_blank(),
       axis.ticks = element_blank(),
       axis.title = element_blank(),

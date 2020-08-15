@@ -28,7 +28,8 @@ coord_ip <- function(network = ip_network("0.0.0.0/0"),
     curve = curve,
     curve_order = curve_order,
     limits = list(x = lim, y = lim),
-    expand = expand
+    expand = expand,
+    ratio = 1
   )
 }
 
