@@ -86,6 +86,24 @@ CoordIp <- ggplot2::ggproto("CoordIp", ggplot2::CoordFixed,
       curve = self$curve,
       curve_order = self$curve_order
     )
+  },
+
+  setup_data = function(data, params) {
+    lapply(data, function(layer_data) {
+      if ("ip" %in% colnames(layer_data) && is_ip_address(layer_data$ip)) {
+        layer_data <- cbind(
+          layer_data,
+          address_to_cartesian(layer_data$ip, params$network, params$pixel_prefix)
+        )
+      }
+      if ("network" %in% colnames(layer_data) && is_ip_network(layer_data$network)) {
+        layer_data <- cbind(
+          layer_data,
+          network_to_boundingbox(layer_data$network, params$network, params$pixel_prefix)
+        )
+      }
+      layer_data
+    })
   }
 )
 

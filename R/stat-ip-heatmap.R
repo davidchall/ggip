@@ -32,7 +32,7 @@ stat_ip_heatmap <- function(mapping = NULL, data = NULL, geom = "raster",
 }
 
 StatIpHeatmap <- ggplot2::ggproto("StatIpHeatmap", ggplot2::Stat,
-  required_aes = "ip",
+  required_aes = c("x", "y"),
 
   default_aes = ggplot2::aes(z = NULL, fill = ggplot2::after_stat(value)),
 
@@ -41,20 +41,10 @@ StatIpHeatmap <- ggplot2::ggproto("StatIpHeatmap", ggplot2::Stat,
     "fun", "fun.args", "drop"
   ),
 
-  setup_data = function(data, params) {
-    if (!is_ip_address(data$ip)) {
-      abort("'ip' aesthetic must be an ip_address vector")
-    }
-
-    data
-  },
-
   compute_layer = function(self, data, params, layout) {
     if (!is_CoordIp(layout$coord)) {
       abort("Must call coord_ip() when using ggip")
     }
-
-    data <- cbind(data, address_to_cartesian(data$ip, layout$coord$network, layout$coord$pixel_prefix))
 
     # add coord to the params, so it can be forwarded to compute_group()
     params$coord <- layout$coord
@@ -75,13 +65,10 @@ StatIpHeatmap <- ggplot2::ggproto("StatIpHeatmap", ggplot2::Stat,
       tapply_df(data$z, list(x = data$x, y = data$y), f, drop = drop)
     }
 
+    # fill missing pixels so raster works
     x_range <- seq(coord$limits$x[1], coord$limits$x[2])
     y_range <- seq(coord$limits$y[1], coord$limits$y[2])
-    tidyr::complete(
-      out,
-      tidyr::expand(out, x = x_range, y = y_range),
-      fill = list(value = 0)
-    )
+    tidyr::complete(out, tidyr::expand(out, x = x_range, y = y_range))
   }
 )
 

@@ -5,3 +5,7 @@ address_to_cartesian <- function(address_r, canvas_network_r, pixel_prefix) {
     .Call(`_ggip_address_to_cartesian`, address_r, canvas_network_r, pixel_prefix)
 }
 
+network_to_boundingbox <- function(network_r, canvas_network_r, pixel_prefix) {
+    .Call(`_ggip_network_to_boundingbox`, network_r, canvas_network_r, pixel_prefix)
+}
+
