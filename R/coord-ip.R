@@ -93,13 +93,13 @@ CoordIp <- ggplot2::ggproto("CoordIp", ggplot2::CoordFixed,
       if ("ip" %in% colnames(layer_data) && is_ip_address(layer_data$ip)) {
         layer_data <- cbind(
           layer_data,
-          address_to_cartesian(layer_data$ip, params$network, params$pixel_prefix)
+          address_to_cartesian(layer_data$ip, params$network, params$pixel_prefix, params$curve)
         )
       }
       if ("network" %in% colnames(layer_data) && is_ip_network(layer_data$network)) {
         layer_data <- cbind(
           layer_data,
-          network_to_cartesian(layer_data$network, params$network, params$pixel_prefix)
+          network_to_cartesian(layer_data$network, params$network, params$pixel_prefix, params$curve)
         )
       }
       layer_data

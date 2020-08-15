@@ -15,7 +15,7 @@ bool is_subnet(const Network &network, const Network &other) {
 
 
 // [[Rcpp::export]]
-DataFrame address_to_cartesian(List address_r, List canvas_network_r, int pixel_prefix) {
+DataFrame address_to_cartesian(List address_r, List canvas_network_r, int pixel_prefix, String curve) {
   IpAddressVector address(address_r);
   IpNetworkVector canvas_network(canvas_network_r);
 
@@ -40,6 +40,9 @@ DataFrame address_to_cartesian(List address_r, List canvas_network_r, int pixel_
   }
   mapping.pixel_bits = mapping.space_bits - pixel_prefix;
 
+  // setup curve
+  auto transform_curve = (curve == "hilbert") ? hilbert_curve : morton_curve;
+
   for (std::size_t i=0; i<vsize; ++i) {
     if (i % 10000 == 0) {
       checkUserInterrupt();
@@ -51,7 +54,7 @@ DataFrame address_to_cartesian(List address_r, List canvas_network_r, int pixel_
     } else if (address.is_ipv6[i]) {
       if (address_in_network(address.address_v6[i], canvas_network.network_v6[0])) {
         uint32_t x, y;
-        address_to_xy(address.address_v6[i], mapping, encode_hilbert, &x, &y);
+        address_to_xy(address.address_v6[i], mapping, transform_curve, &x, &y);
         out_x[i] = x;
         out_y[i] = y;
       } else {
@@ -61,7 +64,7 @@ DataFrame address_to_cartesian(List address_r, List canvas_network_r, int pixel_
     } else {
       if (address_in_network(address.address_v4[i], canvas_network.network_v4[0])) {
         uint32_t x, y;
-        address_to_xy(address.address_v4[i], mapping, encode_hilbert, &x, &y);
+        address_to_xy(address.address_v4[i], mapping, transform_curve, &x, &y);
         out_x[i] = x;
         out_y[i] = y;
       } else {
@@ -79,7 +82,7 @@ DataFrame address_to_cartesian(List address_r, List canvas_network_r, int pixel_
 
 
 // [[Rcpp::export]]
-DataFrame network_to_cartesian(List network_r, List canvas_network_r, int pixel_prefix) {
+DataFrame network_to_cartesian(List network_r, List canvas_network_r, int pixel_prefix, String curve) {
   IpNetworkVector network(network_r);
   IpNetworkVector canvas_network(canvas_network_r);
 
@@ -106,6 +109,9 @@ DataFrame network_to_cartesian(List network_r, List canvas_network_r, int pixel_
   }
   mapping.pixel_bits = mapping.space_bits - pixel_prefix;
 
+  // setup curve
+  auto transform_curve = (curve == "hilbert") ? hilbert_curve : morton_curve;
+
   for (std::size_t i=0; i<vsize; ++i) {
     if (i % 10000 == 0) {
       checkUserInterrupt();
@@ -118,7 +124,7 @@ DataFrame network_to_cartesian(List network_r, List canvas_network_r, int pixel_
       out_ymax[i] = NA_INTEGER;
     } else if (network.is_ipv6[i]) {
       if (is_subnet(network.network_v6[i], canvas_network.network_v6[0])) {
-        BoundingBox bbox = network_to_bbox(network.network_v6[i], mapping, encode_hilbert);
+        BoundingBox bbox = network_to_bbox(network.network_v6[i], mapping, transform_curve);
         out_xmin[i] = bbox.xmin;
         out_ymin[i] = bbox.ymax;
         out_xmax[i] = bbox.xmax;
@@ -131,7 +137,7 @@ DataFrame network_to_cartesian(List network_r, List canvas_network_r, int pixel_
       }
     } else {
       if (is_subnet(network.network_v4[i], canvas_network.network_v4[0])) {
-        BoundingBox bbox = network_to_bbox(network.network_v4[i], mapping, encode_hilbert);
+        BoundingBox bbox = network_to_bbox(network.network_v4[i], mapping, transform_curve);
         out_xmin[i] = bbox.xmin;
         out_ymin[i] = bbox.ymax;
         out_xmax[i] = bbox.xmax;
