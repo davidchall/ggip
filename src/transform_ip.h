@@ -4,6 +4,7 @@
 #include <algorithm>
 #include <ipaddress/bitwise.h>
 #include <ipaddress/masking.h>
+#include "curves.h"
 
 
 namespace ipaddress {
@@ -32,23 +33,22 @@ uint32_t address_to_pixel_int(const Address &address, AddressMapping mapping) {
   return pixel_int;
 }
 
-template<class Transformer>
-BoundingBox traverse_bbox_diagonal(uint32_t first_pixel_int, AddressMapping mapping, Transformer &&transform) {
+BoundingBox network_to_bbox_hilbert(uint32_t first_pixel_int, AddressMapping mapping) {
   BoundingBox bbox;
   uint32_t diag = 0xAAAAAAAA;
   uint32_t x1, x2, y1, y2;
   unsigned int curve_order = (mapping.canvas_bits - mapping.pixel_bits) / 2;
 
   if ((mapping.network_bits - mapping.pixel_bits) == 0) {  // no area
-    transform(first_pixel_int, curve_order, &x1, &y1);
+    hilbert_curve(first_pixel_int, curve_order, &x1, &y1);
 
     bbox.xmin = x1;
     bbox.ymin = y1;
     bbox.xmax = x1;
     bbox.ymax = y1;
   } else if (((mapping.network_bits - mapping.pixel_bits) & 1) == 0) {  // square
-    transform(first_pixel_int, curve_order, &x1, &y1);
-    transform(first_pixel_int | (diag >> (mapping.canvas_bits - mapping.network_bits)), curve_order, &x2, &y2);
+    hilbert_curve(first_pixel_int, curve_order, &x1, &y1);
+    hilbert_curve(first_pixel_int | (diag >> (mapping.canvas_bits - mapping.network_bits)), curve_order, &x2, &y2);
 
     bbox.xmin = std::min(x1, x2);
     bbox.ymin = std::min(y1, y2);
@@ -57,10 +57,10 @@ BoundingBox traverse_bbox_diagonal(uint32_t first_pixel_int, AddressMapping mapp
   } else {  // rectangle
     mapping.network_bits -= 1;
 
-    BoundingBox square1 = traverse_bbox_diagonal(first_pixel_int, mapping, transform);
-    BoundingBox square2 = traverse_bbox_diagonal(
+    BoundingBox square1 = network_to_bbox_hilbert(first_pixel_int, mapping);
+    BoundingBox square2 = network_to_bbox_hilbert(
       first_pixel_int + (1 << (mapping.network_bits - mapping.pixel_bits - 1)),
-      mapping, transform
+      mapping
     );
 
     bbox.xmin = std::min(square1.xmin, square2.xmin);
@@ -72,18 +72,40 @@ BoundingBox traverse_bbox_diagonal(uint32_t first_pixel_int, AddressMapping mapp
   return bbox;
 }
 
-template<class Address, class Transformer>
-void address_to_xy(const Address &address, AddressMapping mapping, Transformer &&transform, uint32_t *x, uint32_t *y) {
+template<class Address>
+void address_to_xy(const Address &address, AddressMapping mapping, bool is_morton, uint32_t *x, uint32_t *y) {
   int curve_order = (mapping.canvas_bits - mapping.pixel_bits) / 2;
   uint32_t pixel_int = address_to_pixel_int(address, mapping);
-  transform(pixel_int, curve_order, x, y);
+  if (is_morton) {
+    morton_curve(pixel_int, curve_order, x, y);
+  } else {
+    hilbert_curve(pixel_int, curve_order, x, y);
+  }
 }
 
-template<class Network, class Transformer>
-BoundingBox network_to_bbox(const Network &network, AddressMapping mapping, Transformer &&transform) {
+template<class Network>
+BoundingBox network_to_bbox(const Network &network, AddressMapping mapping, bool is_morton) {
   mapping.network_bits = mapping.space_bits - network.prefix_length();
   uint32_t first_int = address_to_pixel_int(network.address(), mapping);
-  return traverse_bbox_diagonal(first_int, mapping, transform);
+
+  if (is_morton) {
+    BoundingBox bbox;
+    uint32_t x1, x2, y1, y2;
+    unsigned int curve_order = (mapping.canvas_bits - mapping.pixel_bits) / 2;
+
+    uint32_t last_int = address_to_pixel_int(broadcast_address<typeof(network.address())>(network), mapping);
+    morton_curve(first_int, curve_order, &x1, &y1);
+    morton_curve(last_int, curve_order, &x2, &y2);
+
+    bbox.xmin = std::min(x1, x2);
+    bbox.ymin = std::min(y1, y2);
+    bbox.xmax = std::max(x1, x2);
+    bbox.ymax = std::max(y1, y2);
+
+    return bbox;
+  } else {
+    return network_to_bbox_hilbert(first_int, mapping);
+  }
 }
 
 }
