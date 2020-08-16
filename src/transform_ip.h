@@ -93,7 +93,7 @@ BoundingBox network_to_bbox(const Network &network, AddressMapping mapping, bool
     uint32_t x1, x2, y1, y2;
     unsigned int curve_order = (mapping.canvas_bits - mapping.pixel_bits) / 2;
 
-    uint32_t last_int = address_to_pixel_int(broadcast_address<typeof(network.address())>(network), mapping);
+    uint32_t last_int = address_to_pixel_int(broadcast_address<decltype(network.address())>(network), mapping);
     morton_curve(first_int, curve_order, &x1, &y1);
     morton_curve(last_int, curve_order, &x2, &y2);
 
