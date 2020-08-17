@@ -31,24 +31,3 @@ limits are taken exactly from the data or \code{xlim}/\code{ylim}.}
 A coordinate system that maps a range of address space onto a two-dimensional
 grid using a space-filling curve.
 }
-\examples{
-options(tidyverse.quiet = TRUE)
-library(tidyverse)
-library(ipaddress)
-
-canvas <- ip_network("0.0.0.0/24")
-
-tibble(address = seq(canvas)) \%>\%
-  ggplot() +
-  geom_path(aes(x, y)) +
-  coord_ip(canvas_network = canvas, pixel_prefix = 32, curve = "hilbert") +
-  theme_ip_light() +
-  labs(title = "Hilbert curve (3rd order)")
-
-tibble(address = seq(canvas)) \%>\%
-  ggplot() +
-  geom_path(aes(x, y)) +
-  coord_ip(canvas_network = canvas, pixel_prefix = 32, curve = "morton") +
-  theme_ip_light() +
-  labs(title = "Morton curve (3rd order)")
-}
