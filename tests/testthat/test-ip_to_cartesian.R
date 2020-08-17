@@ -57,6 +57,14 @@ test_that("Networks mapped to bounding boxes", {
     network_to_cartesian(ip_network("224.0.0.0/17"), pixel_prefix = 16, curve = "morton"),
     data.frame(xmin = 128, ymin = 63, xmax = 128, ymax = 63)
   )
+  expect_equal(
+    network_to_cartesian(ip_network("fc00::/17"), canvas_network = ip_network("::/0"), pixel_prefix = 16, curve = "hilbert"),
+    data.frame(xmin = 255, ymin = 224, xmax = 255, ymax = 224)
+  )
+  expect_equal(
+    network_to_cartesian(ip_network("fc00::/17"), canvas_network = ip_network("::/0"), pixel_prefix = 16, curve = "morton"),
+    data.frame(xmin = 224, ymin = 31, xmax = 224, ymax = 31)
+  )
 
   # square
   expect_equal(
@@ -67,6 +75,14 @@ test_that("Networks mapped to bounding boxes", {
     network_to_cartesian(ip_network("224.0.0.0/4"), pixel_prefix = 16, curve = "morton"),
     data.frame(xmin = 128, ymin = 0, xmax = 191, ymax = 63)
   )
+  expect_equal(
+    network_to_cartesian(ip_network("fc00::/8"), canvas_network = ip_network("::/0"), pixel_prefix = 16, curve = "hilbert"),
+    data.frame(xmin = 240, ymin = 224, xmax = 255, ymax = 239)
+  )
+  expect_equal(
+    network_to_cartesian(ip_network("fc00::/8"), canvas_network = ip_network("::/0"), pixel_prefix = 16, curve = "morton"),
+    data.frame(xmin = 224, ymin = 16, xmax = 239, ymax = 31)
+  )
 
   # rectangle
   expect_equal(
@@ -76,6 +92,14 @@ test_that("Networks mapped to bounding boxes", {
   expect_equal(
     network_to_cartesian(ip_network("224.0.0.0/3"), pixel_prefix = 16, curve = "morton"),
     data.frame(xmin = 128, ymin = 0, xmax = 255, ymax = 63)
+  )
+  expect_equal(
+    network_to_cartesian(ip_network("fc00::/7"), canvas_network = ip_network("::/0"), pixel_prefix = 16, curve = "hilbert"),
+    data.frame(xmin = 224, ymin = 224, xmax = 255, ymax = 239)
+  )
+  expect_equal(
+    network_to_cartesian(ip_network("fc00::/7"), canvas_network = ip_network("::/0"), pixel_prefix = 16, curve = "morton"),
+    data.frame(xmin = 224, ymin = 16, xmax = 255, ymax = 31)
   )
 })
 
@@ -189,13 +213,5 @@ test_that("Missing values", {
   expect_error(
     network_to_cartesian(ip_network("0.0.0.0/32"), pixel_prefix = NA),
     "`pixel_prefix` must be a positive integer scalar"
-  )
-  expect_error(
-    address_to_cartesian(ip_address("0.0.0.0"), curve = NA_character_),
-    "`curve` must be a string"
-  )
-  expect_error(
-    network_to_cartesian(ip_network("0.0.0.0/32"), curve = NA_character_),
-    "`curve` must be a string"
   )
 })

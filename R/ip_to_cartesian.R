@@ -80,8 +80,5 @@ validate_mapping_params <- function(canvas_network, pixel_prefix, curve) {
     ))
   }
 
-  if (is.na(curve)) {
-    abort("`curve` must be a string")
-  }
   curve <- arg_match(curve, c("hilbert", "morton"))
 }
