@@ -5,6 +5,27 @@
 #'
 #' @inheritParams ip_to_cartesian
 #' @inheritParams ggplot2::coord_fixed
+#'
+#' @examples
+#' options(tidyverse.quiet = TRUE)
+#' library(tidyverse)
+#' library(ipaddress)
+#'
+#' canvas <- ip_network("0.0.0.0/24")
+#'
+#' tibble(address = seq(canvas)) %>%
+#'   ggplot() +
+#'   geom_path(aes(x, y)) +
+#'   coord_ip(canvas_network = canvas, pixel_prefix = 32, curve = "hilbert") +
+#'   theme_ip_light() +
+#'   labs(title = "Hilbert curve (3rd order)")
+#'
+#' tibble(address = seq(canvas)) %>%
+#'   ggplot() +
+#'   geom_path(aes(x, y)) +
+#'   coord_ip(canvas_network = canvas, pixel_prefix = 32, curve = "morton") +
+#'   theme_ip_light() +
+#'   labs(title = "Morton curve (3rd order)")
 #' @export
 coord_ip <- function(canvas_network = ip_network("0.0.0.0/0"),
                      pixel_prefix = 16,
@@ -43,10 +64,10 @@ CoordIp <- ggplot2::ggproto("CoordIp", ggplot2::CoordFixed,
 
   setup_data = function(data, params) {
     lapply(data, function(layer_data) {
-      if ("ip" %in% colnames(layer_data) && is_ip_address(layer_data$ip)) {
+      if ("address" %in% colnames(layer_data) && is_ip_address(layer_data$address)) {
         layer_data <- cbind(
           layer_data,
-          address_to_cartesian(layer_data$ip, params$canvas_network, params$pixel_prefix, params$curve)
+          address_to_cartesian(layer_data$address, params$canvas_network, params$pixel_prefix, params$curve)
         )
       }
       if ("network" %in% colnames(layer_data) && is_ip_network(layer_data$network)) {

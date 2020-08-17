@@ -33,10 +33,16 @@ You can install the development version from GitHub:
 remotes::install_github("davidchall/ggip")
 ```
 
+## Example usage
+
 ```{r ipv4_heatmap, dpi=150}
+library(tidyverse)
+library(ipaddress)
+library(ggip)
+
 ip_data %>%
   ggplot() +
-  stat_ip_heatmap(aes(ip = ip)) +
+  stat_ip_heatmap(aes(x, y)) +
   scale_fill_viridis_c(trans = "log2", na.value = "black") +
   coord_ip(pixel_prefix = 20) +
   theme_ip_dark()

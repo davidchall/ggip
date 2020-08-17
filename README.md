@@ -1,7 +1,3 @@
----
-output: github_document
----
-
 <!-- README.md is generated from README.Rmd. Please edit that file -->
 
 
@@ -26,15 +22,20 @@ You can install the development version from GitHub:
 remotes::install_github("davidchall/ggip")
 ```
 
-Example usage:
+## Example usage
+
+
 ```r
+library(tidyverse)
+library(ipaddress)
+library(ggip)
+
 ip_data %>%
   ggplot() +
-  stat_ip_heatmap(aes(ip = ip)) +
+  stat_ip_heatmap(aes(x, y)) +
   scale_fill_viridis_c(trans = "log2", na.value = "black") +
   coord_ip(pixel_prefix = 20) +
   theme_ip_dark()
-#> Warning: Transformation introduced infinite values in discrete y-axis
 ```
 
 <img src="man/figures/README-ipv4_heatmap-1.png" title="plot of chunk ipv4_heatmap" alt="plot of chunk ipv4_heatmap" width="100%" />
