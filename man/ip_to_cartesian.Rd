@@ -21,6 +21,8 @@ network_to_cartesian(
 )
 }
 \arguments{
+\item{address}{An \code{\link[ipaddress:ip_address]{ipaddress::ip_address}} vector}
+
 \item{canvas_network}{An \code{\link[ipaddress:ip_network]{ipaddress::ip_network}} scalar that determines the
 network visualized by the plotted canvas. The default shows the entire IPv4
 address space.}
@@ -31,6 +33,8 @@ corresponding network. The default value is 16.}
 
 \item{curve}{A string to choose the space-filling curve. Choices are
 \code{"hilbert"} (default) and \code{"morton"}.}
+
+\item{network}{An \code{\link[ipaddress:ip_network]{ipaddress::ip_network}} vector}
 }
 \description{
 Map IP data to Cartesian coordinates

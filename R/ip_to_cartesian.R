@@ -1,5 +1,7 @@
 #' Map IP data to Cartesian coordinates
 #'
+#' @param address An [`ipaddress::ip_address`] vector
+#' @param network An [`ipaddress::ip_network`] vector
 #' @param canvas_network An [`ipaddress::ip_network`] scalar that determines the
 #'   network visualized by the plotted canvas. The default shows the entire IPv4
 #'   address space.
