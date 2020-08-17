@@ -48,7 +48,7 @@ BoundingBox network_to_bbox_hilbert(uint32_t first_pixel_int, AddressMapping map
     bbox.ymax = y1;
   } else if (((mapping.network_bits - mapping.pixel_bits) & 1) == 0) {  // square
     hilbert_curve(first_pixel_int, curve_order, &x1, &y1);
-    hilbert_curve(first_pixel_int | (diag >> (32 - mapping.pixel_bits - mapping.network_bits)), curve_order, &x2, &y2);
+    hilbert_curve(first_pixel_int | (diag >> (32 - (mapping.network_bits - mapping.pixel_bits))), curve_order, &x2, &y2);
 
     bbox.xmin = std::min(x1, x2);
     bbox.ymin = std::min(y1, y2);
