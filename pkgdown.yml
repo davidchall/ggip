@@ -2,7 +2,7 @@ pandoc: 2.7.3
 pkgdown: 1.5.1
 pkgdown_sha: ~
 articles: []
-last_built: 2020-08-17T02:03Z
+last_built: 2020-08-17T04:08Z
 urls:
   reference: https://davidchall.github.io/ggip/reference
   article: https://davidchall.github.io/ggip/articles
