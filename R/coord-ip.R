@@ -11,8 +11,6 @@ coord_ip <- function(canvas_network = ip_network("0.0.0.0/0"),
                      curve = c("hilbert", "morton"),
                      expand = FALSE) {
 
-  validate_mapping_params(canvas_network, pixel_prefix, curve)
-
   curve_order <- as.integer((pixel_prefix - prefix_length(canvas_network)) / 2)
   lim <- as.integer(c(0, 2 ^ curve_order - 1))
 
