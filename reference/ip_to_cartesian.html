@@ -6,7 +6,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>Coordinate system for IP data — coord_ip • ggip</title>
+<title>Map IP data to Cartesian coordinates — ip_to_cartesian • ggip</title>
 
 
 <!-- jquery -->
@@ -39,9 +39,8 @@
 
 
 
-<meta property="og:title" content="Coordinate system for IP data — coord_ip" />
-<meta property="og:description" content="A coordinate system that maps a range of address space onto a two-dimensional
-grid using a space-filling curve." />
+<meta property="og:title" content="Map IP data to Cartesian coordinates — ip_to_cartesian" />
+<meta property="og:description" content="Map IP data to Cartesian coordinates" />
 
 
 
@@ -109,26 +108,36 @@ grid using a space-filling curve." />
 <div class="row">
   <div class="col-md-9 contents">
     <div class="page-header">
-    <h1>Coordinate system for IP data</h1>
-    <small class="dont-index">Source: <a href='https://github.com/davidchall/ggip/blob/master/R/coord-ip.R'><code>R/coord-ip.R</code></a></small>
-    <div class="hidden name"><code>coord_ip.Rd</code></div>
+    <h1>Map IP data to Cartesian coordinates</h1>
+    <small class="dont-index">Source: <a href='https://github.com/davidchall/ggip/blob/master/R/ip_to_cartesian.R'><code>R/ip_to_cartesian.R</code></a></small>
+    <div class="hidden name"><code>ip_to_cartesian.Rd</code></div>
     </div>
 
     <div class="ref-description">
-    <p>A coordinate system that maps a range of address space onto a two-dimensional
-grid using a space-filling curve.</p>
+    <p>Map IP data to Cartesian coordinates</p>
     </div>
 
-    <pre class="usage"><span class='fu'>coord_ip</span>(
+    <pre class="usage"><span class='fu'>address_to_cartesian</span>(
+  <span class='no'>address</span>,
   <span class='kw'>canvas_network</span> <span class='kw'>=</span> <span class='fu'>ip_network</span>(<span class='st'>"0.0.0.0/0"</span>),
   <span class='kw'>pixel_prefix</span> <span class='kw'>=</span> <span class='fl'>16</span>,
-  <span class='kw'>curve</span> <span class='kw'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(<span class='st'>"hilbert"</span>, <span class='st'>"morton"</span>),
-  <span class='kw'>expand</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>
+  <span class='kw'>curve</span> <span class='kw'>=</span> <span class='st'>"hilbert"</span>
+)
+
+<span class='fu'>network_to_cartesian</span>(
+  <span class='no'>network</span>,
+  <span class='kw'>canvas_network</span> <span class='kw'>=</span> <span class='fu'>ip_network</span>(<span class='st'>"0.0.0.0/0"</span>),
+  <span class='kw'>pixel_prefix</span> <span class='kw'>=</span> <span class='fl'>16</span>,
+  <span class='kw'>curve</span> <span class='kw'>=</span> <span class='st'>"hilbert"</span>
 )</pre>
 
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">
     <colgroup><col class="name" /><col class="desc" /></colgroup>
+    <tr>
+      <th>address</th>
+      <td><p>An <code><a href='https://davidchall.github.io/ipaddress/reference/ip_address.html'>ipaddress::ip_address</a></code> vector</p></td>
+    </tr>
     <tr>
       <th>canvas_network</th>
       <td><p>An <code><a href='https://davidchall.github.io/ipaddress/reference/ip_network.html'>ipaddress::ip_network</a></code> scalar that determines the
@@ -147,10 +156,8 @@ corresponding network. The default value is 16.</p></td>
 <code>"hilbert"</code> (default) and <code>"morton"</code>.</p></td>
     </tr>
     <tr>
-      <th>expand</th>
-      <td><p>If <code>TRUE</code>, the default, adds a small expansion factor to
-the limits to ensure that data and axes don't overlap. If <code>FALSE</code>,
-limits are taken exactly from the data or <code>xlim</code>/<code>ylim</code>.</p></td>
+      <th>network</th>
+      <td><p>An <code><a href='https://davidchall.github.io/ipaddress/reference/ip_network.html'>ipaddress::ip_network</a></code> vector</p></td>
     </tr>
     </table>
 
