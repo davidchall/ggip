@@ -44,7 +44,22 @@ test_that("Start and end points", {
 })
 
 test_that("Addresses mapped to points", {
-
+  expect_equal(
+    address_to_cartesian(ip_address("224.0.0.0"), pixel_prefix = 16, curve = "hilbert"),
+    data.frame(x = 191, y = 192)
+  )
+  expect_equal(
+    address_to_cartesian(ip_address("224.0.0.0"), pixel_prefix = 16, curve = "morton"),
+    data.frame(x = 128, y = 63)
+  )
+  expect_equal(
+    address_to_cartesian(ip_address("fc00::"), canvas_network = ip_network("::/0"), pixel_prefix = 16, curve = "hilbert"),
+    data.frame(x = 255, y = 224)
+  )
+  expect_equal(
+    address_to_cartesian(ip_address("fc00::"), canvas_network = ip_network("::/0"), pixel_prefix = 16, curve = "morton"),
+    data.frame(x = 224, y = 31)
+  )
 })
 
 test_that("Networks mapped to bounding boxes", {
@@ -134,7 +149,7 @@ test_that("Outside canvas mapped to NA", {
   )
 })
 
-test_that("input validation of mapping parameters", {
+test_that("Input validation of mapping parameters", {
   valid1 <- ip_network("0.0.0.0/0")
   valid2 <- 16
   valid3 <- "hilbert"
@@ -187,6 +202,11 @@ test_that("input validation of mapping parameters", {
     validate_mapping_params(valid1, 32, valid3),
     "Current parameters would result in plot with 65536x65536 pixels"
   )
+})
+
+test_that("Other input validation", {
+  expect_error(address_to_cartesian(ip_network()), "`address` must be an ip_address vector")
+  expect_error(network_to_cartesian(ip_address()), "`network` must be an ip_network vector")
 })
 
 test_that("Missing values", {

@@ -20,7 +20,7 @@ address_to_cartesian <- function(address,
                                  pixel_prefix = 16,
                                  curve = "hilbert") {
   if (!is_ip_address(address)) {
-    abort("'address' must be an ip_address vector")
+    abort("`address` must be an ip_address vector")
   }
   validate_mapping_params(canvas_network, pixel_prefix, curve)
 
@@ -34,7 +34,7 @@ network_to_cartesian <- function(network,
                                  pixel_prefix = 16,
                                  curve = "hilbert") {
   if (!is_ip_network(network)) {
-    abort("'network' must be an ip_address vector")
+    abort("`network` must be an ip_network vector")
   }
   validate_mapping_params(canvas_network, pixel_prefix, curve)
 
