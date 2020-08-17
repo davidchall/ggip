@@ -64,17 +64,21 @@ CoordIp <- ggplot2::ggproto("CoordIp", ggplot2::CoordFixed,
 
   setup_data = function(data, params) {
     lapply(data, function(layer_data) {
-      if ("address" %in% colnames(layer_data) && is_ip_address(layer_data$address)) {
-        layer_data <- cbind(
-          layer_data,
-          address_to_cartesian(layer_data$address, params$canvas_network, params$pixel_prefix, params$curve)
-        )
-      }
-      if ("network" %in% colnames(layer_data) && is_ip_network(layer_data$network)) {
-        layer_data <- cbind(
-          layer_data,
-          network_to_cartesian(layer_data$network, params$canvas_network, params$pixel_prefix, params$curve)
-        )
+      # replace ip_address and ip_network columns with dataframe columns
+      for (col in colnames(layer_data)) {
+        if (is_ip_address(layer_data[[col]])) {
+          # dataframe output has columns: ip, x, y
+          layer_data[[col]] <- cbind(
+            data.frame(ip = layer_data[[col]]),
+            address_to_cartesian(layer_data[[col]], params$canvas_network, params$pixel_prefix, params$curve)
+          )
+        } else if (is_ip_network(layer_data[[col]])) {
+          # dataframe output has columns: ip, xmin, ymin, xmax, ymax
+          layer_data[[col]] <- cbind(
+            data.frame(ip = layer_data[[col]]),
+            network_to_cartesian(layer_data[[col]], params$canvas_network, params$pixel_prefix, params$curve)
+          )
+        }
       }
       layer_data
     })

@@ -42,7 +42,7 @@ library(ggip)
 
 ip_data %>%
   ggplot() +
-  stat_ip_heatmap(aes(x, y)) +
+  stat_ip_heatmap(aes(ip$x, ip$y)) +
   scale_fill_viridis_c(trans = "log2", na.value = "black") +
   coord_ip(pixel_prefix = 20) +
   theme_ip_dark()
