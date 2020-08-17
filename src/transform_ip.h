@@ -39,7 +39,7 @@ BoundingBox network_to_bbox_hilbert(uint32_t first_pixel_int, AddressMapping map
   uint32_t x1, x2, y1, y2;
   unsigned int curve_order = (mapping.canvas_bits - mapping.pixel_bits) / 2;
 
-  if ((mapping.network_bits - mapping.pixel_bits) == 0) {  // no area
+  if (mapping.network_bits <= mapping.pixel_bits) {  // no area
     hilbert_curve(first_pixel_int, curve_order, &x1, &y1);
 
     bbox.xmin = x1;
@@ -59,7 +59,7 @@ BoundingBox network_to_bbox_hilbert(uint32_t first_pixel_int, AddressMapping map
 
     BoundingBox square1 = network_to_bbox_hilbert(first_pixel_int, mapping);
     BoundingBox square2 = network_to_bbox_hilbert(
-      first_pixel_int + (1 << (mapping.network_bits - mapping.pixel_bits - 1)),
+      first_pixel_int | (1 << (mapping.network_bits - mapping.pixel_bits)),
       mapping
     );
 

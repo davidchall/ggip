@@ -14,7 +14,7 @@ bool is_subnet(const Network &network, const Network &other) {
 
 
 // [[Rcpp::export]]
-DataFrame address_to_cartesian(List address_r, List canvas_network_r, int pixel_prefix, String curve) {
+DataFrame wrap_address_to_cartesian(List address_r, List canvas_network_r, int pixel_prefix, String curve) {
   IpAddressVector address(address_r);
   IpNetworkVector canvas_network(canvas_network_r);
 
@@ -81,7 +81,7 @@ DataFrame address_to_cartesian(List address_r, List canvas_network_r, int pixel_
 
 
 // [[Rcpp::export]]
-DataFrame network_to_cartesian(List network_r, List canvas_network_r, int pixel_prefix, String curve) {
+DataFrame wrap_network_to_cartesian(List network_r, List canvas_network_r, int pixel_prefix, String curve) {
   IpNetworkVector network(network_r);
   IpNetworkVector canvas_network(canvas_network_r);
 
@@ -92,8 +92,8 @@ DataFrame network_to_cartesian(List network_r, List canvas_network_r, int pixel_
   // initialize output vectors
   std::size_t vsize = network.size();
   IntegerVector out_xmin(vsize);
-  IntegerVector out_xmax(vsize);
   IntegerVector out_ymin(vsize);
+  IntegerVector out_xmax(vsize);
   IntegerVector out_ymax(vsize);
 
   // setup mapping from IP space to plotting canvas
@@ -118,33 +118,33 @@ DataFrame network_to_cartesian(List network_r, List canvas_network_r, int pixel_
 
     if (network.is_na[i] || (network.is_ipv6[i] != canvas_ipv6)) {
       out_xmin[i] = NA_INTEGER;
-      out_xmax[i] = NA_INTEGER;
       out_ymin[i] = NA_INTEGER;
+      out_xmax[i] = NA_INTEGER;
       out_ymax[i] = NA_INTEGER;
     } else if (network.is_ipv6[i]) {
       if (is_subnet(network.network_v6[i], canvas_network.network_v6[0])) {
         BoundingBox bbox = network_to_bbox(network.network_v6[i], mapping, is_morton);
         out_xmin[i] = bbox.xmin;
-        out_ymin[i] = bbox.ymax;
+        out_ymin[i] = bbox.ymin;
         out_xmax[i] = bbox.xmax;
-        out_ymax[i] = bbox.ymin;
+        out_ymax[i] = bbox.ymax;
       } else {
         out_xmin[i] = NA_INTEGER;
-        out_xmax[i] = NA_INTEGER;
         out_ymin[i] = NA_INTEGER;
+        out_xmax[i] = NA_INTEGER;
         out_ymax[i] = NA_INTEGER;
       }
     } else {
       if (is_subnet(network.network_v4[i], canvas_network.network_v4[0])) {
         BoundingBox bbox = network_to_bbox(network.network_v4[i], mapping, is_morton);
         out_xmin[i] = bbox.xmin;
-        out_ymin[i] = bbox.ymax;
+        out_ymin[i] = bbox.ymin;
         out_xmax[i] = bbox.xmax;
-        out_ymax[i] = bbox.ymin;
+        out_ymax[i] = bbox.ymax;
       } else {
         out_xmin[i] = NA_INTEGER;
-        out_xmax[i] = NA_INTEGER;
         out_ymin[i] = NA_INTEGER;
+        out_xmax[i] = NA_INTEGER;
         out_ymax[i] = NA_INTEGER;
       }
     }
@@ -152,8 +152,8 @@ DataFrame network_to_cartesian(List network_r, List canvas_network_r, int pixel_
 
   return DataFrame::create(
     _["xmin"] = out_xmin,
-    _["xmax"] = out_xmax,
     _["ymin"] = out_ymin,
+    _["xmax"] = out_xmax,
     _["ymax"] = out_ymax
   );
 }

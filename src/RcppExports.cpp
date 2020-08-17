@@ -5,9 +5,9 @@
 
 using namespace Rcpp;
 
-// address_to_cartesian
-DataFrame address_to_cartesian(List address_r, List canvas_network_r, int pixel_prefix, String curve);
-RcppExport SEXP _ggip_address_to_cartesian(SEXP address_rSEXP, SEXP canvas_network_rSEXP, SEXP pixel_prefixSEXP, SEXP curveSEXP) {
+// wrap_address_to_cartesian
+DataFrame wrap_address_to_cartesian(List address_r, List canvas_network_r, int pixel_prefix, String curve);
+RcppExport SEXP _ggip_wrap_address_to_cartesian(SEXP address_rSEXP, SEXP canvas_network_rSEXP, SEXP pixel_prefixSEXP, SEXP curveSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
@@ -15,13 +15,13 @@ BEGIN_RCPP
     Rcpp::traits::input_parameter< List >::type canvas_network_r(canvas_network_rSEXP);
     Rcpp::traits::input_parameter< int >::type pixel_prefix(pixel_prefixSEXP);
     Rcpp::traits::input_parameter< String >::type curve(curveSEXP);
-    rcpp_result_gen = Rcpp::wrap(address_to_cartesian(address_r, canvas_network_r, pixel_prefix, curve));
+    rcpp_result_gen = Rcpp::wrap(wrap_address_to_cartesian(address_r, canvas_network_r, pixel_prefix, curve));
     return rcpp_result_gen;
 END_RCPP
 }
-// network_to_cartesian
-DataFrame network_to_cartesian(List network_r, List canvas_network_r, int pixel_prefix, String curve);
-RcppExport SEXP _ggip_network_to_cartesian(SEXP network_rSEXP, SEXP canvas_network_rSEXP, SEXP pixel_prefixSEXP, SEXP curveSEXP) {
+// wrap_network_to_cartesian
+DataFrame wrap_network_to_cartesian(List network_r, List canvas_network_r, int pixel_prefix, String curve);
+RcppExport SEXP _ggip_wrap_network_to_cartesian(SEXP network_rSEXP, SEXP canvas_network_rSEXP, SEXP pixel_prefixSEXP, SEXP curveSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
@@ -29,14 +29,14 @@ BEGIN_RCPP
     Rcpp::traits::input_parameter< List >::type canvas_network_r(canvas_network_rSEXP);
     Rcpp::traits::input_parameter< int >::type pixel_prefix(pixel_prefixSEXP);
     Rcpp::traits::input_parameter< String >::type curve(curveSEXP);
-    rcpp_result_gen = Rcpp::wrap(network_to_cartesian(network_r, canvas_network_r, pixel_prefix, curve));
+    rcpp_result_gen = Rcpp::wrap(wrap_network_to_cartesian(network_r, canvas_network_r, pixel_prefix, curve));
     return rcpp_result_gen;
 END_RCPP
 }
 
 static const R_CallMethodDef CallEntries[] = {
-    {"_ggip_address_to_cartesian", (DL_FUNC) &_ggip_address_to_cartesian, 4},
-    {"_ggip_network_to_cartesian", (DL_FUNC) &_ggip_network_to_cartesian, 4},
+    {"_ggip_wrap_address_to_cartesian", (DL_FUNC) &_ggip_wrap_address_to_cartesian, 4},
+    {"_ggip_wrap_network_to_cartesian", (DL_FUNC) &_ggip_wrap_network_to_cartesian, 4},
     {NULL, NULL, 0}
 };
 
