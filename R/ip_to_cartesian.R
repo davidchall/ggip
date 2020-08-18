@@ -1,15 +1,30 @@
 #' Map IP data to Cartesian coordinates
 #'
-#' @param address An [`ipaddress::ip_address`] vector
-#' @param network An [`ipaddress::ip_network`] vector
-#' @param canvas_network An [`ipaddress::ip_network`] scalar that determines the
-#'   network visualized by the plotted canvas. The default shows the entire IPv4
-#'   address space.
+#' These functions are used internally by [coord_ip()] to map
+#' [`ip_address`][`ipaddress::ip_address`] and [`ip_network`][`ipaddress::ip_network`]
+#' vectors to Cartesian coordinates. They are provided externally to support use
+#' of these coordinates outside of ggplot2.
+#'
+#' @param address An [`ip_address`][`ipaddress::ip_address`] vector
+#' @param network An [`ip_network`][`ipaddress::ip_network`] vector
+#' @param canvas_network An [`ip_network`][`ipaddress::ip_network`] scalar that
+#'   determines the network visualized by the plotted canvas. The default shows
+#'   the entire IPv4 address space.
 #' @param pixel_prefix An integer scalar that determines the number of addresses
 #'   represented by a single pixel. It sets the prefix length of the
 #'   corresponding network. The default value is 16.
 #' @param curve A string to choose the space-filling curve. Choices are
 #'   `"hilbert"` (default) and `"morton"`.
+#' @return A data.frame containing columns:
+#'  * `address_to_cartesian()`: `x` and `y`
+#'  * `network_to_cartesian()`: `xmin`, `ymin`, `xmax` and `ymax`
+#'
+#' @examples
+#' library(ipaddress)
+#'
+#' address_to_cartesian(ip_address("192.168.0.1"))
+#'
+#' network_to_cartesian(ip_network("224.0.0.0/4"))
 #' @name ip_to_cartesian
 NULL
 

@@ -5,13 +5,15 @@ home:
   description: R package for data visualization of IP addresses and networks
 
 reference:
-  - title: "Map IP data to Cartesian coordinates"
+  - title: "Plotting"
     contents:
       - coord_ip
-      - ip_to_cartesian
-  - title: "Layers"
-    contents:
+      - theme_ip
       - stat_ip_heatmap
-  - title: "Themes"
+  - title: "Internal functions"
     contents:
-      - theme_ip_light
+      - ip_to_cartesian
+
+figures:
+  fig.asp: 1
+  fig.width: 5

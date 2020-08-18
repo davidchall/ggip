@@ -8,13 +8,13 @@ coord_ip(
   canvas_network = ip_network("0.0.0.0/0"),
   pixel_prefix = 16,
   curve = c("hilbert", "morton"),
-  expand = FALSE
+  expand = TRUE
 )
 }
 \arguments{
-\item{canvas_network}{An \code{\link[ipaddress:ip_network]{ipaddress::ip_network}} scalar that determines the
-network visualized by the plotted canvas. The default shows the entire IPv4
-address space.}
+\item{canvas_network}{An \code{\link[ipaddress:ip_network]{ip_network}} scalar that
+determines the network visualized by the plotted canvas. The default shows
+the entire IPv4 address space.}
 
 \item{pixel_prefix}{An integer scalar that determines the number of addresses
 represented by a single pixel. It sets the prefix length of the
@@ -28,6 +28,67 @@ the limits to ensure that data and axes don't overlap. If \code{FALSE},
 limits are taken exactly from the data or \code{xlim}/\code{ylim}.}
 }
 \description{
-A coordinate system that maps a range of address space onto a two-dimensional
-grid using a space-filling curve.
+A ggplot2 coordinate system that maps a range of address space onto a
+two-dimensional grid using a space-filling curve.
+
+\code{coord_ip()} translates all \code{\link[ipaddress:ip_address]{ip_address}} and
+\code{\link[ipaddress:ip_network]{ip_network}} vectors to Cartesian coordinates,
+ready for use by ggplot2 layers (see Details). This ensures all layers use a
+common mapping.
+}
+\details{
+\code{coord_ip()} uses nested dataframes to store the result of the mapping. This
+means each \code{\link[ipaddress:ip_address]{ip_address}} or
+\code{\link[ipaddress:ip_network]{ip_network}} column in your original dataset is
+converted to a dataframe column. When specifying ggplot2 aesthetics, you'll
+need to use \code{$} to access the nested data (see Examples).
+
+Each \code{\link[ipaddress:ip_address]{ip_address}} column will be replaced with a
+dataframe containing the following columns:\tabular{lll}{
+   Column name \tab Data type \tab Description \cr
+   \code{ip} \tab \code{ip_address} \tab Original IP data \cr
+   \code{x} \tab \code{integer} \tab Pixel x coordinate \cr
+   \code{y} \tab \code{integer} \tab Pixel y coordinate \cr
+}
+
+
+Each \code{\link[ipaddress:ip_network]{ip_network}} column will be replaced with a
+dataframe containing the following columns:\tabular{lll}{
+   Column name \tab Data type \tab Description \cr
+   \code{ip} \tab \code{ip_network} \tab Original IP data \cr
+   \code{xmin} \tab \code{integer} \tab Bounding box xmin coordinate \cr
+   \code{ymin} \tab \code{integer} \tab Bounding box ymin coordinate \cr
+   \code{xmax} \tab \code{integer} \tab Bounding box xmax coordinate \cr
+   \code{ymax} \tab \code{integer} \tab Bounding box ymax coordinate \cr
+}
+}
+\examples{
+options(tidyverse.quiet = TRUE)
+library(tidyverse)
+library(ipaddress)
+
+tibble(address = ip_address(c("0.0.0.0", "128.0.0.0", "192.168.0.1"))) \%>\%
+  ggplot(aes(x = address$x, y = address$y, label = address$ip)) +
+  geom_point() +
+  geom_label(nudge_x = c(10, 0, -10), nudge_y = -10) +
+  coord_ip() +
+  theme_ip_light()
+
+tibble(network = ip_network(c("0.0.0.0/8", "224.0.0.0/4"))) \%>\%
+  mutate(
+    start = network_address(network),
+    end = broadcast_address(network)
+  ) \%>\%
+  ggplot() +
+  geom_point(aes(x = start$x, y = start$y), color = "blue") +
+  geom_point(aes(x = end$x, y = end$y), color = "red") +
+  geom_rect(
+    aes(xmin = network$xmin, xmax = network$xmax, ymin = network$ymin, ymax = network$ymax),
+    alpha = 0.5, fill = "grey"
+  ) +
+  coord_ip(curve = "morton") +
+  theme_ip_light()
+}
+\seealso{
+\code{vignette("visualizing-ip-data")} describes the mapping in more detail.
 }

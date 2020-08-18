@@ -21,11 +21,11 @@ network_to_cartesian(
 )
 }
 \arguments{
-\item{address}{An \code{\link[ipaddress:ip_address]{ipaddress::ip_address}} vector}
+\item{address}{An \code{\link[ipaddress:ip_address]{ip_address}} vector}
 
-\item{canvas_network}{An \code{\link[ipaddress:ip_network]{ipaddress::ip_network}} scalar that determines the
-network visualized by the plotted canvas. The default shows the entire IPv4
-address space.}
+\item{canvas_network}{An \code{\link[ipaddress:ip_network]{ip_network}} scalar that
+determines the network visualized by the plotted canvas. The default shows
+the entire IPv4 address space.}
 
 \item{pixel_prefix}{An integer scalar that determines the number of addresses
 represented by a single pixel. It sets the prefix length of the
@@ -34,8 +34,25 @@ corresponding network. The default value is 16.}
 \item{curve}{A string to choose the space-filling curve. Choices are
 \code{"hilbert"} (default) and \code{"morton"}.}
 
-\item{network}{An \code{\link[ipaddress:ip_network]{ipaddress::ip_network}} vector}
+\item{network}{An \code{\link[ipaddress:ip_network]{ip_network}} vector}
+}
+\value{
+A data.frame containing columns:
+\itemize{
+\item \code{address_to_cartesian()}: \code{x} and \code{y}
+\item \code{network_to_cartesian()}: \code{xmin}, \code{ymin}, \code{xmax} and \code{ymax}
+}
 }
 \description{
-Map IP data to Cartesian coordinates
+These functions are used internally by \code{\link[=coord_ip]{coord_ip()}} to map
+\code{\link[ipaddress:ip_address]{ip_address}} and \code{\link[ipaddress:ip_network]{ip_network}}
+vectors to Cartesian coordinates. They are provided externally to support use
+of these coordinates outside of ggplot2.
+}
+\examples{
+library(ipaddress)
+
+address_to_cartesian(ip_address("192.168.0.1"))
+
+network_to_cartesian(ip_network("224.0.0.0/4"))
 }

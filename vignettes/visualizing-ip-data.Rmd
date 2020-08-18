@@ -1,0 +1,107 @@
+---
+title: "Visualizing IP data"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{Visualizing IP data}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>",
+  echo = FALSE,
+  message = FALSE
+)
+```
+
+```{r setup}
+library(tidyverse)
+library(ipaddress)
+library(ggip)
+```
+
+```{r plot_func}
+ordinal_suffix <- function(x) {
+    suffix <- c("st", "nd", "rd", rep("th", 17))
+    suffix[((x-1) %% 10 + 1) + 10*(((x %% 100) %/% 10) == 1)]
+}
+
+plot_curve <- function(curve, curve_order) {
+  pixel_prefix <- 32L
+  canvas_prefix <- as.integer(pixel_prefix - (2 * curve_order))
+  canvas_network <- ip_network(ip_address("0.0.0.0"), canvas_prefix)
+  n_pixels <- 2 ^ curve_order
+  
+  tibble(address = seq(canvas_network)) %>%
+    ggplot() +
+    geom_path(aes(address$x, address$y)) +
+    coord_ip(
+      canvas_network = canvas_network,
+      pixel_prefix = pixel_prefix,
+      curve = curve,
+      expand = TRUE
+    ) +
+    theme_ip_light() +
+    labs(title = paste0(
+      curve_order, ordinal_suffix(curve_order),
+      " order (", n_pixels, "x", n_pixels, " grid)"
+    ))
+}
+```
+
+Data visualization of the IP address space is challenging because there are so many unique addresses (approximately 4.3 billion for IPv4 and $3.8 \times 10^{38}$ for IPv6).
+But treating it as a continuous scale would not be meaningful, owing to the hierarchical nature of address space.
+
+We can take three actions to tackle this problem:
+
+1. Visualize only a subrange of the full address space (i.e. neglecting leading bits)
+2. Limit resolution by aggregating data within subnetworks (i.e. neglecting trailing bits)
+3. Transform the one-dimensional address space onto the two-dimensional plane
+
+These actions are handled by the `canvas_network`, `pixel_prefix` and `curve` arguments of the `coord_ip()` function, respectively.
+This vignette describes the third action in more detail, to help interpret plots generated using ggip.
+
+
+## Space-filling curves
+
+Inspired by [an xkcd comic](https://xkcd.com/195/) originally published in December 2006, we use a space-filling curve to map IP data (one-dimensional) to Cartesian coordinates (two-dimensional).
+Two curves are commonly chosen for this task: the Hilbert curve and the Morton curve (also known as the Z curve).
+Compared to other space-filling curves, these are advantageous because they preserve locality (i.e. subnetworks remain close together).
+
+The curve order represents how nested the curve is and therefore determines how many data points can be visualized.
+Conversely, our choices for actions 1 & 2 (see above) determine the order of the plotted curve.
+The curve order is increased if the canvas displays more address space or if a pixel represents fewer addresses.
+
+**Warning:** The number of plotted data points grows exponentially with curve order.
+For this reason, ggip limits the difference in network prefix lengths between the canvas and pixel to 24.
+
+
+### Hilbert curve
+
+IP data is most commonly displayed on a Hilbert curve because it has optimal locality preservation.
+
+This curve starts in the top-left corner and ends in the top-right corner.
+
+```{r hilbert, fig.show="hold", out.width="30%"}
+plot_curve("hilbert", 2)
+plot_curve("hilbert", 3)
+plot_curve("hilbert", 4)
+```
+
+
+### Morton curve
+
+The Morton curve technically offers slightly poorer locality preservation than the Hilbert curve.
+However, the discontinuous jumps in the curve actually correspond to crossing IP network boundaries.
+In this sense, the Morton curve is a more natural representation of the IP network structure.
+For example, the start and end addresses of a network are always located diagonally across from each other.
+
+This curve starts in the top-left corner and ends in the bottom-right corner.
+
+```{r morton, fig.show="hold", out.width="30%"}
+plot_curve("morton", 2)
+plot_curve("morton", 3)
+plot_curve("morton", 4)
+```

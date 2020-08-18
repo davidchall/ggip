@@ -74,8 +74,11 @@ Heatmap of IP data
 }
 \section{Aesthetics}{
 
+\code{stat_ip_heatmap()} understands the following aesthetics (required aesthetics
+are in bold):
 \itemize{
-\item \code{ip}: IP data (\code{\link[ipaddress:ip_address]{ipaddress::ip_address}})
+\item \strong{\code{x}}
+\item \strong{\code{y}}
 \item \code{z}: Value passed to the summary function (only required if \code{fun != "count"}).
 }
 }
@@ -83,7 +86,6 @@ Heatmap of IP data
 \section{Computed variables}{
 
 \itemize{
-\item \code{x}, \code{y}: Cartesian coordinates of encoded IP data
 \item \code{value}: Value of summary statistic
 }
 }

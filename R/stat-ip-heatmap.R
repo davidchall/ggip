@@ -1,10 +1,12 @@
 #' Heatmap of IP data
 #'
 #' @section Aesthetics:
-#'  - `ip`: IP data ([`ipaddress::ip_address`])
+#' `stat_ip_heatmap()` understands the following aesthetics (required aesthetics
+#' are in bold):
+#'  - **`x`**
+#'  - **`y`**
 #'  - `z`: Value passed to the summary function (only required if `fun != "count"`).
 #' @section Computed variables:
-#'  - `x`, `y`: Cartesian coordinates of encoded IP data
 #'  - `value`: Value of summary statistic
 #'
 #' @inheritParams ggplot2::layer
