@@ -87,6 +87,18 @@
 <li>
   <a href="../reference/index.html">Reference</a>
 </li>
+<li class="dropdown">
+  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
+    Articles
+     
+    <span class="caret"></span>
+  </a>
+  <ul class="dropdown-menu" role="menu">
+    <li>
+      <a href="../articles/visualizing-ip-data.html">Visualizing IP data</a>
+    </li>
+  </ul>
+</li>
       </ul>
       <ul class="nav navbar-nav navbar-right">
         <li>
@@ -209,8 +221,10 @@ the default plot specification, e.g. <code><a href='https://ggplot2.tidyverse.or
 
     
 
-<ul>
-<li><p><code>ip</code>: IP data (<code><a href='https://davidchall.github.io/ipaddress/reference/ip_address.html'>ipaddress::ip_address</a></code>)</p></li>
+<p><code>stat_ip_heatmap()</code> understands the following aesthetics (required aesthetics
+are in bold):</p><ul>
+<li><p><strong><code>x</code></strong></p></li>
+<li><p><strong><code>y</code></strong></p></li>
 <li><p><code>z</code>: Value passed to the summary function (only required if <code>fun != "count"</code>).</p></li>
 </ul>
 
@@ -219,7 +233,6 @@ the default plot specification, e.g. <code><a href='https://ggplot2.tidyverse.or
     
 
 <ul>
-<li><p><code>x</code>, <code>y</code>: Cartesian coordinates of encoded IP data</p></li>
 <li><p><code>value</code>: Value of summary statistic</p></li>
 </ul>
 
