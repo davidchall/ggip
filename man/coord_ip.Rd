@@ -31,12 +31,13 @@ limits are taken exactly from the data or \code{xlim}/\code{ylim}.}
 A ggplot2 coordinate system that maps a range of address space onto a
 two-dimensional grid using a space-filling curve.
 
-\code{coord_ip()} translates all \code{\link[ipaddress:ip_address]{ip_address}} and
-\code{\link[ipaddress:ip_network]{ip_network}} vectors to Cartesian coordinates,
-ready for use by ggplot2 layers (see Details). This ensures all layers use a
-common mapping.
+\code{coord_ip()} forms the foundation of any ggip plot. It translates all
+\code{\link[ipaddress:ip_address]{ip_address}} and \code{\link[ipaddress:ip_network]{ip_network}}
+vectors to Cartesian coordinates, ready for use by ggplot2 layers (see
+Accessing Coordinates). This ensures all layers use a common mapping.
 }
-\details{
+\section{Accessing Coordinates}{
+
 \code{coord_ip()} uses nested dataframes to store the result of the mapping. This
 means each \code{\link[ipaddress:ip_address]{ip_address}} or
 \code{\link[ipaddress:ip_network]{ip_network}} column in your original dataset is
@@ -47,8 +48,8 @@ Each \code{\link[ipaddress:ip_address]{ip_address}} column will be replaced with
 dataframe containing the following columns:\tabular{lll}{
    Column name \tab Data type \tab Description \cr
    \code{ip} \tab \code{ip_address} \tab Original IP data \cr
-   \code{x} \tab \code{integer} \tab Pixel x coordinate \cr
-   \code{y} \tab \code{integer} \tab Pixel y coordinate \cr
+   \code{x} \tab \code{integer} \tab Pixel x \cr
+   \code{y} \tab \code{integer} \tab Pixel y \cr
 }
 
 
@@ -56,12 +57,13 @@ Each \code{\link[ipaddress:ip_network]{ip_network}} column will be replaced with
 dataframe containing the following columns:\tabular{lll}{
    Column name \tab Data type \tab Description \cr
    \code{ip} \tab \code{ip_network} \tab Original IP data \cr
-   \code{xmin} \tab \code{integer} \tab Bounding box xmin coordinate \cr
-   \code{ymin} \tab \code{integer} \tab Bounding box ymin coordinate \cr
-   \code{xmax} \tab \code{integer} \tab Bounding box xmax coordinate \cr
-   \code{ymax} \tab \code{integer} \tab Bounding box ymax coordinate \cr
+   \code{xmin} \tab \code{integer} \tab Bounding box xmin \cr
+   \code{ymin} \tab \code{integer} \tab Bounding box ymin \cr
+   \code{xmax} \tab \code{integer} \tab Bounding box xmax \cr
+   \code{ymax} \tab \code{integer} \tab Bounding box ymax \cr
 }
 }
+
 \examples{
 options(tidyverse.quiet = TRUE)
 library(tidyverse)

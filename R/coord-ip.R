@@ -4,12 +4,12 @@
 #' A ggplot2 coordinate system that maps a range of address space onto a
 #' two-dimensional grid using a space-filling curve.
 #'
-#' `coord_ip()` translates all [`ip_address`][`ipaddress::ip_address`] and
-#' [`ip_network`][`ipaddress::ip_network`] vectors to Cartesian coordinates,
-#' ready for use by ggplot2 layers (see Details). This ensures all layers use a
-#' common mapping.
+#' `coord_ip()` forms the foundation of any ggip plot. It translates all
+#' [`ip_address`][`ipaddress::ip_address`] and [`ip_network`][`ipaddress::ip_network`]
+#' vectors to Cartesian coordinates, ready for use by ggplot2 layers (see
+#' Accessing Coordinates). This ensures all layers use a common mapping.
 #'
-#' @details
+#' @section Accessing Coordinates:
 #' `coord_ip()` uses nested dataframes to store the result of the mapping. This
 #' means each [`ip_address`][`ipaddress::ip_address`] or
 #' [`ip_network`][`ipaddress::ip_network`] column in your original dataset is
@@ -19,22 +19,22 @@
 #' Each [`ip_address`][`ipaddress::ip_address`] column will be replaced with a
 #' dataframe containing the following columns:
 #'
-#' | Column name | Data type    | Description        |
-#' |:------------|:-------------|:-------------------|
-#' | `ip`        | `ip_address` | Original IP data   |
-#' | `x`         | `integer`    | Pixel x coordinate |
-#' | `y`         | `integer`    | Pixel y coordinate |
+#' | Column name | Data type    | Description      |
+#' |:------------|:-------------|:-----------------|
+#' | `ip`        | `ip_address` | Original IP data |
+#' | `x`         | `integer`    | Pixel x          |
+#' | `y`         | `integer`    | Pixel y          |
 #'
 #' Each [`ip_network`][`ipaddress::ip_network`] column will be replaced with a
 #' dataframe containing the following columns:
 #'
-#' | Column name | Data type    | Description                  |
-#' |:------------|:-------------|:-----------------------------|
-#' | `ip`        | `ip_network` | Original IP data             |
-#' | `xmin`      | `integer`    | Bounding box xmin coordinate |
-#' | `ymin`      | `integer`    | Bounding box ymin coordinate |
-#' | `xmax`      | `integer`    | Bounding box xmax coordinate |
-#' | `ymax`      | `integer`    | Bounding box ymax coordinate |
+#' | Column name | Data type    | Description       |
+#' |:------------|:-------------|:------------------|
+#' | `ip`        | `ip_network` | Original IP data  |
+#' | `xmin`      | `integer`    | Bounding box xmin |
+#' | `ymin`      | `integer`    | Bounding box ymin |
+#' | `xmax`      | `integer`    | Bounding box xmax |
+#' | `ymax`      | `integer`    | Bounding box ymax |
 #'
 #' @inheritParams ip_to_cartesian
 #' @inheritParams ggplot2::coord_fixed
