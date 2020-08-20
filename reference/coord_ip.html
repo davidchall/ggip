@@ -42,10 +42,10 @@
 <meta property="og:title" content="Coordinate system for IP data — coord_ip" />
 <meta property="og:description" content="A ggplot2 coordinate system that maps a range of address space onto a
 two-dimensional grid using a space-filling curve.
-coord_ip() translates all ip_address and
-ip_network vectors to Cartesian coordinates,
-ready for use by ggplot2 layers (see Details). This ensures all layers use a
-common mapping." />
+coord_ip() forms the foundation of any ggip plot. It translates all
+ip_address and ip_network
+vectors to Cartesian coordinates, ready for use by ggplot2 layers (see
+Accessing Coordinates). This ensures all layers use a common mapping." />
 
 
 
@@ -133,10 +133,10 @@ common mapping." />
     <div class="ref-description">
     <p>A ggplot2 coordinate system that maps a range of address space onto a
 two-dimensional grid using a space-filling curve.</p>
-<p><code>coord_ip()</code> translates all <code><a href='https://davidchall.github.io/ipaddress/reference/ip_address.html'>ip_address</a></code> and
-<code><a href='https://davidchall.github.io/ipaddress/reference/ip_network.html'>ip_network</a></code> vectors to Cartesian coordinates,
-ready for use by ggplot2 layers (see Details). This ensures all layers use a
-common mapping.</p>
+<p><code>coord_ip()</code> forms the foundation of any ggip plot. It translates all
+<code><a href='https://davidchall.github.io/ipaddress/reference/ip_address.html'>ip_address</a></code> and <code><a href='https://davidchall.github.io/ipaddress/reference/ip_network.html'>ip_network</a></code>
+vectors to Cartesian coordinates, ready for use by ggplot2 layers (see
+Accessing Coordinates). This ensures all layers use a common mapping.</p>
     </div>
 
     <pre class="usage"><span class='fu'>coord_ip</span>(
@@ -174,9 +174,11 @@ limits are taken exactly from the data or <code>xlim</code>/<code>ylim</code>.</
     </tr>
     </table>
 
-    <h2 class="hasAnchor" id="details"><a class="anchor" href="#details"></a>Details</h2>
+    <h2 class="hasAnchor" id="accessing-coordinates"><a class="anchor" href="#accessing-coordinates"></a>Accessing Coordinates</h2>
 
-    <p><code>coord_ip()</code> uses nested dataframes to store the result of the mapping. This
+    
+
+<p><code>coord_ip()</code> uses nested dataframes to store the result of the mapping. This
 means each <code><a href='https://davidchall.github.io/ipaddress/reference/ip_address.html'>ip_address</a></code> or
 <code><a href='https://davidchall.github.io/ipaddress/reference/ip_network.html'>ip_network</a></code> column in your original dataset is
 converted to a dataframe column. When specifying ggplot2 aesthetics, you'll
@@ -185,8 +187,8 @@ need to use <code>$</code> to access the nested data (see Examples).</p>
 dataframe containing the following columns:</p><table class='table'>
 <tr><td>Column name</td><td>Data type</td><td>Description</td></tr>
 <tr><td><code>ip</code></td><td><code>ip_address</code></td><td>Original IP data</td></tr>
-<tr><td><code>x</code></td><td><code>integer</code></td><td>Pixel x coordinate</td></tr>
-<tr><td><code>y</code></td><td><code>integer</code></td><td>Pixel y coordinate</td></tr>
+<tr><td><code>x</code></td><td><code>integer</code></td><td>Pixel x</td></tr>
+<tr><td><code>y</code></td><td><code>integer</code></td><td>Pixel y</td></tr>
 </table>
 
 
@@ -195,10 +197,10 @@ dataframe containing the following columns:</p><table class='table'>
 dataframe containing the following columns:</p><table class='table'>
 <tr><td>Column name</td><td>Data type</td><td>Description</td></tr>
 <tr><td><code>ip</code></td><td><code>ip_network</code></td><td>Original IP data</td></tr>
-<tr><td><code>xmin</code></td><td><code>integer</code></td><td>Bounding box xmin coordinate</td></tr>
-<tr><td><code>ymin</code></td><td><code>integer</code></td><td>Bounding box ymin coordinate</td></tr>
-<tr><td><code>xmax</code></td><td><code>integer</code></td><td>Bounding box xmax coordinate</td></tr>
-<tr><td><code>ymax</code></td><td><code>integer</code></td><td>Bounding box ymax coordinate</td></tr>
+<tr><td><code>xmin</code></td><td><code>integer</code></td><td>Bounding box xmin</td></tr>
+<tr><td><code>ymin</code></td><td><code>integer</code></td><td>Bounding box ymin</td></tr>
+<tr><td><code>xmax</code></td><td><code>integer</code></td><td>Bounding box xmax</td></tr>
+<tr><td><code>ymax</code></td><td><code>integer</code></td><td>Bounding box ymax</td></tr>
 </table>
 
 
