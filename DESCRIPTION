@@ -24,7 +24,8 @@ Suggests:
     knitr,
     rmarkdown,
     testthat,
-    tidyverse
+    tidyverse,
+    vdiffr
 LinkingTo: 
     AsioHeaders,
     ipaddress,
@@ -32,9 +33,7 @@ LinkingTo:
 VignetteBuilder: 
     knitr
 Remotes:
-    davidchall/ipaddress,
-    r-lib/testthat
-Config/testthat/edition: 3
+    davidchall/ipaddress
 Encoding: UTF-8
 LazyData: true
 Roxygen: list(markdown = TRUE)
