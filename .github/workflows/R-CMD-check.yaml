@@ -78,6 +78,7 @@ jobs:
       - name: Install dependencies
         run: |
           remotes::install_cran("gdtools", force = TRUE, repos = "https://cloud.r-project.org/")
+          remotes::install_cran("freetypeharfbuzz", force = TRUE, repos = "https://cloud.r-project.org/")
           remotes::install_deps(dependencies = TRUE)
           remotes::install_cran("rcmdcheck")
         shell: Rscript {0}
