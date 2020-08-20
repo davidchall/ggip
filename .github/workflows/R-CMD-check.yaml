@@ -14,6 +14,10 @@ on:
 
 name: R-CMD-check
 
+# Increment this version when we want to clear cache
+env:
+  cache-version: v2
+
 jobs:
   R-CMD-check:
     runs-on: ${{ matrix.config.os }}
@@ -61,8 +65,8 @@ jobs:
         uses: actions/cache@v1
         with:
           path: ${{ env.R_LIBS_USER }}
-          key: ${{ runner.os }}-${{ hashFiles('.github/R-version') }}-1-${{ hashFiles('.github/depends.Rds') }}
-          restore-keys: ${{ runner.os }}-${{ hashFiles('.github/R-version') }}-1-
+          key: ${{ runner.os }}-${{ hashFiles('.github/R-version') }}-${{ env.cache-version }}-${{ hashFiles('.github/depends.Rds') }}
+          restore-keys: ${{ runner.os }}-${{ hashFiles('.github/R-version') }}-${{ env.cache-version }}-
 
       # - name: Install system dependencies
       #   if: runner.os == 'Linux'
