@@ -91,20 +91,12 @@
 <div class="sourceCode" id="cb1"><pre class="r"><span class="co"># install.packages("remotes")</span>
 <span class="kw pkg">remotes</span><span class="kw ns">::</span><span class="fu"><a href="https://remotes.r-lib.org/reference/install_github.html">install_github</a></span>(<span class="st">"davidchall/ggip"</span>)</pre></div>
 </div>
-<div id="example-usage" class="section level2">
+<div id="quick-start" class="section level2">
 <h2 class="hasAnchor">
-<a href="#example-usage" class="anchor"></a>Example usage</h2>
-<div class="sourceCode" id="cb2"><pre class="r"><span class="fu"><a href="https://rdrr.io/r/base/library.html">library</a></span>(<span class="no">tidyverse</span>)
-<span class="fu"><a href="https://rdrr.io/r/base/library.html">library</a></span>(<span class="no">ipaddress</span>)
-<span class="fu"><a href="https://rdrr.io/r/base/library.html">library</a></span>(<span class="no">ggip</span>)
-
-<span class="no">ip_data</span> <span class="kw">%&gt;%</span>
-  <span class="fu">ggplot</span>() +
-  <span class="fu"><a href="reference/stat_ip_heatmap.html">stat_ip_heatmap</a></span>(<span class="fu">aes</span>(<span class="no">ip</span>$<span class="no">x</span>, <span class="no">ip</span>$<span class="no">y</span>)) +
-  <span class="fu">scale_fill_viridis_c</span>(<span class="kw">trans</span> <span class="kw">=</span> <span class="st">"log2"</span>, <span class="kw">na.value</span> <span class="kw">=</span> <span class="st">"black"</span>) +
-  <span class="fu"><a href="reference/coord_ip.html">coord_ip</a></span>(<span class="kw">pixel_prefix</span> <span class="kw">=</span> <span class="fl">20</span>) +
-  <span class="fu"><a href="reference/theme_ip.html">theme_ip_dark</a></span>()</pre></div>
-<p><img src="reference/figures/README-ipv4_heatmap-1.png" title="plot of chunk ipv4_heatmap" alt="plot of chunk ipv4_heatmap" width="100%"></p>
+<a href="#quick-start" class="anchor"></a>Quick start</h2>
+<p><code><a href="reference/coord_ip.html">coord_ip()</a></code> forms the basis of any ggip plot. It determines which region of address space is displayed and also the resolution of the pixels in terms of network sizes. It also translates <code>ip_address()</code> and <code>ip_network()</code> vectors into Cartesian coordinates that can be used by ggplot2 layers.</p>
+<p>With ggip, it is easy to quickly produce visualizations like this:</p>
+<p><img src="reference/figures/ipv4-heatmap.png" alt="IPv4 heatmap" width="100%"></p>
 </div>
 </div>
   </div>
