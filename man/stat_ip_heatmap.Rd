@@ -10,7 +10,7 @@ stat_ip_heatmap(
   geom = "raster",
   position = "identity",
   ...,
-  fun = "count",
+  fun = NULL,
   fun.args = list(),
   na.rm = FALSE,
   show.legend = NA,
@@ -48,7 +48,8 @@ often aesthetics, used to set an aesthetic to a fixed value, like
 \code{colour = "red"} or \code{size = 3}. They may also be parameters
 to the paired geom/stat.}
 
-\item{fun}{Summary function}
+\item{fun}{Summary function (see section below for details). If \code{NULL} (the
+default), the number of observations is computed.}
 
 \item{fun.args}{A list of extra arguments to pass to \code{fun}}
 
@@ -76,20 +77,38 @@ are in bold):
 \itemize{
 \item \strong{\code{x}}
 \item \strong{\code{y}}
-\item \code{z}: Value passed to the summary function (only required if \code{fun != "count"}).
+\item \code{z}: Value passed to the summary function (required if \code{fun} is used)
+\item \code{ip}: \code{\link[ipaddress:ip_address]{ip_address}} vector
 }
 }
 
 \section{Computed variables}{
 
 \itemize{
-\item \code{value}: Value of summary statistic
-\item \code{count}
-\item \code{proportion}
+\item \code{value}: Value of summary statistic (or \code{count} if \code{fun} not used)
+\item \code{count}: Number of observations
+\item \code{address_count}: Number of unique addresses
+\item \code{address_proportion}: Observed proportion of total addresses
 }
 }
 
 \section{Summary function}{
 
+The \code{data} might contain multiple rows per pixel of the heatmap, so we use
+a summary function to reduce this information to a single value to display.
+This function receives the \code{data} column specified by the \code{z} aesthetic
+and will also receive arguments specified by \code{fun.args}.
+
+The \code{fun} argument can be specified in multiple ways:
+\describe{
+\item{\code{NULL}}{If no summary function is provided, the number of observations
+is computed. In this case, you don't need to specify the \code{z} aesthetic,
+and the computed variables \code{value} and \code{count} will be equal.}
+\item{String}{The name of an existing function (e.g. \code{fun = "mean"}).}
+\item{Function}{Either provide an existing function (e.g. \code{fun = mean}) or
+define a new function (e.g. \code{fun = function(x) sum(x^2)}).}
+\item{Formula}{A function can also be created from a formula. This uses \code{.x}
+as the summarized variable (e.g. \code{fun = ~ sum(.x^2)}).}
+}
 }
 
