@@ -7,8 +7,6 @@
 stat_ip_heatmap(
   mapping = NULL,
   data = NULL,
-  geom = "raster",
-  position = "identity",
   ...,
   fun = NULL,
   fun.args = list(),
@@ -37,11 +35,6 @@ A \code{function} will be called with a single argument,
 the plot data. The return value must be a \code{data.frame}, and
 will be used as the layer data. A \code{function} can be created
 from a \code{formula} (e.g. \code{~ head(.x, 10)}).}
-
-\item{geom}{The geometric object to use display the data}
-
-\item{position}{Position adjustment, either as a string, or the result of
-a call to a position adjustment function.}
 
 \item{...}{Other arguments passed on to \code{\link[ggplot2:layer]{layer()}}. These are
 often aesthetics, used to set an aesthetic to a fixed value, like
@@ -78,36 +71,40 @@ are in bold):
 \item \strong{\code{x}}
 \item \strong{\code{y}}
 \item \code{z}: Value passed to the summary function (required if \code{fun} is used)
-\item \code{ip}: \code{\link[ipaddress:ip_address]{ip_address}} vector
+\item \code{fill}: Must use a computed variable (default: \code{after_stat(value)})
+\item \code{ip}: \code{\link[ipaddress:ip_address]{ip_address}} vector associated with \code{x}
+and \code{y} aesthetics. Required if \code{ip_count} or \code{ip_propn} computed variable
+is used.
 }
 }
 
 \section{Computed variables}{
 
+The following variables are available to \code{\link[ggplot2:aes_eval]{ggplot2::after_stat()}}:
 \itemize{
-\item \code{value}: Value of summary statistic (or \code{count} if \code{fun} not used)
+\item \code{value}: Value of summary statistic
 \item \code{count}: Number of observations
-\item \code{address_count}: Number of unique addresses
-\item \code{address_proportion}: Observed proportion of total addresses
+\item \code{ip_count}: Number of unique addresses
+\item \code{ip_propn}: Observed proportion of network
 }
 }
 
 \section{Summary function}{
 
-The \code{data} might contain multiple rows per pixel of the heatmap, so we use
-a summary function to reduce this information to a single value to display.
+The \code{data} might contain multiple rows per pixel of the heatmap, so a summary
+function reduces this information to a single value to display.
 This function receives the \code{data} column specified by the \code{z} aesthetic
-and will also receive arguments specified by \code{fun.args}.
+and also receives arguments specified by \code{fun.args}.
 
 The \code{fun} argument can be specified in multiple ways:
 \describe{
 \item{\code{NULL}}{If no summary function is provided, the number of observations
 is computed. In this case, you don't need to specify the \code{z} aesthetic,
 and the computed variables \code{value} and \code{count} will be equal.}
-\item{String}{The name of an existing function (e.g. \code{fun = "mean"}).}
-\item{Function}{Either provide an existing function (e.g. \code{fun = mean}) or
+\item{string}{The name of an existing function (e.g. \code{fun = "mean"}).}
+\item{function}{Either provide an existing function (e.g. \code{fun = mean}) or
 define a new function (e.g. \code{fun = function(x) sum(x^2)}).}
-\item{Formula}{A function can also be created from a formula. This uses \code{.x}
+\item{formula}{A function can also be created from a formula. This uses \code{.x}
 as the summarized variable (e.g. \code{fun = ~ sum(.x^2)}).}
 }
 }

@@ -6,27 +6,33 @@
 #'  - **`x`**
 #'  - **`y`**
 #'  - `z`: Value passed to the summary function (required if `fun` is used)
-#'  - `ip`: [`ip_address`][`ipaddress::ip_address`] vector
+#'  - `fill`: Must use a computed variable (default: `after_stat(value)`)
+#'  - `ip`: [`ip_address`][`ipaddress::ip_address`] vector associated with `x`
+#'    and `y` aesthetics. Required if `ip_count` or `ip_propn` computed variable
+#'    is used.
+#'
 #' @section Computed variables:
-#'  - `value`: Value of summary statistic (or `count` if `fun` not used)
+#' The following variables are available to [ggplot2::after_stat()]:
+#'  - `value`: Value of summary statistic
 #'  - `count`: Number of observations
-#'  - `address_count`: Number of unique addresses
-#'  - `address_proportion`: Observed proportion of total addresses
+#'  - `ip_count`: Number of unique addresses
+#'  - `ip_propn`: Observed proportion of network
+#'
 #' @section Summary function:
-#' The `data` might contain multiple rows per pixel of the heatmap, so we use
-#' a summary function to reduce this information to a single value to display.
+#' The `data` might contain multiple rows per pixel of the heatmap, so a summary
+#' function reduces this information to a single value to display.
 #' This function receives the `data` column specified by the `z` aesthetic
-#' and will also receive arguments specified by `fun.args`.
+#' and also receives arguments specified by `fun.args`.
 #'
 #' The `fun` argument can be specified in multiple ways:
 #' \describe{
 #' \item{`NULL`}{If no summary function is provided, the number of observations
 #'   is computed. In this case, you don't need to specify the `z` aesthetic,
 #'   and the computed variables `value` and `count` will be equal.}
-#' \item{String}{The name of an existing function (e.g. `fun = "mean"`).}
-#' \item{Function}{Either provide an existing function (e.g. `fun = mean`) or
+#' \item{string}{The name of an existing function (e.g. `fun = "mean"`).}
+#' \item{function}{Either provide an existing function (e.g. `fun = mean`) or
 #'   define a new function (e.g. `fun = function(x) sum(x^2)`).}
-#' \item{Formula}{A function can also be created from a formula. This uses `.x`
+#' \item{formula}{A function can also be created from a formula. This uses `.x`
 #'   as the summarized variable (e.g. `fun = ~ sum(.x^2)`).}
 #' }
 #'
@@ -36,14 +42,14 @@
 #'   default), the number of observations is computed.
 #' @param fun.args A list of extra arguments to pass to `fun`
 #' @export
-stat_ip_heatmap <- function(mapping = NULL, data = NULL, geom = "raster",
-                            position = "identity", ...,
+stat_ip_heatmap <- function(mapping = NULL, data = NULL,
+                            ...,
                             fun = NULL, fun.args = list(),
                             na.rm = FALSE, show.legend = NA,
                             inherit.aes = TRUE) {
   ggplot2::layer(
-    stat = StatIpHeatmap, data = data, mapping = mapping, geom = geom,
-    position = position, show.legend = show.legend, inherit.aes = inherit.aes,
+    stat = StatIpHeatmap, data = data, mapping = mapping, geom = "raster",
+    position = "identity", show.legend = show.legend, inherit.aes = inherit.aes,
     params = list(
       na.rm = na.rm,
       fun = fun,
@@ -60,7 +66,7 @@ StatIpHeatmap <- ggplot2::ggproto("StatIpHeatmap", ggplot2::Stat,
     z = NULL,
     ip = NULL,
     fill = ggplot2::after_stat(value)
-    ),
+  ),
 
   extra_params = c(
     "na.rm",
@@ -108,10 +114,10 @@ compute_ip_heatmap <- function(data, coord, fun, fun.args) {
   }
   if ("ip" %in% colnames(data)) {
     f <- function(x) length(unique(x))
-    out$address_count <- summarize_grid(data$ip, index, f)
+    out$ip_count <- summarize_grid(data$ip, index, f)
 
     bits_per_pixel <- max_prefix_length(coord$canvas_network) - coord$pixel_prefix
-    out$address_proportion <- out$address_count / (2^bits_per_pixel)
+    out$ip_propn <- out$ip_count / (2^bits_per_pixel)
   }
 
   # fill remaining grid so raster works
