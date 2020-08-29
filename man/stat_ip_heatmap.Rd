@@ -12,7 +12,6 @@ stat_ip_heatmap(
   ...,
   fun = "count",
   fun.args = list(),
-  drop = TRUE,
   na.rm = FALSE,
   show.legend = NA,
   inherit.aes = TRUE
@@ -53,8 +52,6 @@ to the paired geom/stat.}
 
 \item{fun.args}{A list of extra arguments to pass to \code{fun}}
 
-\item{drop}{if \code{TRUE} removes all cells with 0 counts.}
-
 \item{na.rm}{If \code{FALSE}, the default, missing values are removed with
 a warning. If \code{TRUE}, missing values are silently removed.}
 
@@ -87,6 +84,12 @@ are in bold):
 
 \itemize{
 \item \code{value}: Value of summary statistic
+\item \code{count}
+\item \code{proportion}
 }
+}
+
+\section{Summary function}{
+
 }
 
