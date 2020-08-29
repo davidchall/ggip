@@ -7,19 +7,16 @@
 stat_ip_heatmap(
   mapping = NULL,
   data = NULL,
-  ...,
   fun = NULL,
   fun.args = list(),
   na.rm = FALSE,
-  show.legend = NA,
-  inherit.aes = TRUE
+  show.legend = NA
 )
 }
 \arguments{
-\item{mapping}{Set of aesthetic mappings created by \code{\link[ggplot2:aes]{aes()}} or
-\code{\link[ggplot2:aes_]{aes_()}}. If specified and \code{inherit.aes = TRUE} (the
-default), it is combined with the default mapping at the top level of the
-plot. You must supply \code{mapping} if there is no plot mapping.}
+\item{mapping}{Set of aesthetic mappings created by \code{\link[ggplot2:aes]{aes()}}.
+Note \code{stat_ip_heatmap()} does not inherit the default mapping specified in
+\code{\link[ggplot2:ggplot]{ggplot()}}, so these \emph{must} be defined here.}
 
 \item{data}{The data to be displayed in this layer. There are three
 options:
@@ -36,11 +33,6 @@ the plot data. The return value must be a \code{data.frame}, and
 will be used as the layer data. A \code{function} can be created
 from a \code{formula} (e.g. \code{~ head(.x, 10)}).}
 
-\item{...}{Other arguments passed on to \code{\link[ggplot2:layer]{layer()}}. These are
-often aesthetics, used to set an aesthetic to a fixed value, like
-\code{colour = "red"} or \code{size = 3}. They may also be parameters
-to the paired geom/stat.}
-
 \item{fun}{Summary function (see section below for details). If \code{NULL} (the
 default), the number of observations is computed.}
 
@@ -54,33 +46,28 @@ a warning. If \code{TRUE}, missing values are silently removed.}
 \code{FALSE} never includes, and \code{TRUE} always includes.
 It can also be a named logical vector to finely select the aesthetics to
 display.}
-
-\item{inherit.aes}{If \code{FALSE}, overrides the default aesthetics,
-rather than combining with them. This is most useful for helper functions
-that define both data and aesthetics and shouldn't inherit behaviour from
-the default plot specification, e.g. \code{\link[ggplot2:borders]{borders()}}.}
 }
 \description{
 Heatmap of IP data
 }
 \section{Aesthetics}{
 
-\code{stat_ip_heatmap()} understands the following aesthetics (required aesthetics
-are in bold):
+\code{stat_ip_heatmap()} understands the following aesthetics:
 \itemize{
-\item \strong{\code{x}}
-\item \strong{\code{y}}
+\item \code{ip}: An \code{\link[ipaddress:ip_address]{ip_address}} column
 \item \code{z}: Value passed to the summary function (required if \code{fun} is used)
 \item \code{fill}: Must use a computed variable (default: \code{after_stat(value)})
-\item \code{ip}: \code{\link[ipaddress:ip_address]{ip_address}} vector associated with \code{x}
-and \code{y} aesthetics. Required if \code{ip_count} or \code{ip_propn} computed variable
-is used.
 }
+
+\emph{Note:} Since this is a native ggip layer, it can accept an
+\code{\link[ipaddress:ip_address]{ip_address}} column directly. It works together
+with \code{\link[=coord_ip]{coord_ip()}} to ensure IP data are correctly mapped to the \code{x} and \code{y}
+aesthetics.
 }
 
 \section{Computed variables}{
 
-The following variables are available to \code{\link[ggplot2:aes_eval]{ggplot2::after_stat()}}:
+The following variables are available to \code{\link[ggplot2:aes_eval]{after_stat()}}:
 \itemize{
 \item \code{value}: Value of summary statistic
 \item \code{count}: Number of observations
