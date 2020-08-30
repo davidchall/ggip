@@ -5,12 +5,17 @@ home:
   description: R package for data visualization of IP addresses and networks
 
 reference:
-  - title: "Plotting"
+  - title: "Fundamentals"
+    desc: "These components must be included in _every_ ggip plot."
     contents:
       - coord_ip
       - theme_ip
+  - title: "Layers"
+    desc: "These IP-specific layers support common use cases."
+    contents:
       - stat_ip_heatmap
   - title: "Internal functions"
+    desc: "These functions are exposed to support use cases beyond ggplot2."
     contents:
       - ip_to_cartesian
 

@@ -4,7 +4,7 @@
 \alias{theme_ip}
 \alias{theme_ip_light}
 \alias{theme_ip_dark}
-\title{Themes for IP heatmaps}
+\title{Themes for IP data}
 \usage{
 theme_ip_light(base_size = 11, base_family = "")
 

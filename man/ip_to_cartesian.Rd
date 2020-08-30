@@ -46,7 +46,7 @@ A data.frame containing columns:
 \description{
 These functions are used internally by \code{\link[=coord_ip]{coord_ip()}} to map
 \code{\link[ipaddress:ip_address]{ip_address}} and \code{\link[ipaddress:ip_network]{ip_network}}
-vectors to Cartesian coordinates. They are provided externally to support use
+vectors to Cartesian coordinates. They are exposed externally to support use
 of these coordinates outside of ggplot2.
 }
 \examples{

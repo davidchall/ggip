@@ -2,7 +2,7 @@
 #'
 #' These functions are used internally by [coord_ip()] to map
 #' [`ip_address`][`ipaddress::ip_address`] and [`ip_network`][`ipaddress::ip_network`]
-#' vectors to Cartesian coordinates. They are provided externally to support use
+#' vectors to Cartesian coordinates. They are exposed externally to support use
 #' of these coordinates outside of ggplot2.
 #'
 #' @param address An [`ip_address`][`ipaddress::ip_address`] vector

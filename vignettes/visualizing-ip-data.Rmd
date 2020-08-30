@@ -12,7 +12,8 @@ knitr::opts_chunk$set(
   collapse = TRUE,
   comment = "#>",
   echo = FALSE,
-  message = FALSE
+  message = FALSE,
+  warning = FALSE
 )
 ```
 
