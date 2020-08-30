@@ -49,10 +49,11 @@ stat_ip_heatmap <- function(mapping = NULL, data = NULL,
                             fun = NULL, fun.args = list(),
                             na.rm = FALSE, show.legend = NA) {
   if (is.null(mapping$ip)) {
-    abort("stat_ip_heatmap() requires `ip` aesthetic")
+    abort("stat_ip_heatmap requires `ip` aesthetic")
   }
 
-  # extract {x, y, ip} aesthetics from ip aesthetic
+  # setup {x, y, ip} aesthetics from ip aesthetic
+  # these columns will be filled by coord_ip()
   ip_col <- as_name(mapping$ip)
   mapping$x <- parse_expr(paste0(ip_col, "$x"))
   mapping$y <- parse_expr(paste0(ip_col, "$y"))
@@ -79,13 +80,21 @@ StatIpHeatmap <- ggplot2::ggproto("StatIpHeatmap", ggplot2::Stat,
     "fun", "fun.args"
   ),
 
+  setup_params = function(data, params) {
+    if (!is_ip_address(data$ip)) {
+      abort("stat_ip_heatmap requires `ip` aesthetic to be an ip_address vector")
+    }
+
+    if (!is.null(params$fun) && !("z" %in% colnames(data))) {
+      abort("stat_ip_heatmap requires `z` aesthetic when using non-default summary function")
+    }
+
+    params
+  },
+
   compute_layer = function(self, data, params, layout) {
     if (!is_CoordIp(layout$coord)) {
       abort("Must call coord_ip() when using ggip")
-    }
-
-    if (!is_ip_address(data$ip)) {
-      abort("stat_ip_heatmap requires `ip` aesthetic to be an ip_address vector")
     }
 
     # add coord to the params, so it can be forwarded to compute_group()
@@ -106,9 +115,6 @@ compute_ip_heatmap <- function(data, coord, fun, fun.args) {
   }
 
   summarize_count <- is.null(fun)
-  if (!summarize_count && !("z" %in% colnames(data))) {
-    abort("stat_ip_heatmap requires `z` aesthetic when using non-default summary function")
-  }
 
   # summarize grid found in data
   index <- list(x = data$x, y = data$y)
@@ -122,17 +128,14 @@ compute_ip_heatmap <- function(data, coord, fun, fun.args) {
     f <- function(x) do.call(fun, c(list(quote(x)), fun.args))
     summarize_grid(data$z, index, f)
   }
-  if ("ip" %in% colnames(data)) {
-    f <- function(x) length(unique(x))
-    out$ip_count <- summarize_grid(data$ip, index, f)
 
-    bits_per_pixel <- max_prefix_length(coord$canvas_network) - coord$pixel_prefix
-    out$ip_propn <- out$ip_count / (2^bits_per_pixel)
-  }
+  out$ip_count <- summarize_grid(data$ip, index, function(x) length(unique(x)))
+  bits_per_pixel <- max_prefix_length(coord$canvas_network) - coord$pixel_prefix
+  out$ip_propn <- out$ip_count / (2^bits_per_pixel)
 
   # fill remaining grid so raster works
   range <- coord$limits$x[1]:coord$limits$x[2]
-  fill_na <- list(count = 0, proportion = 0)
+  fill_na <- list(count = 0, ip_count = 0, ip_propn = 0)
   if (summarize_count) {
     fill_na$value <- 0
   }
