@@ -139,14 +139,14 @@ of these coordinates outside of ggplot2.</p>
   <span class='no'>address</span>,
   <span class='kw'>canvas_network</span> <span class='kw'>=</span> <span class='fu'>ip_network</span>(<span class='st'>"0.0.0.0/0"</span>),
   <span class='kw'>pixel_prefix</span> <span class='kw'>=</span> <span class='fl'>16</span>,
-  <span class='kw'>curve</span> <span class='kw'>=</span> <span class='st'>"hilbert"</span>
+  <span class='kw'>curve</span> <span class='kw'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(<span class='st'>"hilbert"</span>, <span class='st'>"morton"</span>)
 )
 
 <span class='fu'>network_to_cartesian</span>(
   <span class='no'>network</span>,
   <span class='kw'>canvas_network</span> <span class='kw'>=</span> <span class='fu'>ip_network</span>(<span class='st'>"0.0.0.0/0"</span>),
   <span class='kw'>pixel_prefix</span> <span class='kw'>=</span> <span class='fl'>16</span>,
-  <span class='kw'>curve</span> <span class='kw'>=</span> <span class='st'>"hilbert"</span>
+  <span class='kw'>curve</span> <span class='kw'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(<span class='st'>"hilbert"</span>, <span class='st'>"morton"</span>)
 )</pre>
 
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
