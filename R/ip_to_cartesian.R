@@ -33,11 +33,12 @@ NULL
 address_to_cartesian <- function(address,
                                  canvas_network = ip_network("0.0.0.0/0"),
                                  pixel_prefix = 16,
-                                 curve = "hilbert") {
+                                 curve = c("hilbert", "morton")) {
   if (!is_ip_address(address)) {
     abort("`address` must be an ip_address vector")
   }
-  validate_mapping_params(canvas_network, pixel_prefix, curve)
+  validate_mapping_params(canvas_network, pixel_prefix)
+  curve <- arg_match(curve)
 
   wrap_address_to_cartesian(address, canvas_network, pixel_prefix, curve)
 }
@@ -47,17 +48,18 @@ address_to_cartesian <- function(address,
 network_to_cartesian <- function(network,
                                  canvas_network = ip_network("0.0.0.0/0"),
                                  pixel_prefix = 16,
-                                 curve = "hilbert") {
+                                 curve = c("hilbert", "morton")) {
   if (!is_ip_network(network)) {
     abort("`network` must be an ip_network vector")
   }
-  validate_mapping_params(canvas_network, pixel_prefix, curve)
+  validate_mapping_params(canvas_network, pixel_prefix)
+  curve <- arg_match(curve)
 
   wrap_network_to_cartesian(network, canvas_network, pixel_prefix, curve)
 }
 
 
-validate_mapping_params <- function(canvas_network, pixel_prefix, curve) {
+validate_mapping_params <- function(canvas_network, pixel_prefix) {
   if (!(is_ip_network(canvas_network) && length(canvas_network) == 1)) {
     abort("`canvas_network` must be an ip_network scalar")
   }
@@ -94,6 +96,4 @@ validate_mapping_params <- function(canvas_network, pixel_prefix, curve) {
       "Current parameters would result in plot with ", n_pixels, "x", n_pixels, " pixels"
     ))
   }
-
-  curve <- arg_match(curve, c("hilbert", "morton"))
 }

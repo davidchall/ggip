@@ -10,14 +10,14 @@ address_to_cartesian(
   address,
   canvas_network = ip_network("0.0.0.0/0"),
   pixel_prefix = 16,
-  curve = "hilbert"
+  curve = c("hilbert", "morton")
 )
 
 network_to_cartesian(
   network,
   canvas_network = ip_network("0.0.0.0/0"),
   pixel_prefix = 16,
-  curve = "hilbert"
+  curve = c("hilbert", "morton")
 )
 }
 \arguments{
