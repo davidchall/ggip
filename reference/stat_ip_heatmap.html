@@ -132,15 +132,10 @@
     <pre class="usage"><span class='fu'>stat_ip_heatmap</span>(
   <span class='kw'>mapping</span> <span class='kw'>=</span> <span class='kw'>NULL</span>,
   <span class='kw'>data</span> <span class='kw'>=</span> <span class='kw'>NULL</span>,
-  <span class='kw'>geom</span> <span class='kw'>=</span> <span class='st'>"raster"</span>,
-  <span class='kw'>position</span> <span class='kw'>=</span> <span class='st'>"identity"</span>,
-  <span class='no'>...</span>,
-  <span class='kw'>fun</span> <span class='kw'>=</span> <span class='st'>"count"</span>,
+  <span class='kw'>fun</span> <span class='kw'>=</span> <span class='kw'>NULL</span>,
   <span class='kw'>fun.args</span> <span class='kw'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/list.html'>list</a></span>(),
-  <span class='kw'>drop</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>,
   <span class='kw'>na.rm</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>,
-  <span class='kw'>show.legend</span> <span class='kw'>=</span> <span class='fl'>NA</span>,
-  <span class='kw'>inherit.aes</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>
+  <span class='kw'>show.legend</span> <span class='kw'>=</span> <span class='fl'>NA</span>
 )</pre>
 
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
@@ -148,10 +143,9 @@
     <colgroup><col class="name" /><col class="desc" /></colgroup>
     <tr>
       <th>mapping</th>
-      <td><p>Set of aesthetic mappings created by <code><a href='https://ggplot2.tidyverse.org/reference/aes.html'>aes()</a></code> or
-<code><a href='https://ggplot2.tidyverse.org/reference/aes_.html'>aes_()</a></code>. If specified and <code>inherit.aes = TRUE</code> (the
-default), it is combined with the default mapping at the top level of the
-plot. You must supply <code>mapping</code> if there is no plot mapping.</p></td>
+      <td><p>Set of aesthetic mappings created by <code><a href='https://ggplot2.tidyverse.org/reference/aes.html'>aes()</a></code>.
+Note <code>stat_ip_heatmap()</code> does not inherit the default mapping specified in
+<code><a href='https://ggplot2.tidyverse.org/reference/ggplot.html'>ggplot()</a></code>, so these <em>must</em> be defined here.</p></td>
     </tr>
     <tr>
       <th>data</th>
@@ -168,32 +162,13 @@ will be used as the layer data. A <code>function</code> can be created
 from a <code>formula</code> (e.g. <code>~ head(.x, 10)</code>).</p></td>
     </tr>
     <tr>
-      <th>geom</th>
-      <td><p>The geometric object to use display the data</p></td>
-    </tr>
-    <tr>
-      <th>position</th>
-      <td><p>Position adjustment, either as a string, or the result of
-a call to a position adjustment function.</p></td>
-    </tr>
-    <tr>
-      <th>...</th>
-      <td><p>Other arguments passed on to <code><a href='https://ggplot2.tidyverse.org/reference/layer.html'>layer()</a></code>. These are
-often aesthetics, used to set an aesthetic to a fixed value, like
-<code>colour = "red"</code> or <code>size = 3</code>. They may also be parameters
-to the paired geom/stat.</p></td>
-    </tr>
-    <tr>
       <th>fun</th>
-      <td><p>Summary function</p></td>
+      <td><p>Summary function (see section below for details). If <code>NULL</code> (the
+default), the number of observations is computed.</p></td>
     </tr>
     <tr>
       <th>fun.args</th>
       <td><p>A list of extra arguments to pass to <code>fun</code></p></td>
-    </tr>
-    <tr>
-      <th>drop</th>
-      <td><p>if <code>TRUE</code> removes all cells with 0 counts.</p></td>
     </tr>
     <tr>
       <th>na.rm</th>
@@ -208,33 +183,52 @@ a warning. If <code>TRUE</code>, missing values are silently removed.</p></td>
 It can also be a named logical vector to finely select the aesthetics to
 display.</p></td>
     </tr>
-    <tr>
-      <th>inherit.aes</th>
-      <td><p>If <code>FALSE</code>, overrides the default aesthetics,
-rather than combining with them. This is most useful for helper functions
-that define both data and aesthetics and shouldn't inherit behaviour from
-the default plot specification, e.g. <code><a href='https://ggplot2.tidyverse.org/reference/borders.html'>borders()</a></code>.</p></td>
-    </tr>
     </table>
 
     <h2 class="hasAnchor" id="aesthetics"><a class="anchor" href="#aesthetics"></a>Aesthetics</h2>
 
     
 
-<p><code>stat_ip_heatmap()</code> understands the following aesthetics (required aesthetics
-are in bold):</p><ul>
-<li><p><strong><code>x</code></strong></p></li>
-<li><p><strong><code>y</code></strong></p></li>
-<li><p><code>z</code>: Value passed to the summary function (only required if <code>fun != "count"</code>).</p></li>
+<p><code>stat_ip_heatmap()</code> understands the following aesthetics:</p><ul>
+<li><p><code>ip</code>: An <code><a href='https://davidchall.github.io/ipaddress/reference/ip_address.html'>ip_address</a></code> column</p></li>
+<li><p><code>z</code>: Value passed to the summary function (required if <code>fun</code> is used)</p></li>
+<li><p><code>fill</code>: Must use a computed variable (default: <code>after_stat(value)</code>)</p></li>
 </ul>
 
+<p><em>Note:</em> Since this is a native ggip layer, it can accept an
+<code><a href='https://davidchall.github.io/ipaddress/reference/ip_address.html'>ip_address</a></code> column directly. It works together
+with <code><a href='coord_ip.html'>coord_ip()</a></code> to ensure IP data are correctly mapped to the <code>x</code> and <code>y</code>
+aesthetics.</p>
     <h2 class="hasAnchor" id="computed-variables"><a class="anchor" href="#computed-variables"></a>Computed variables</h2>
 
     
 
-<ul>
+<p>The following variables are available to <code><a href='https://ggplot2.tidyverse.org/reference/aes_eval.html'>after_stat()</a></code>:</p><ul>
 <li><p><code>value</code>: Value of summary statistic</p></li>
+<li><p><code>count</code>: Number of observations</p></li>
+<li><p><code>ip_count</code>: Number of unique addresses</p></li>
+<li><p><code>ip_propn</code>: Observed proportion of network</p></li>
 </ul>
+
+    <h2 class="hasAnchor" id="summary-function"><a class="anchor" href="#summary-function"></a>Summary function</h2>
+
+    
+
+<p>The <code>data</code> might contain multiple rows per pixel of the heatmap, so a summary
+function reduces this information to a single value to display.
+This function receives the <code>data</code> column specified by the <code>z</code> aesthetic
+and also receives arguments specified by <code>fun.args</code>.</p>
+<p>The <code>fun</code> argument can be specified in multiple ways:</p><dl'>
+<dt><code>NULL</code></dt><dd><p>If no summary function is provided, the number of observations
+is computed. In this case, you don't need to specify the <code>z</code> aesthetic,
+and the computed variables <code>value</code> and <code>count</code> will be equal.</p></dd>
+<dt>string</dt><dd><p>The name of an existing function (e.g. <code>fun = "mean"</code>).</p></dd>
+<dt>function</dt><dd><p>Either provide an existing function (e.g. <code>fun = mean</code>) or
+define a new function (e.g. <code>fun = function(x) sum(x^2)</code>).</p></dd>
+<dt>formula</dt><dd><p>A function can also be created from a formula. This uses <code>.x</code>
+as the summarized variable (e.g. <code>fun = ~ sum(.x^2)</code>).</p></dd>
+
+</dl>
 
 
   </div>
