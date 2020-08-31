@@ -132,6 +132,7 @@
     <pre class="usage"><span class='fu'>stat_ip_heatmap</span>(
   <span class='kw'>mapping</span> <span class='kw'>=</span> <span class='kw'>NULL</span>,
   <span class='kw'>data</span> <span class='kw'>=</span> <span class='kw'>NULL</span>,
+  <span class='no'>...</span>,
   <span class='kw'>fun</span> <span class='kw'>=</span> <span class='kw'>NULL</span>,
   <span class='kw'>fun.args</span> <span class='kw'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/list.html'>list</a></span>(),
   <span class='kw'>na.rm</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>,
@@ -144,7 +145,7 @@
     <tr>
       <th>mapping</th>
       <td><p>Set of aesthetic mappings created by <code><a href='https://ggplot2.tidyverse.org/reference/aes.html'>aes()</a></code>.
-Note <code>stat_ip_heatmap()</code> does not inherit the default mapping specified in
+This layer does not inherit the default mapping specified in
 <code><a href='https://ggplot2.tidyverse.org/reference/ggplot.html'>ggplot()</a></code>, so these <em>must</em> be defined here.</p></td>
     </tr>
     <tr>
@@ -160,6 +161,13 @@ data. All objects will be fortified to produce a data frame. See
 the plot data. The return value must be a <code>data.frame</code>, and
 will be used as the layer data. A <code>function</code> can be created
 from a <code>formula</code> (e.g. <code>~ head(.x, 10)</code>).</p></td>
+    </tr>
+    <tr>
+      <th>...</th>
+      <td><p>Other arguments passed on to <code><a href='https://ggplot2.tidyverse.org/reference/layer.html'>layer()</a></code>. These are
+often aesthetics, used to set an aesthetic to a fixed value, like
+<code>colour = "red"</code> or <code>size = 3</code>. They may also be parameters
+to the paired geom/stat.</p></td>
     </tr>
     <tr>
       <th>fun</th>
@@ -193,6 +201,7 @@ display.</p></td>
 <li><p><code>ip</code>: An <code><a href='https://davidchall.github.io/ipaddress/reference/ip_address.html'>ip_address</a></code> column</p></li>
 <li><p><code>z</code>: Value passed to the summary function (required if <code>fun</code> is used)</p></li>
 <li><p><code>fill</code>: Must use a computed variable (default: <code>after_stat(value)</code>)</p></li>
+<li><p><code>alpha</code></p></li>
 </ul>
 
 <p><em>Note:</em> Since this is a native ggip layer, it can accept an
