@@ -8,3 +8,4 @@
 ^docs$
 ^pkgdown$
 ^codecov\.yml$
+^vignettes/make-bit-figures.R$
