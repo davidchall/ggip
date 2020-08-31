@@ -89,20 +89,44 @@
 
     
     
-<p>Data visualization of the IP address space is challenging because there are so many unique addresses (approximately 4.3 billion for IPv4 and <span class="math inline">\(3.8 \times 10^{38}\)</span> for IPv6). But treating it as a continuous scale would not be meaningful, owing to the hierarchical nature of address space.</p>
-<p>We can take three actions to tackle this problem:</p>
+<p><em>This vignette assumes an understanding of IP addresses and networks.</em> <em>Please consult <code><a href="https://davidchall.github.io/ipaddress/articles/ipaddress-classes.html">vignette("ipaddress-classes", "ipaddress")</a></code> for a very basic introduction.</em></p>
+<p>Data visualization of the IP address space is challenging because there are so many unique addresses (approximately 4.3 billion for IPv4 and <span class="math inline">\(3.8 \times 10^{38}\)</span> for IPv6). Owing to the hierarchical nature of address space, we must plot the addresses on a discrete scale (not a continuous scale). It’s simply not possible to display (or interpret) such a large number of discrete levels simultaneously.</p>
+<p>There are a few actions we can take to improve the situation:</p>
 <ol style="list-style-type: decimal">
-<li>Visualize only a subrange of the full address space (i.e. neglecting leading bits)</li>
-<li>Limit resolution by aggregating data within subnetworks (i.e. neglecting trailing bits)</li>
+<li>Visualize a reduced number of discrete levels by:
+<ol style="list-style-type: lower-alpha">
+<li>Showing only a subnetwork of the full address space (i.e. filtering leading bits)</li>
+<li>Limiting the resolution by summarizing data within networks (i.e. neglecting trailing bits)</li>
+</ol>
+</li>
 <li>Transform the one-dimensional address space onto the two-dimensional plane</li>
 </ol>
-<p>These actions are handled by the <code>canvas_network</code>, <code>pixel_prefix</code> and <code>curve</code> arguments of the <code><a href="../reference/coord_ip.html">coord_ip()</a></code> function, respectively. This vignette describes the third action in more detail, to help interpret plots generated using ggip.</p>
+<p>These are handled by the <code>canvas_network</code>, <code>pixel_prefix</code> and <code>curve</code> arguments of <code><a href="../reference/coord_ip.html">coord_ip()</a></code>, respectively. This vignette describes these actions in more detail.</p>
+<div id="reducing-visualized-information" class="section level2">
+<h2 class="hasAnchor">
+<a href="#reducing-visualized-information" class="anchor"></a>Reducing visualized information</h2>
+<p>As an example, consider the 32-bit representation of the IPv4 address <code>192.168.0.124</code>. If we wanted to visualize this single address within the full context of the IPv4 address space, we’d need to simultaneously display <span class="math inline">\(2^{32}\)</span> discrete levels (roughly 4.3 billion).</p>
+<div class="figure">
+<img src="bits_raw.png" alt="Raw bits of `192.168.0.124`." width="100%"><p class="caption">
+Raw bits of <code>192.168.0.124</code>.
+</p>
+</div>
+<p>To reduce the visualized information, we could only show a subnetwork of the full address space. In our example, we could only display the <code>192.0.0.0/8</code> network. This would effectively filter addresses where the leading 8 bits match the specified network (shown in yellow below), thereby reducing the number of discrete levels to <span class="math inline">\(2^{24}\)</span> (roughly 16.8 million).</p>
+<p>Alternatively, we could make each discrete level represent a network of addresses. To do this, we’d need to use a summary function to reduce the network data to a single value. In our example, we could make each discrete level represent a network with a prefix length of 24. This would effectively neglect the trailing 8 bits of the 32-bit address (shown in blue below), thereby further reducing the number of discrete levels to <span class="math inline">\(2^{16}\)</span> (65,536).</p>
+<div class="figure">
+<img src="bits_reduced.png" alt="Reduced bits of `192.168.0.124` using a `canvas_network` of `192.0.0.0/8` and a `pixel_prefix` of 24." width="100%"><p class="caption">
+Reduced bits of <code>192.168.0.124</code> using a <code>canvas_network</code> of <code>192.0.0.0/8</code> and a <code>pixel_prefix</code> of 24.
+</p>
+</div>
+<p>These two techniques become even more important in the IPv6 address space, which uses 128-bit addresses.</p>
+<p><strong>Note:</strong> To prevent accidentally plotting an unreasonably large number of discrete levels, ggip limits the number of plotted bits to 24. This means the <code><a href="../reference/coord_ip.html">coord_ip()</a></code> arguments must satisfy:</p>
+<pre><code>pixel_prefix - prefix_length(canvas_prefix) &lt;= 24</code></pre>
+</div>
 <div id="space-filling-curves" class="section level2">
 <h2 class="hasAnchor">
 <a href="#space-filling-curves" class="anchor"></a>Space-filling curves</h2>
-<p>Inspired by <a href="https://xkcd.com/195/">an xkcd comic</a> originally published in December 2006, we use a space-filling curve to map IP data (one-dimensional) to Cartesian coordinates (two-dimensional). Two curves are commonly chosen for this task: the Hilbert curve and the Morton curve (also known as the Z curve). Compared to other space-filling curves, these are advantageous because they preserve locality (i.e. subnetworks remain close together).</p>
-<p>The curve order represents how nested the curve is and therefore determines how many data points can be visualized. Conversely, our choices for actions 1 &amp; 2 (see above) determine the order of the plotted curve. The curve order is increased if the canvas displays more address space or if a pixel represents fewer addresses.</p>
-<p><strong>Warning:</strong> The number of plotted data points grows exponentially with curve order. For this reason, ggip limits the difference in network prefix lengths between the canvas and pixel to 24.</p>
+<p>Inspired by <a href="https://xkcd.com/195/">an xkcd comic</a> originally published in December 2006, we use a space-filling curve to map IP data (one-dimensional) to Cartesian coordinates (two-dimensional). This means our discrete levels become represented by pixels. Two curves are commonly chosen for this task: the Hilbert curve and the Morton curve (also known as the Z curve). Compared to other space-filling curves, these are advantageous because they preserve locality (i.e. subnetworks remain close together).</p>
+<p>The curve order represents how nested the curve is and therefore determines how many data points can be visualized. Conversely, choosing the number of plotted bits (see above) determines the order of the curve.</p>
 <div id="hilbert-curve" class="section level3">
 <h3 class="hasAnchor">
 <a href="#hilbert-curve" class="anchor"></a>Hilbert curve</h3>
