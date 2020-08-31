@@ -1,10 +1,20 @@
 #' Heatmap of IP data
 #'
+#' @inheritParams ggplot2::layer
+#' @inheritParams ggplot2::geom_point
+#' @param mapping Set of aesthetic mappings created by [`aes()`][ggplot2::aes()].
+#'   This layer does not inherit the default mapping specified in
+#'   [`ggplot()`][ggplot2::ggplot()], so these *must* be defined here.
+#' @param fun Summary function (see section below for details). If `NULL` (the
+#'   default), the number of observations is computed.
+#' @param fun.args A list of extra arguments to pass to `fun`
+#'
 #' @section Aesthetics:
 #' `stat_ip_heatmap()` understands the following aesthetics:
 #'  - `ip`: An [`ip_address`][`ipaddress::ip_address`] column
 #'  - `z`: Value passed to the summary function (required if `fun` is used)
 #'  - `fill`: Must use a computed variable (default: `after_stat(value)`)
+#'  - `alpha`
 #'
 #' *Note:* Since this is a native ggip layer, it can accept an
 #' [`ip_address`][`ipaddress::ip_address`] column directly. It works together
@@ -35,17 +45,9 @@
 #' \item{formula}{A function can also be created from a formula. This uses `.x`
 #'   as the summarized variable (e.g. `fun = ~ sum(.x^2)`).}
 #' }
-#'
-#' @inheritParams ggplot2::layer
-#' @inheritParams ggplot2::geom_point
-#' @param mapping Set of aesthetic mappings created by [`aes()`][ggplot2::aes()].
-#'   Note `stat_ip_heatmap()` does not inherit the default mapping specified in
-#'   [`ggplot()`][ggplot2::ggplot()], so these *must* be defined here.
-#' @param fun Summary function (see section below for details). If `NULL` (the
-#'   default), the number of observations is computed.
-#' @param fun.args A list of extra arguments to pass to `fun`
 #' @export
 stat_ip_heatmap <- function(mapping = NULL, data = NULL,
+                            ...,
                             fun = NULL, fun.args = list(),
                             na.rm = FALSE, show.legend = NA) {
   if (is.null(mapping$ip)) {
@@ -65,7 +67,8 @@ stat_ip_heatmap <- function(mapping = NULL, data = NULL,
     params = list(
       na.rm = na.rm,
       fun = fun,
-      fun.args = fun.args
+      fun.args = fun.args,
+      ...
     )
   )
 }

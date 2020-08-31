@@ -7,6 +7,7 @@
 stat_ip_heatmap(
   mapping = NULL,
   data = NULL,
+  ...,
   fun = NULL,
   fun.args = list(),
   na.rm = FALSE,
@@ -15,7 +16,7 @@ stat_ip_heatmap(
 }
 \arguments{
 \item{mapping}{Set of aesthetic mappings created by \code{\link[ggplot2:aes]{aes()}}.
-Note \code{stat_ip_heatmap()} does not inherit the default mapping specified in
+This layer does not inherit the default mapping specified in
 \code{\link[ggplot2:ggplot]{ggplot()}}, so these \emph{must} be defined here.}
 
 \item{data}{The data to be displayed in this layer. There are three
@@ -32,6 +33,11 @@ A \code{function} will be called with a single argument,
 the plot data. The return value must be a \code{data.frame}, and
 will be used as the layer data. A \code{function} can be created
 from a \code{formula} (e.g. \code{~ head(.x, 10)}).}
+
+\item{...}{Other arguments passed on to \code{\link[ggplot2:layer]{layer()}}. These are
+often aesthetics, used to set an aesthetic to a fixed value, like
+\code{colour = "red"} or \code{size = 3}. They may also be parameters
+to the paired geom/stat.}
 
 \item{fun}{Summary function (see section below for details). If \code{NULL} (the
 default), the number of observations is computed.}
@@ -57,6 +63,7 @@ Heatmap of IP data
 \item \code{ip}: An \code{\link[ipaddress:ip_address]{ip_address}} column
 \item \code{z}: Value passed to the summary function (required if \code{fun} is used)
 \item \code{fill}: Must use a computed variable (default: \code{after_stat(value)})
+\item \code{alpha}
 }
 
 \emph{Note:} Since this is a native ggip layer, it can accept an
