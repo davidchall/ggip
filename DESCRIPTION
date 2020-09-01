@@ -1,5 +1,5 @@
 Package: ggip
-Title: Data visualization for IP addresses and networks
+Title: Data Visualization for IP Addresses and Networks
 Version: 0.0.0.9000
 Authors@R: 
     person(given = "David",
@@ -7,7 +7,11 @@ Authors@R:
            role = c("aut", "cre"),
            email = "david.hall.physics@gmail.com",
            comment = c(ORCID = "0000-0002-2193-0480"))
-Description: What the package does (one paragraph).
+Description: A 'ggplot2' extension that enables visualization of
+    IP (Internet Protocol) addresses and networks. The address space is
+    mapped onto the Cartesian coordinate system using a space-filling
+    curve. Offers full support for both IPv4 and IPv6 (Internet Protocol
+    versions 4 and 6) address spaces.
 License: MIT + file LICENSE
 URL: https://davidchall.github.io/ggip,
     https://github.com/davidchall/ggip

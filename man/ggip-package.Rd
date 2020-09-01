@@ -4,9 +4,13 @@
 \name{ggip-package}
 \alias{ggip}
 \alias{ggip-package}
-\title{ggip: Data visualization for IP addresses and networks}
+\title{ggip: Data Visualization for IP Addresses and Networks}
 \description{
-What the package does (one paragraph).
+A 'ggplot2' extension that enables visualization of
+    IP (Internet Protocol) addresses and networks. The address space is
+    mapped onto the Cartesian coordinate system using a space-filling
+    curve. Offers full support for both IPv4 and IPv6 (Internet Protocol
+    versions 4 and 6) address spaces.
 }
 \seealso{
 Useful links:

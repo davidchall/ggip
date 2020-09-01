@@ -109,6 +109,7 @@ Compared to other space-filling curves, these are advantageous because they pres
 
 The curve order represents how nested the curve is and therefore determines how many data points can be visualized.
 Conversely, choosing the number of plotted bits (see above) determines the order of the curve.
+Since space-filling curves are fractal, increasing the curve order effectively improves the image resolution (plotted networks remain in the same overall location).
 
 
 ### Hilbert curve
