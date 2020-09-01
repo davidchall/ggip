@@ -1,4 +1,4 @@
-#' Heatmap of IP data
+#' Summarize IP addresses on heatmap
 #'
 #' @inheritParams ggplot2::layer
 #' @inheritParams ggplot2::geom_point
@@ -10,7 +10,7 @@
 #' @param fun.args A list of extra arguments to pass to `fun`
 #'
 #' @section Aesthetics:
-#' `stat_ip_heatmap()` understands the following aesthetics:
+#' `stat_summary_address()` understands the following aesthetics:
 #'  - `ip`: An [`ip_address`][`ipaddress::ip_address`] column
 #'  - `z`: Value passed to the summary function (required if `fun` is used)
 #'  - `fill`: Must use a computed variable (default: `after_stat(value)`)
@@ -46,12 +46,11 @@
 #'   as the summarized variable (e.g. `fun = ~ sum(.x^2)`).}
 #' }
 #' @export
-stat_ip_heatmap <- function(mapping = NULL, data = NULL,
-                            ...,
-                            fun = NULL, fun.args = list(),
-                            na.rm = FALSE, show.legend = NA) {
+stat_summary_address <- function(mapping = NULL, data = NULL, ...,
+                                 fun = NULL, fun.args = list(),
+                                 na.rm = FALSE, show.legend = NA) {
   if (is.null(mapping$ip)) {
-    abort("stat_ip_heatmap requires `ip` aesthetic")
+    abort("stat_summary_address requires `ip` aesthetic")
   }
 
   # setup {x, y, ip} aesthetics from ip aesthetic
@@ -85,11 +84,11 @@ StatIpHeatmap <- ggplot2::ggproto("StatIpHeatmap", ggplot2::Stat,
 
   setup_params = function(data, params) {
     if (!is_ip_address(data$ip)) {
-      abort("stat_ip_heatmap requires `ip` aesthetic to be an ip_address vector")
+      abort("stat_summary_address requires `ip` aesthetic to be an ip_address vector")
     }
 
     if (!is.null(params$fun) && !("z" %in% colnames(data))) {
-      abort("stat_ip_heatmap requires `z` aesthetic when using non-default summary function")
+      abort("stat_summary_address requires `z` aesthetic when using non-default summary function")
     }
 
     params

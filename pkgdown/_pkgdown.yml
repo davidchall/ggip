@@ -13,7 +13,7 @@ reference:
   - title: "Layers"
     desc: "These IP-specific layers support common use cases."
     contents:
-      - stat_ip_heatmap
+      - stat_summary_address
   - title: "Internal functions"
     desc: "These functions are exposed to support use cases beyond ggplot2."
     contents:
