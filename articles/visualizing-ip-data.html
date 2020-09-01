@@ -126,7 +126,7 @@ Reduced bits of <code>192.168.0.124</code> using a <code>canvas_network</code> o
 <h2 class="hasAnchor">
 <a href="#space-filling-curves" class="anchor"></a>Space-filling curves</h2>
 <p>Inspired by <a href="https://xkcd.com/195/">an xkcd comic</a> originally published in December 2006, we use a space-filling curve to map IP data (one-dimensional) to Cartesian coordinates (two-dimensional). This means our discrete levels become represented by pixels. Two curves are commonly chosen for this task: the Hilbert curve and the Morton curve (also known as the Z curve). Compared to other space-filling curves, these are advantageous because they preserve locality (i.e. subnetworks remain close together).</p>
-<p>The curve order represents how nested the curve is and therefore determines how many data points can be visualized. Conversely, choosing the number of plotted bits (see above) determines the order of the curve.</p>
+<p>The curve order represents how nested the curve is and therefore determines how many data points can be visualized. Conversely, choosing the number of plotted bits (see above) determines the order of the curve. Since space-filling curves are fractal, increasing the curve order effectively improves the image resolution (plotted networks remain in the same overall location).</p>
 <div id="hilbert-curve" class="section level3">
 <h3 class="hasAnchor">
 <a href="#hilbert-curve" class="anchor"></a>Hilbert curve</h3>

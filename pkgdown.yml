@@ -3,7 +3,7 @@ pkgdown: 1.5.1
 pkgdown_sha: ~
 articles:
   visualizing-ip-data: visualizing-ip-data.html
-last_built: 2020-08-31T15:18Z
+last_built: 2020-09-01T00:21Z
 urls:
   reference: https://davidchall.github.io/ggip/reference
   article: https://davidchall.github.io/ggip/articles

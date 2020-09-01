@@ -83,7 +83,16 @@
 <a href="#ggip" class="anchor"></a>ggip</h1></div>
 <!-- badges: start -->
 
-<p><strong>WARNING:</strong> This package is in very early stages of development!</p>
+<p>ggip facilitates visualizing IP addresses and networks stored in vectors from the <a href="https://davidchall.github.io/ipaddress/">ipaddress</a> package.</p>
+<p>Here are some of the key features:</p>
+<ul>
+<li>IP data mapped to 2D plane by a <strong>unified coordinate system</strong>
+</li>
+<li>Compatible with <strong>existing ggplot2 layers</strong>
+</li>
+<li>Custom <strong>IP-specific layers</strong> for common use cases</li>
+<li>Full support for both <strong>IPv4 and IPv6</strong> address spaces</li>
+</ul>
 <div id="installation" class="section level2">
 <h2 class="hasAnchor">
 <a href="#installation" class="anchor"></a>Installation</h2>
@@ -94,7 +103,7 @@
 <div id="quick-start" class="section level2">
 <h2 class="hasAnchor">
 <a href="#quick-start" class="anchor"></a>Quick start</h2>
-<p><code><a href="reference/coord_ip.html">coord_ip()</a></code> forms the basis of any ggip plot. It determines which region of address space is displayed and also the resolution of the pixels in terms of network sizes. It also translates <code>ip_address()</code> and <code>ip_network()</code> vectors into Cartesian coordinates that can be used by ggplot2 layers.</p>
+<p><code><a href="reference/coord_ip.html">coord_ip()</a></code> forms the basis of any ggip plot. It determines which region of address space is displayed and also the resolution of the pixels in terms of network sizes. It also translates <code><a href="https://davidchall.github.io/ipaddress/reference/ip_address.html">ipaddress::ip_address()</a></code> and <code><a href="https://davidchall.github.io/ipaddress/reference/ip_network.html">ipaddress::ip_network()</a></code> vectors into Cartesian coordinates that can be used by ggplot2 layers.</p>
 <p>With ggip, it is easy to quickly produce visualizations like this:</p>
 <p><img src="reference/figures/ipv4-heatmap.png" alt="IPv4 heatmap" width="100%"></p>
 </div>
