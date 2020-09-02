@@ -15,10 +15,10 @@
 #'  - `size`
 #'
 #' @export
-geom_curve_outline <- function(mapping = NULL, data = "canvas", ...,
+geom_curve_outline <- function(mapping = NULL, data = NULL, ...,
                                enclosed = FALSE, na.rm = FALSE) {
-  if (data == "canvas") {
-    data <- data.frame(group = 1)
+  if (is.null(data)) {
+    data <- ensure_nonempty_data
   }
 
   ggplot2::layer(
@@ -157,3 +157,24 @@ outline_sides_to_segments <- function(data, coord) {
       )
     )
 }
+
+
+#--- copied from ggplot2
+
+# Convenience function used by `stat_function()` and
+# `geom_function()` to convert empty input data into
+# non-empty input data without touching any non-empty
+# input data that may have been provided.
+ensure_nonempty_data <- function(data) {
+  if (empty(data)) {
+    data.frame(group = 1)
+  } else {
+    data
+  }
+}
+
+empty <- function(df) {
+  is.null(df) || nrow(df) == 0 || ncol(df) == 0 || is.waive(df)
+}
+
+is.waive <- function(x) inherits(x, "waiver")
