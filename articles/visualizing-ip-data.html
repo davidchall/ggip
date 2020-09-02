@@ -106,18 +106,11 @@
 <h2 class="hasAnchor">
 <a href="#reducing-visualized-information" class="anchor"></a>Reducing visualized information</h2>
 <p>As an example, consider the 32-bit representation of the IPv4 address <code>192.168.0.124</code>. If we wanted to visualize this single address within the full context of the IPv4 address space, we’d need to simultaneously display <span class="math inline">\(2^{32}\)</span> discrete levels (roughly 4.3 billion).</p>
-<div class="figure">
-<img src="bits_raw.png" alt="Raw bits of `192.168.0.124`." width="100%"><p class="caption">
-Raw bits of <code>192.168.0.124</code>.
-</p>
-</div>
-<p>To reduce the visualized information, we could only show a subnetwork of the full address space. In our example, we could only display the <code>192.0.0.0/8</code> network. This would effectively filter addresses where the leading 8 bits match the specified network (shown in yellow below), thereby reducing the number of discrete levels to <span class="math inline">\(2^{24}\)</span> (roughly 16.8 million).</p>
-<p>Alternatively, we could make each discrete level represent a network of addresses. To do this, we’d need to use a summary function to reduce the network data to a single value. In our example, we could make each discrete level represent a network with a prefix length of 24. This would effectively neglect the trailing 8 bits of the 32-bit address (shown in blue below), thereby further reducing the number of discrete levels to <span class="math inline">\(2^{16}\)</span> (65,536).</p>
-<div class="figure">
-<img src="bits_reduced.png" alt="Reduced bits of `192.168.0.124` using a `canvas_network` of `192.0.0.0/8` and a `pixel_prefix` of 24." width="100%"><p class="caption">
-Reduced bits of <code>192.168.0.124</code> using a <code>canvas_network</code> of <code>192.0.0.0/8</code> and a <code>pixel_prefix</code> of 24.
-</p>
-</div>
+<p><img src="bits_raw.png" width="100%"></p>
+<p>To reduce the visualized information, we could only show a subnetwork of the full address space. In our example, we could only display the <code>192.0.0.0/8</code> network. This would effectively filter addresses where the leading 8 bits match the specified network, thereby reducing the number of discrete levels to <span class="math inline">\(2^{24}\)</span> (roughly 16.8 million).</p>
+<p><img src="bits_half_reduced.png" width="100%"></p>
+<p>Alternatively, we could make each discrete level represent a network of addresses. To do this, we’d need to use a summary function to reduce the network data to a single value. In our example, we could make each discrete level represent a network with a prefix length of 24. This would effectively neglect the trailing 8 bits of the 32-bit address, thereby further reducing the number of discrete levels to <span class="math inline">\(2^{16}\)</span> (65,536).</p>
+<p><img src="bits_reduced.png" width="100%"></p>
 <p>These two techniques become even more important in the IPv6 address space, which uses 128-bit addresses.</p>
 <p><strong>Note:</strong> To prevent accidentally plotting an unreasonably large number of discrete levels, ggip limits the number of plotted bits to 24. This means the <code><a href="../reference/coord_ip.html">coord_ip()</a></code> arguments must satisfy:</p>
 <pre><code>pixel_prefix - prefix_length(canvas_prefix) &lt;= 24</code></pre>
