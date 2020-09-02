@@ -15,8 +15,12 @@
 #'  - `size`
 #'
 #' @export
-geom_curve_outline <- function(mapping = NULL, data = NULL, ...,
+geom_curve_outline <- function(mapping = NULL, data = "canvas", ...,
                                enclosed = FALSE, na.rm = FALSE) {
+  if (data == "canvas") {
+    data <- data.frame(group = 1)
+  }
+
   ggplot2::layer(
     geom = GeomCurveOutline, data = data, mapping = mapping, stat = "identity",
     position = "identity", show.legend = FALSE, inherit.aes = FALSE,
@@ -29,9 +33,8 @@ geom_curve_outline <- function(mapping = NULL, data = NULL, ...,
 }
 
 GeomCurveOutline <- ggplot2::ggproto("GeomCurveOutline", ggplot2::Geom,
-  required_aes = c("ip"),
-
   default_aes = ggplot2::aes(
+    ip = NULL,
     curve_order = 4,
     colour = "black",
     size = 0.5,
@@ -46,6 +49,10 @@ GeomCurveOutline <- ggplot2::ggproto("GeomCurveOutline", ggplot2::Geom,
     }
     if (coord$curve != "hilbert") {
       abort('geom_curve_order is incompatible with coord_ip(curve = "morton")')
+    }
+
+    if (is.null(data$ip)) {
+      data$ip <- coord$canvas_network
     }
 
     lines <- data %>%
