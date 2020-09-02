@@ -56,8 +56,10 @@ GeomCurveOutline <- ggplot2::ggproto("GeomCurveOutline", ggplot2::Geom,
     }
 
     lines <- data %>%
+      dplyr::distinct() %>%
       dplyr::rowwise(-ip, -curve_order) %>%
-      dplyr::summarize(generate_curve_data(ip, curve_order, coord, enclosed))
+      dplyr::summarize(generate_curve_data(ip, curve_order, coord, enclosed)) %>%
+      dplyr::distinct()
 
     ggplot2::GeomSegment$draw_panel(lines, panel_params, coord,
                                     lineend = "round", na.rm = na.rm)
