@@ -62,15 +62,19 @@ GeomCurveOutline <- ggplot2::ggproto("GeomCurveOutline", ggplot2::Geom,
 generate_curve_data <- function(network, curve_order, coord, enclosed) {
   curve_prefix <- (2 * curve_order) + prefix_length(coord$canvas_network)
 
-  tibble::tibble(network = subnets(network, new_prefix = curve_prefix)) %>%
-    dplyr::mutate(network_to_cartesian(
-      network,
-      canvas_network = coord$canvas_network,
-      pixel_prefix = coord$pixel_prefix,
-      curve = coord$curve
-    )) %>%
-    squares_to_outline_sides(enclosed) %>%
-    outline_sides_to_segments(coord)
+  if (curve_prefix > prefix_length(network)) {
+    tibble::tibble(network = subnets(network, new_prefix = curve_prefix)) %>%
+      dplyr::mutate(network_to_cartesian(
+        network,
+        canvas_network = coord$canvas_network,
+        pixel_prefix = coord$pixel_prefix,
+        curve = coord$curve
+      )) %>%
+      squares_to_outline_sides(enclosed) %>%
+      outline_sides_to_segments(coord)
+  } else {
+    data.frame(x = double(), y = double(), xend = double(), yend = double())
+  }
 }
 
 find_direction <- function(x_from, y_from, x_to, y_to) {
