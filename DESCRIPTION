@@ -25,7 +25,6 @@ Imports:
     magrittr,
     Rcpp,
     rlang,
-    tibble,
     tidyr
 Suggests: 
     knitr,

@@ -72,7 +72,7 @@ generate_curve_data <- function(network, curve_order, coord, enclosed) {
   curve_prefix <- (2 * curve_order) + prefix_length(coord$canvas_network)
 
   if (curve_prefix > prefix_length(network)) {
-    tibble::tibble(network = subnets(network, new_prefix = curve_prefix)) %>%
+    data.frame(network = subnets(network, new_prefix = curve_prefix)) %>%
       dplyr::mutate(network_to_cartesian(
         network,
         canvas_network = coord$canvas_network,
@@ -120,7 +120,7 @@ squares_to_outline_sides <- function(data, enclosed) {
       ),
     ) %>%
     dplyr::select(-.data$xmid, -.data$ymid) %>%
-    dplyr::full_join(tibble::tibble(side = sides), by = character()) %>%
+    dplyr::full_join(data.frame(side = sides), by = character()) %>%
     dplyr::filter(.data$side != .data$from, .data$side != .data$to) %>%
     dplyr::select(-.data$from, -.data$to)
 }
