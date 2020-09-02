@@ -19,10 +19,13 @@ BugReports: https://github.com/davidchall/ggip/issues
 Depends: 
     R (>= 3.3.0)
 Imports: 
+    dplyr,
     ggplot2,
     ipaddress,
+    magrittr,
     Rcpp,
     rlang,
+    tibble,
     tidyr
 Suggests: 
     knitr,
