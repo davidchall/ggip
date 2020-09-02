@@ -43,5 +43,7 @@ bit_figure <- function(address, path,
 
 bit_figure(ip_address("192.168.0.124"), "vignettes/bits_raw.png")
 
+bit_figure(ip_address("192.168.0.124"), "vignettes/bits_half_reduced.png", canvas_prefix = 8)
+
 bit_figure(ip_address("192.168.0.124"), "vignettes/bits_reduced.png", canvas_prefix = 8, pixel_prefix = 24)
 
