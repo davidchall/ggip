@@ -14,15 +14,37 @@
 #'  - `linetype`
 #'  - `size`
 #'
+#' @examples
+#' library(ggplot2)
+#' library(ipaddress)
+#'
+#' p <- ggplot() + coord_ip() + theme_ip_light()
+#'
+#' # default shows curve across entire canvas
+#' p + geom_hilbert_outline()
+#'
+#' # only show subnetwork
+#' p + geom_hilbert_outline(ip = ip_network("128.0.0.0/4"))
+#'
+#' # increased nesting
+#' p + geom_hilbert_outline(curve_order = 5)
+#'
+#' # show multiple networks
+#' df <- data.frame(
+#'   ip = ip_network(c("0.0.0.0/2", "128.0.0.0/4")),
+#'   curve_order = c(4, 5)
+#' )
+#' p + geom_hilbert_outline(aes(ip = ip, curve_order = curve_order), data = df)
 #' @export
-geom_curve_outline <- function(mapping = NULL, data = NULL, ...,
-                               enclosed = FALSE, na.rm = FALSE) {
+geom_hilbert_outline <- function(mapping = NULL, data = NULL, ...,
+                                 enclosed = FALSE, na.rm = FALSE) {
+  # can use layer without any data
   if (is.null(data)) {
     data <- ensure_nonempty_data
   }
 
   ggplot2::layer(
-    geom = GeomCurveOutline, data = data, mapping = mapping, stat = "identity",
+    geom = GeomHilbertOutline, data = data, mapping = mapping, stat = "identity",
     position = "identity", show.legend = FALSE, inherit.aes = FALSE,
     params = list(
       enclosed = enclosed,
@@ -32,7 +54,7 @@ geom_curve_outline <- function(mapping = NULL, data = NULL, ...,
   )
 }
 
-GeomCurveOutline <- ggplot2::ggproto("GeomCurveOutline", ggplot2::Geom,
+GeomHilbertOutline <- ggplot2::ggproto("GeomHilbertOutline", ggplot2::Geom,
   default_aes = ggplot2::aes(
     ip = NULL,
     curve_order = 4,
@@ -45,14 +67,20 @@ GeomCurveOutline <- ggplot2::ggproto("GeomCurveOutline", ggplot2::Geom,
   draw_panel = function(data, panel_params, coord, enclosed = FALSE, na.rm = FALSE) {
 
     if (!is_CoordIp(coord)) {
-      abort("Must call coord_ip() when using ggip")
+      stop_missing_coord()
     }
     if (coord$curve != "hilbert") {
-      abort('geom_curve_order is incompatible with coord_ip(curve = "morton")')
+      abort(glue::glue('`{snake_class(self)}()` requires `coord_ip(curve = "hilbert")`.'))
     }
 
+    # validate ip aesthetic
     if (is.null(data$ip)) {
       data$ip <- coord$canvas_network
+    } else if (is_ip_network_coords(data$ip)) {
+      data$ip <- data$ip$ip
+    }
+    if (!is_ip_network(data$ip)) {
+      stop_bad_aes_type(snake_class(self), "ip", "an ip_network vector")
     }
 
     lines <- data %>%

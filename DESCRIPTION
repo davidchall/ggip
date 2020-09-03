@@ -22,7 +22,6 @@ Imports:
     dplyr,
     ggplot2,
     ipaddress,
-    magrittr,
     Rcpp,
     rlang,
     tidyr
