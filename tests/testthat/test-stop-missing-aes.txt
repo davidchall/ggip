@@ -1,0 +1,3 @@
+> stop_missing_aes("my_layer", "ip")
+Error: `my_layer()` must have the following aesthetics: `ip`.
+

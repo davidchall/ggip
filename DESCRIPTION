@@ -20,6 +20,7 @@ Depends:
     R (>= 3.3.0)
 Imports: 
     ggplot2,
+    glue,
     ipaddress,
     Rcpp,
     rlang,
