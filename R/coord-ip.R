@@ -37,7 +37,9 @@
 #' | `ymax`      | `integer`    | Bounding box ymax |
 #'
 #' @inheritParams ip_to_cartesian
-#' @inheritParams ggplot2::coord_fixed
+#' @param expand If `TRUE`, the default, adds a small expanded margin around the
+#'   data grid.
+#'
 #' @examples
 #' options(tidyverse.quiet = TRUE)
 #' library(tidyverse)

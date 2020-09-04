@@ -1,16 +1,21 @@
-#' Summarize IP addresses on heatmap
+#' Summarize IP addresses on a heatmap
+#'
+#' The data are grouped into networks determined by the `pixel_prefix` argument
+#' of `coord_ip()`. Then the values of `z` in each network are summarized with
+#' `fun`.
 #'
 #' @inheritParams ggplot2::layer
 #' @inheritParams ggplot2::geom_point
 #' @param fun Summary function (see section below for details). If `NULL` (the
-#'   default), the number of observations is computed.
+#'   default), the observations are simply counted.
 #' @param fun.args A list of extra arguments to pass to `fun`
 #'
 #' @section Aesthetics:
-#' `stat_summary_address()` understands the following aesthetics:
-#'  - `ip`: An [`ip_address`][`ipaddress::ip_address`] column
+#' `stat_summary_address()` understands the following aesthetics (required
+#' aesthetics are in bold):
+#'  - **`ip`**: An [`ip_address`][`ipaddress::ip_address`] column
 #'  - `z`: Value passed to the summary function (required if `fun` is used)
-#'  - `fill`: Must use a computed variable (default: `after_stat(value)`)
+#'  - `fill`: Default: `after_stat(value)`
 #'  - `alpha`
 #'
 #' @section Computed variables:
@@ -37,6 +42,34 @@
 #' \item{formula}{A function can also be created from a formula. This uses `.x`
 #'   as the summarized variable (e.g. `fun = ~ sum(.x^2)`).}
 #' }
+#'
+#' @examples
+#' library(ggplot2)
+#' library(ipaddress)
+#'
+#' dat <- data.frame(
+#'   ip = sample_ipv4(10000),
+#'   weight = runif(10000)
+#' )
+#'
+#' p <- ggplot(dat, aes(ip = ip)) +
+#'   coord_ip(expand = FALSE) +
+#'   theme_ip_light()
+#'
+#' # simple count of observations
+#' p +
+#'   stat_summary_address() +
+#'   scale_fill_viridis_c(trans = "log2", na.value = "black", guide = "none")
+#'
+#' # count unique addresses
+#' p +
+#'   stat_summary_address(aes(fill = after_stat(ip_count))) +
+#'   scale_fill_viridis_c(trans = "log2", na.value = "black", guide = "none")
+#'
+#' # compute mean weight
+#' p +
+#'   stat_summary_address(aes(z = weight), fun = ~ mean(.x)) +
+#'   scale_fill_viridis_c(na.value = "black", guide = "none")
 #' @export
 stat_summary_address <- function(mapping = NULL, data = NULL, ...,
                                  fun = NULL, fun.args = list(),
