@@ -70,7 +70,7 @@ GeomHilbertOutline <- ggplot2::ggproto("GeomHilbertOutline", ggplot2::Geom,
       stop_missing_coord()
     }
     if (coord$curve != "hilbert") {
-      abort(glue::glue('`{snake_class(self)}()` requires `coord_ip(curve = "hilbert")`.'))
+      abort(glue::glue('`geom_hilbert_outline()` requires `coord_ip(curve = "hilbert")`.'))
     }
 
     # validate ip aesthetic
@@ -80,7 +80,7 @@ GeomHilbertOutline <- ggplot2::ggproto("GeomHilbertOutline", ggplot2::Geom,
       data$ip <- data$ip$ip
     }
     if (!is_ip_network(data$ip)) {
-      stop_bad_aes_type(snake_class(self), "ip", "an ip_network vector")
+      stop_bad_aes_type("geom_hilbert_outline", "ip", "an ip_network vector")
     }
 
     lines <- data %>%
