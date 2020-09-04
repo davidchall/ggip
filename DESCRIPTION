@@ -24,7 +24,8 @@ Imports:
     ipaddress,
     Rcpp,
     rlang,
-    tidyr
+    tidyr,
+    vctrs
 Suggests: 
     knitr,
     rmarkdown,
