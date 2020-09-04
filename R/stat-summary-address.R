@@ -69,7 +69,7 @@ StatSummaryAddress <- ggplot2::ggproto("StatSummaryAddress", ggplot2::Stat,
 
     # validate ip aesthetic
     if (is.null(data$ip)) {
-      stop_missing_aes(snake_class(self), "ip")
+      stop_missing_aes("stat_summary_address", "ip")
     } else if (is_ip_address_coords(data$ip)) {
       data$x <- data$ip$x
       data$y <- data$ip$y
@@ -77,7 +77,7 @@ StatSummaryAddress <- ggplot2::ggproto("StatSummaryAddress", ggplot2::Stat,
     } else if (is_ip_address(data$ip)) {
       abort("The `ip` aesthetic of `stat_summary_address()` must map to a `data` variable.")
     } else {
-      stop_bad_aes_type(snake_class(self), "ip", "an ip_address vector")
+      stop_bad_aes_type("stat_summary_address", "ip", "an ip_address vector")
     }
 
     if (!is.null(params$fun) && !("z" %in% colnames(data))) {

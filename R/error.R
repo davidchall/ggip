@@ -1,7 +1,7 @@
 # Use `stop_bad_aes_type()` when the aesthetic data has an unexpected type
 stop_bad_aes_type <- function(layer, aes, expected) {
   abort(
-    .subclass = "ggip_error_bad_aes_type",
+    class = "ggip_error_bad_aes_type",
     layer = layer, aes = aes, expected = expected
   )
 }
@@ -17,7 +17,7 @@ conditionMessage.ggip_error_bad_aes_type <- function(c) {
 # Use `stop_missing_aes()` when a required aesthetic was not specified
 stop_missing_aes <- function(layer, aes) {
   abort(
-    .subclass = "ggip_error_missing_aes",
+    class = "ggip_error_missing_aes",
     layer = layer, aes = aes
   )
 }
@@ -32,12 +32,9 @@ conditionMessage.ggip_error_missing_aes <- function(c) {
 }
 
 
-# Use `stop_missing_coord()` when `coord_ip()` wasn't used
 stop_missing_coord <- function() {
-  abort(.subclass = "ggip_error_missing_coord")
-}
-
-#' @export
-conditionMessage.ggip_error_missing_coord <- function(c) {
-  "ggip plots must use the `coord_ip()` coordinate system."
+  abort(
+    message = "ggip plots must use the `coord_ip()` coordinate system.",
+    class = "ggip_error_missing_coord"
+  )
 }
