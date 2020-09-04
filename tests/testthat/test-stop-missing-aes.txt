@@ -1,0 +1,9 @@
+> stop_missing_aes("my_layer", "ip")
+Error: `my_layer()` must have the following aesthetics: `ip`.
+
+> stop_missing_aes("my_layer", c("x", "y"))
+Error: `my_layer()` must have the following aesthetics: `x` and `y`.
+
+> stop_missing_aes("my_layer", c("x", "y", "ip"))
+Error: `my_layer()` must have the following aesthetics: `x`, `y` and `ip`.
+

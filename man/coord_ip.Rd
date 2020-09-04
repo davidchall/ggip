@@ -23,9 +23,8 @@ corresponding network. The default value is 16.}
 \item{curve}{A string to choose the space-filling curve. Choices are
 \code{"hilbert"} (default) and \code{"morton"}.}
 
-\item{expand}{If \code{TRUE}, the default, adds a small expansion factor to
-the limits to ensure that data and axes don't overlap. If \code{FALSE},
-limits are taken exactly from the data or \code{xlim}/\code{ylim}.}
+\item{expand}{If \code{TRUE}, the default, adds a small expanded margin around the
+data grid.}
 }
 \description{
 A ggplot2 coordinate system that maps a range of address space onto a

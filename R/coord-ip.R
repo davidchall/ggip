@@ -37,7 +37,9 @@
 #' | `ymax`      | `integer`    | Bounding box ymax |
 #'
 #' @inheritParams ip_to_cartesian
-#' @inheritParams ggplot2::coord_fixed
+#' @param expand If `TRUE`, the default, adds a small expanded margin around the
+#'   data grid.
+#'
 #' @examples
 #' options(tidyverse.quiet = TRUE)
 #' library(tidyverse)
@@ -105,19 +107,27 @@ CoordIp <- ggplot2::ggproto("CoordIp", ggplot2::CoordFixed,
 
   setup_data = function(data, params) {
     lapply(data, function(layer_data) {
-      # replace ip_address and ip_network columns with dataframe columns
       for (col in colnames(layer_data)) {
+
+        # ip_address --> ip_address_coords
         if (is_ip_address(layer_data[[col]])) {
-          # dataframe output has columns: ip, x, y
-          layer_data[[col]] <- cbind(
-            data.frame(ip = layer_data[[col]]),
-            address_to_cartesian(layer_data[[col]], params$canvas_network, params$pixel_prefix, params$curve)
+          coords <- address_to_cartesian(
+            layer_data[[col]], params$canvas_network, params$pixel_prefix, params$curve
           )
-        } else if (is_ip_network(layer_data[[col]])) {
-          # dataframe output has columns: ip, xmin, ymin, xmax, ymax
-          layer_data[[col]] <- cbind(
-            data.frame(ip = layer_data[[col]]),
-            network_to_cartesian(layer_data[[col]], params$canvas_network, params$pixel_prefix, params$curve)
+          layer_data[[col]] <- ip_address_coords(
+            ip = layer_data[[col]], x = coords$x, y = coords$y
+          )
+        }
+
+        # ip_network --> ip_network_coords
+        else if (is_ip_network(layer_data[[col]])) {
+          coords <- network_to_cartesian(
+            layer_data[[col]], params$canvas_network, params$pixel_prefix, params$curve
+          )
+          layer_data[[col]] <- ip_network_coords(
+            ip = layer_data[[col]],
+            xmin = coords$xmin, ymin = coords$ymin,
+            xmax = coords$xmax, ymax = coords$ymax
           )
         }
       }
@@ -130,6 +140,7 @@ is_CoordIp <- function(x) inherits(x, "CoordIp")
 
 
 # ggplot2 scales -----------------------------------------------------------
+# these prevent ggplot2 warnings
 
 #' @importFrom ggplot2 scale_type
 #' @export

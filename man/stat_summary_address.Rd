@@ -2,7 +2,7 @@
 % Please edit documentation in R/stat-summary-address.R
 \name{stat_summary_address}
 \alias{stat_summary_address}
-\title{Summarize IP addresses on heatmap}
+\title{Summarize IP addresses on a heatmap}
 \usage{
 stat_summary_address(
   mapping = NULL,
@@ -11,13 +11,15 @@ stat_summary_address(
   fun = NULL,
   fun.args = list(),
   na.rm = FALSE,
-  show.legend = NA
+  show.legend = NA,
+  inherit.aes = TRUE
 )
 }
 \arguments{
-\item{mapping}{Set of aesthetic mappings created by \code{\link[ggplot2:aes]{aes()}}.
-This layer does not inherit the default mapping specified in
-\code{\link[ggplot2:ggplot]{ggplot()}}, so these \emph{must} be defined here.}
+\item{mapping}{Set of aesthetic mappings created by \code{\link[ggplot2:aes]{aes()}} or
+\code{\link[ggplot2:aes_]{aes_()}}. If specified and \code{inherit.aes = TRUE} (the
+default), it is combined with the default mapping at the top level of the
+plot. You must supply \code{mapping} if there is no plot mapping.}
 
 \item{data}{The data to be displayed in this layer. There are three
 options:
@@ -40,7 +42,7 @@ often aesthetics, used to set an aesthetic to a fixed value, like
 to the paired geom/stat.}
 
 \item{fun}{Summary function (see section below for details). If \code{NULL} (the
-default), the number of observations is computed.}
+default), the observations are simply counted.}
 
 \item{fun.args}{A list of extra arguments to pass to \code{fun}}
 
@@ -52,24 +54,27 @@ a warning. If \code{TRUE}, missing values are silently removed.}
 \code{FALSE} never includes, and \code{TRUE} always includes.
 It can also be a named logical vector to finely select the aesthetics to
 display.}
+
+\item{inherit.aes}{If \code{FALSE}, overrides the default aesthetics,
+rather than combining with them. This is most useful for helper functions
+that define both data and aesthetics and shouldn't inherit behaviour from
+the default plot specification, e.g. \code{\link[ggplot2:borders]{borders()}}.}
 }
 \description{
-Summarize IP addresses on heatmap
+The data are grouped into networks determined by the \code{pixel_prefix} argument
+of \code{coord_ip()}. Then the values of \code{z} in each network are summarized with
+\code{fun}.
 }
 \section{Aesthetics}{
 
-\code{stat_summary_address()} understands the following aesthetics:
+\code{stat_summary_address()} understands the following aesthetics (required
+aesthetics are in bold):
 \itemize{
-\item \code{ip}: An \code{\link[ipaddress:ip_address]{ip_address}} column
+\item \strong{\code{ip}}: An \code{\link[ipaddress:ip_address]{ip_address}} column
 \item \code{z}: Value passed to the summary function (required if \code{fun} is used)
-\item \code{fill}: Must use a computed variable (default: \code{after_stat(value)})
+\item \code{fill}: Default: \code{after_stat(value)}
 \item \code{alpha}
 }
-
-\emph{Note:} Since this is a native ggip layer, it can accept an
-\code{\link[ipaddress:ip_address]{ip_address}} column directly. It works together
-with \code{\link[=coord_ip]{coord_ip()}} to ensure IP data are correctly mapped to the \code{x} and \code{y}
-aesthetics.
 }
 
 \section{Computed variables}{
@@ -103,3 +108,31 @@ as the summarized variable (e.g. \code{fun = ~ sum(.x^2)}).}
 }
 }
 
+\examples{
+library(ggplot2)
+library(ipaddress)
+
+dat <- data.frame(
+  ip = sample_ipv4(10000),
+  weight = runif(10000)
+)
+
+p <- ggplot(dat, aes(ip = ip)) +
+  coord_ip(expand = FALSE) +
+  theme_ip_light()
+
+# simple count of observations
+p +
+  stat_summary_address() +
+  scale_fill_viridis_c(trans = "log2", na.value = "black", guide = "none")
+
+# count unique addresses
+p +
+  stat_summary_address(aes(fill = after_stat(ip_count))) +
+  scale_fill_viridis_c(trans = "log2", na.value = "black", guide = "none")
+
+# compute mean weight
+p +
+  stat_summary_address(aes(z = weight), fun = ~ mean(.x)) +
+  scale_fill_viridis_c(na.value = "black", guide = "none")
+}
