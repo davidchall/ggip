@@ -6,7 +6,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>Summarize IP addresses on heatmap — stat_summary_address • ggip</title>
+<title>Summarize IP addresses on a heatmap — stat_summary_address • ggip</title>
 
 
 <!-- jquery -->
@@ -39,8 +39,10 @@
 
 
 
-<meta property="og:title" content="Summarize IP addresses on heatmap — stat_summary_address" />
-<meta property="og:description" content="Summarize IP addresses on heatmap" />
+<meta property="og:title" content="Summarize IP addresses on a heatmap — stat_summary_address" />
+<meta property="og:description" content="The data are grouped into networks determined by the pixel_prefix argument
+of coord_ip(). Then the values of z in each network are summarized with
+fun." />
 
 
 
@@ -120,13 +122,15 @@
 <div class="row">
   <div class="col-md-9 contents">
     <div class="page-header">
-    <h1>Summarize IP addresses on heatmap</h1>
+    <h1>Summarize IP addresses on a heatmap</h1>
     <small class="dont-index">Source: <a href='https://github.com/davidchall/ggip/blob/master/R/stat-summary-address.R'><code>R/stat-summary-address.R</code></a></small>
     <div class="hidden name"><code>stat_summary_address.Rd</code></div>
     </div>
 
     <div class="ref-description">
-    <p>Summarize IP addresses on heatmap</p>
+    <p>The data are grouped into networks determined by the <code>pixel_prefix</code> argument
+of <code><a href='coord_ip.html'>coord_ip()</a></code>. Then the values of <code>z</code> in each network are summarized with
+<code>fun</code>.</p>
     </div>
 
     <pre class="usage"><span class='fu'>stat_summary_address</span>(
@@ -174,7 +178,7 @@ to the paired geom/stat.</p></td>
     <tr>
       <th>fun</th>
       <td><p>Summary function (see section below for details). If <code>NULL</code> (the
-default), the number of observations is computed.</p></td>
+default), the observations are simply counted.</p></td>
     </tr>
     <tr>
       <th>fun.args</th>
@@ -206,10 +210,11 @@ the default plot specification, e.g. <code><a href='https://ggplot2.tidyverse.or
 
     
 
-<p><code>stat_summary_address()</code> understands the following aesthetics:</p><ul>
-<li><p><code>ip</code>: An <code><a href='https://davidchall.github.io/ipaddress/reference/ip_address.html'>ip_address</a></code> column</p></li>
+<p><code>stat_summary_address()</code> understands the following aesthetics (required
+aesthetics are in bold):</p><ul>
+<li><p><strong><code>ip</code></strong>: An <code><a href='https://davidchall.github.io/ipaddress/reference/ip_address.html'>ip_address</a></code> column</p></li>
 <li><p><code>z</code>: Value passed to the summary function (required if <code>fun</code> is used)</p></li>
-<li><p><code>fill</code>: Must use a computed variable (default: <code>after_stat(value)</code>)</p></li>
+<li><p><code>fill</code>: Default: <code><a href='https://ggplot2.tidyverse.org/reference/aes_eval.html'>after_stat(value)</a></code></p></li>
 <li><p><code>alpha</code></p></li>
 </ul>
 
@@ -245,6 +250,31 @@ as the summarized variable (e.g. <code>fun = ~ sum(.x^2)</code>).</p></dd>
 </dl>
 
 
+    <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
+    <pre class="examples"><div class='input'><span class='fu'><a href='https://rdrr.io/r/base/library.html'>library</a></span>(<span class='no'>ggplot2</span>)
+<span class='fu'><a href='https://rdrr.io/r/base/library.html'>library</a></span>(<span class='no'>ipaddress</span>)
+
+<span class='no'>dat</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/data.frame.html'>data.frame</a></span>(
+  <span class='kw'>ip</span> <span class='kw'>=</span> <span class='fu'><a href='https://davidchall.github.io/ipaddress/reference/sample.html'>sample_ipv4</a></span>(<span class='fl'>10000</span>),
+  <span class='kw'>weight</span> <span class='kw'>=</span> <span class='fu'><a href='https://rdrr.io/r/stats/Uniform.html'>runif</a></span>(<span class='fl'>10000</span>)
+)
+
+<span class='no'>p</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='https://ggplot2.tidyverse.org/reference/ggplot.html'>ggplot</a></span>(<span class='no'>dat</span>, <span class='fu'><a href='https://ggplot2.tidyverse.org/reference/aes.html'>aes</a></span>(<span class='kw'>ip</span> <span class='kw'>=</span> <span class='no'>ip</span>)) +
+  <span class='fu'><a href='coord_ip.html'>coord_ip</a></span>(<span class='kw'>expand</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>) +
+  <span class='fu'><a href='theme_ip.html'>theme_ip_light</a></span>()
+
+<span class='co'># simple count of observations</span>
+<span class='no'>p</span> +
+  <span class='fu'>stat_summary_address</span>() +
+  <span class='fu'><a href='https://ggplot2.tidyverse.org/reference/scale_viridis.html'>scale_fill_viridis_c</a></span>(<span class='kw'>trans</span> <span class='kw'>=</span> <span class='st'>"log2"</span>, <span class='kw'>na.value</span> <span class='kw'>=</span> <span class='st'>"black"</span>, <span class='kw'>guide</span> <span class='kw'>=</span> <span class='st'>"none"</span>)</div><div class='output co'>#&gt; <span class='warning'>Warning: Transformation introduced infinite values in discrete y-axis</span></div><div class='img'><img src='stat_summary_address-1.png' alt='' width='480' height='480' /></div><div class='input'>
+<span class='co'># count unique addresses</span>
+<span class='no'>p</span> +
+  <span class='fu'>stat_summary_address</span>(<span class='fu'><a href='https://ggplot2.tidyverse.org/reference/aes.html'>aes</a></span>(<span class='kw'>fill</span> <span class='kw'>=</span> <span class='fu'><a href='https://ggplot2.tidyverse.org/reference/aes_eval.html'>after_stat</a></span>(<span class='no'>ip_count</span>))) +
+  <span class='fu'><a href='https://ggplot2.tidyverse.org/reference/scale_viridis.html'>scale_fill_viridis_c</a></span>(<span class='kw'>trans</span> <span class='kw'>=</span> <span class='st'>"log2"</span>, <span class='kw'>na.value</span> <span class='kw'>=</span> <span class='st'>"black"</span>, <span class='kw'>guide</span> <span class='kw'>=</span> <span class='st'>"none"</span>)</div><div class='output co'>#&gt; <span class='warning'>Warning: Transformation introduced infinite values in discrete y-axis</span></div><div class='img'><img src='stat_summary_address-2.png' alt='' width='480' height='480' /></div><div class='input'>
+<span class='co'># compute mean weight</span>
+<span class='no'>p</span> +
+  <span class='fu'>stat_summary_address</span>(<span class='fu'><a href='https://ggplot2.tidyverse.org/reference/aes.html'>aes</a></span>(<span class='kw'>z</span> <span class='kw'>=</span> <span class='no'>weight</span>), <span class='kw'>fun</span> <span class='kw'>=</span> ~ <span class='fu'><a href='https://rdrr.io/r/base/mean.html'>mean</a></span>(<span class='no'>.x</span>)) +
+  <span class='fu'><a href='https://ggplot2.tidyverse.org/reference/scale_viridis.html'>scale_fill_viridis_c</a></span>(<span class='kw'>na.value</span> <span class='kw'>=</span> <span class='st'>"black"</span>, <span class='kw'>guide</span> <span class='kw'>=</span> <span class='st'>"none"</span>)</div><div class='img'><img src='stat_summary_address-3.png' alt='' width='480' height='480' /></div></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">
     <nav id="toc" data-toggle="toc" class="sticky-top">
