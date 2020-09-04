@@ -7,9 +7,9 @@ stop_bad_aes_type <- function(layer, aes, expected) {
 }
 
 #' @export
-conditionMessage.ggip_error_bad_aes_type <- function(cnd) {
+conditionMessage.ggip_error_bad_aes_type <- function(c) {
   glue::glue_data(
-    cnd, "The `{aes}` aesthetic of `{layer}()` must be {expected}."
+    c, "The `{aes}` aesthetic of `{layer}()` must be {expected}."
   )
 }
 
@@ -23,9 +23,9 @@ stop_missing_aes <- function(layer, aes) {
 }
 
 #' @export
-conditionMessage.ggip_error_missing_aes <- function(cnd) {
+conditionMessage.ggip_error_missing_aes <- function(c) {
   glue::glue_data(
-    cnd,
+    c,
     "`{layer}()` must have the following aesthetics: ",
     '{glue::glue_collapse(glue::backtick(aes), sep = ", ", last = " and ")}.'
   )
@@ -38,6 +38,6 @@ stop_missing_coord <- function() {
 }
 
 #' @export
-conditionMessage.ggip_error_missing_coord <- function(cnd) {
+conditionMessage.ggip_error_missing_coord <- function(c) {
   "ggip plots must use the `coord_ip()` coordinate system."
 }
