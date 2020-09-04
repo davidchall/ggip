@@ -11,13 +11,15 @@ stat_summary_address(
   fun = NULL,
   fun.args = list(),
   na.rm = FALSE,
-  show.legend = NA
+  show.legend = NA,
+  inherit.aes = TRUE
 )
 }
 \arguments{
-\item{mapping}{Set of aesthetic mappings created by \code{\link[ggplot2:aes]{aes()}}.
-This layer does not inherit the default mapping specified in
-\code{\link[ggplot2:ggplot]{ggplot()}}, so these \emph{must} be defined here.}
+\item{mapping}{Set of aesthetic mappings created by \code{\link[ggplot2:aes]{aes()}} or
+\code{\link[ggplot2:aes_]{aes_()}}. If specified and \code{inherit.aes = TRUE} (the
+default), it is combined with the default mapping at the top level of the
+plot. You must supply \code{mapping} if there is no plot mapping.}
 
 \item{data}{The data to be displayed in this layer. There are three
 options:
@@ -52,6 +54,11 @@ a warning. If \code{TRUE}, missing values are silently removed.}
 \code{FALSE} never includes, and \code{TRUE} always includes.
 It can also be a named logical vector to finely select the aesthetics to
 display.}
+
+\item{inherit.aes}{If \code{FALSE}, overrides the default aesthetics,
+rather than combining with them. This is most useful for helper functions
+that define both data and aesthetics and shouldn't inherit behaviour from
+the default plot specification, e.g. \code{\link[ggplot2:borders]{borders()}}.}
 }
 \description{
 Summarize IP addresses on heatmap
@@ -65,11 +72,6 @@ Summarize IP addresses on heatmap
 \item \code{fill}: Must use a computed variable (default: \code{after_stat(value)})
 \item \code{alpha}
 }
-
-\emph{Note:} Since this is a native ggip layer, it can accept an
-\code{\link[ipaddress:ip_address]{ip_address}} column directly. It works together
-with \code{\link[=coord_ip]{coord_ip()}} to ensure IP data are correctly mapped to the \code{x} and \code{y}
-aesthetics.
 }
 
 \section{Computed variables}{

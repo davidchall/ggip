@@ -21,10 +21,12 @@ Depends:
 Imports: 
     dplyr,
     ggplot2,
+    glue,
     ipaddress,
     Rcpp,
     rlang,
-    tidyr
+    tidyr,
+    vctrs
 Suggests: 
     knitr,
     rmarkdown,

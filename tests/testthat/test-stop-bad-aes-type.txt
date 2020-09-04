@@ -1,0 +1,3 @@
+> stop_bad_aes_type("my_layer", "ip", "an ip_address vector")
+Error: The `ip` aesthetic of `my_layer()` must be an ip_address vector.
+

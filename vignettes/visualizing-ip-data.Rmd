@@ -22,6 +22,70 @@ library(ipaddress)
 library(ggip)
 ```
 
+*This vignette assumes an understanding of IP addresses and networks.*
+*Please consult `vignette("ipaddress-classes", "ipaddress")` for a very basic introduction.*
+
+Data visualization of the IP address space is challenging because there are so many unique addresses (approximately 4.3 billion for IPv4 and $3.8 \times 10^{38}$ for IPv6).
+Owing to the hierarchical nature of address space, we must plot the addresses on a discrete scale (not a continuous scale).
+It's simply not possible to display (or interpret) such a large number of discrete levels simultaneously.
+
+There are a few actions we can take to improve the situation:
+
+1. Visualize a reduced number of discrete levels by:
+    a. Showing only a subnetwork of the full address space (i.e. filtering leading bits)
+    b. Limiting the resolution by summarizing data within networks (i.e. neglecting trailing bits)
+2. Transform the one-dimensional address space onto the two-dimensional plane
+
+These are handled by the `canvas_network`, `pixel_prefix` and `curve` arguments of `coord_ip()`, respectively.
+This vignette describes these actions in more detail.
+
+
+## Reducing visualized information
+
+As an example, consider the 32-bit representation of the IPv4 address `192.168.0.124`.
+If we wanted to visualize this single address within the full context of the IPv4 address space, we'd need to simultaneously display $2^{32}$ discrete levels (roughly 4.3 billion).
+
+```{r, echo=FALSE, out.width="100%"}
+knitr::include_graphics("bits_raw.png")
+```
+
+To reduce the visualized information, we could only show a subnetwork of the full address space.
+In our example, we could only display the `192.0.0.0/8` network.
+This would effectively filter addresses where the leading 8 bits match the specified network, thereby reducing the number of discrete levels to $2^{24}$ (roughly 16.8 million).
+
+```{r, echo=FALSE, out.width="100%"}
+knitr::include_graphics("bits_half_reduced.png")
+```
+
+Alternatively, we could make each discrete level represent a network of addresses.
+To do this, we'd need to use a summary function to reduce the network data to a single value.
+In our example, we could make each discrete level represent a network with a prefix length of 24.
+This would effectively neglect the trailing 8 bits of the 32-bit address, thereby further reducing the number of discrete levels to $2^{16}$ (65,536).
+
+```{r, echo=FALSE, out.width="100%"}
+knitr::include_graphics("bits_reduced.png")
+```
+
+These two techniques become even more important in the IPv6 address space, which uses 128-bit addresses.
+
+**Note:** To prevent accidentally plotting an unreasonably large number of discrete levels, ggip limits the number of plotted bits to 24.
+This means the `coord_ip()` arguments must satisfy:
+
+```
+pixel_prefix - prefix_length(canvas_prefix) <= 24
+```
+
+## Space-filling curves
+
+Inspired by [an xkcd comic](https://xkcd.com/195/) originally published in December 2006, we use a space-filling curve to map IP data (one-dimensional) to Cartesian coordinates (two-dimensional).
+This means our discrete levels become represented by pixels.
+Two curves are commonly chosen for this task: the Hilbert curve and the Morton curve (also known as the Z curve).
+Compared to other space-filling curves, these are advantageous because they preserve locality (i.e. subnetworks remain close together).
+
+The curve order represents how nested the curve is and therefore determines how many data points can be visualized.
+Conversely, choosing the number of plotted bits (see above) determines the order of the curve.
+Since space-filling curves are fractal, increasing the curve order effectively improves the image resolution (plotted networks remain in the same overall location).
+
 ```{r plot_func}
 ordinal_suffix <- function(x) {
     suffix <- c("st", "nd", "rd", rep("th", 17))
@@ -50,67 +114,6 @@ plot_curve <- function(curve, curve_order) {
     ))
 }
 ```
-
-*This vignette assumes an understanding of IP addresses and networks.*
-*Please consult `vignette("ipaddress-classes", "ipaddress")` for a very basic introduction.*
-
-Data visualization of the IP address space is challenging because there are so many unique addresses (approximately 4.3 billion for IPv4 and $3.8 \times 10^{38}$ for IPv6).
-Owing to the hierarchical nature of address space, we must plot the addresses on a discrete scale (not a continuous scale).
-It's simply not possible to display (or interpret) such a large number of discrete levels simultaneously.
-
-There are a few actions we can take to improve the situation:
-
-1. Visualize a reduced number of discrete levels by:
-    a. Showing only a subnetwork of the full address space (i.e. filtering leading bits)
-    b. Limiting the resolution by summarizing data within networks (i.e. neglecting trailing bits)
-2. Transform the one-dimensional address space onto the two-dimensional plane
-
-These are handled by the `canvas_network`, `pixel_prefix` and `curve` arguments of `coord_ip()`, respectively.
-This vignette describes these actions in more detail.
-
-
-## Reducing visualized information
-
-As an example, consider the 32-bit representation of the IPv4 address `192.168.0.124`.
-If we wanted to visualize this single address within the full context of the IPv4 address space, we'd need to simultaneously display $2^{32}$ discrete levels (roughly 4.3 billion).
-
-```{r, echo=FALSE, out.width="100%", fig.cap="Raw bits of `192.168.0.124`."}
-knitr::include_graphics("bits_raw.png")
-```
-
-To reduce the visualized information, we could only show a subnetwork of the full address space.
-In our example, we could only display the `192.0.0.0/8` network.
-This would effectively filter addresses where the leading 8 bits match the specified network (shown in yellow below), thereby reducing the number of discrete levels to $2^{24}$ (roughly 16.8 million).
-
-Alternatively, we could make each discrete level represent a network of addresses.
-To do this, we'd need to use a summary function to reduce the network data to a single value.
-In our example, we could make each discrete level represent a network with a prefix length of 24.
-This would effectively neglect the trailing 8 bits of the 32-bit address (shown in blue below), thereby further reducing the number of discrete levels to $2^{16}$ (65,536).
-
-```{r, echo=FALSE, out.width="100%", fig.cap='Reduced bits of `192.168.0.124` using a `canvas_network` of `192.0.0.0/8` and a `pixel_prefix` of 24.'}
-knitr::include_graphics("bits_reduced.png")
-```
-
-These two techniques become even more important in the IPv6 address space, which uses 128-bit addresses.
-
-**Note:** To prevent accidentally plotting an unreasonably large number of discrete levels, ggip limits the number of plotted bits to 24.
-This means the `coord_ip()` arguments must satisfy:
-
-```
-pixel_prefix - prefix_length(canvas_prefix) <= 24
-```
-
-## Space-filling curves
-
-Inspired by [an xkcd comic](https://xkcd.com/195/) originally published in December 2006, we use a space-filling curve to map IP data (one-dimensional) to Cartesian coordinates (two-dimensional).
-This means our discrete levels become represented by pixels.
-Two curves are commonly chosen for this task: the Hilbert curve and the Morton curve (also known as the Z curve).
-Compared to other space-filling curves, these are advantageous because they preserve locality (i.e. subnetworks remain close together).
-
-The curve order represents how nested the curve is and therefore determines how many data points can be visualized.
-Conversely, choosing the number of plotted bits (see above) determines the order of the curve.
-Since space-filling curves are fractal, increasing the curve order effectively improves the image resolution (plotted networks remain in the same overall location).
-
 
 ### Hilbert curve
 
