@@ -1,0 +1,136 @@
+#include <Rcpp.h>
+#include <ipaddress.h>
+#include "address_to_pixel_int.h"
+#include "curves.h"
+
+using namespace Rcpp;
+using namespace ipaddress;
+
+
+struct BoundingBox {
+  uint32_t xmin, xmax, ymin, ymax;
+};
+
+BoundingBox network_to_bbox_hilbert(uint32_t first_pixel_int, AddressMapping mapping) {
+  BoundingBox bbox;
+  uint32_t diag = 0xAAAAAAAA;
+  uint32_t x1, x2, y1, y2;
+  unsigned int curve_order = (mapping.canvas_bits - mapping.pixel_bits) / 2;
+
+  if (mapping.network_bits <= mapping.pixel_bits) {  // no area
+    hilbert_curve(first_pixel_int, curve_order, &x1, &y1);
+
+    bbox.xmin = x1;
+    bbox.ymin = y1;
+    bbox.xmax = x1;
+    bbox.ymax = y1;
+  } else if (((mapping.network_bits - mapping.pixel_bits) & 1) == 0) {  // square
+    hilbert_curve(first_pixel_int, curve_order, &x1, &y1);
+    hilbert_curve(first_pixel_int | (diag >> (32 - (mapping.network_bits - mapping.pixel_bits))), curve_order, &x2, &y2);
+
+    bbox.xmin = std::min(x1, x2);
+    bbox.ymin = std::min(y1, y2);
+    bbox.xmax = std::max(x1, x2);
+    bbox.ymax = std::max(y1, y2);
+  } else {  // rectangle
+    mapping.network_bits -= 1;
+
+    BoundingBox square1 = network_to_bbox_hilbert(first_pixel_int, mapping);
+    BoundingBox square2 = network_to_bbox_hilbert(
+      first_pixel_int | (1 << (mapping.network_bits - mapping.pixel_bits)),
+      mapping
+    );
+
+    bbox.xmin = std::min(square1.xmin, square2.xmin);
+    bbox.ymin = std::min(square1.ymin, square2.ymin);
+    bbox.xmax = std::max(square1.xmax, square2.xmax);
+    bbox.ymax = std::max(square1.ymax, square2.ymax);
+  }
+
+  return bbox;
+}
+
+BoundingBox network_to_bbox(const IpNetwork &network, AddressMapping mapping, bool is_morton) {
+  mapping.network_bits = mapping.space_bits - network.prefix_length();
+  uint32_t first_int = address_to_pixel_int(network.address(), mapping);
+
+  if (is_morton) {
+    BoundingBox bbox;
+    uint32_t x1, x2, y1, y2;
+    unsigned int curve_order = (mapping.canvas_bits - mapping.pixel_bits) / 2;
+
+    uint32_t last_int = address_to_pixel_int(broadcast_address(network), mapping);
+    morton_curve(first_int, curve_order, &x1, &y1);
+    morton_curve(last_int, curve_order, &x2, &y2);
+
+    bbox.xmin = std::min(x1, x2);
+    bbox.ymin = std::min(y1, y2);
+    bbox.xmax = std::max(x1, x2);
+    bbox.ymax = std::max(y1, y2);
+
+    return bbox;
+  } else {
+    return network_to_bbox_hilbert(first_int, mapping);
+  }
+}
+
+bool is_subnet(const IpNetwork &network, const IpNetwork &other) {
+  return address_in_network(network.address(), other) && (network.prefix_length() >= other.prefix_length());
+}
+
+// [[Rcpp::export]]
+DataFrame wrap_network_to_cartesian(List network_r, List canvas_network_r, int pixel_prefix, String curve) {
+  std::vector<IpNetwork> network = decode_networks(network_r);
+  std::vector<IpNetwork> canvas_networks = decode_networks(canvas_network_r);
+
+  if (canvas_networks.size() != 1) {
+    stop("'canvas_network' must be an ip_network scalar"); // # nocov
+  }
+  IpNetwork canvas_network = canvas_networks[0];
+
+  // initialize output vectors
+  std::size_t vsize = network.size();
+  IntegerVector out_xmin(vsize);
+  IntegerVector out_ymin(vsize);
+  IntegerVector out_xmax(vsize);
+  IntegerVector out_ymax(vsize);
+
+  // setup mapping from IP space to plotting canvas
+  AddressMapping mapping = get_mapping(canvas_network, pixel_prefix);
+
+  // setup curve
+  bool is_morton = (curve == "morton");
+
+  for (std::size_t i=0; i<vsize; ++i) {
+    if (i % 10000 == 0) {
+      checkUserInterrupt();
+    }
+
+    if (network[i].is_na()) {
+      out_xmin[i] = NA_INTEGER;
+      out_ymin[i] = NA_INTEGER;
+      out_xmax[i] = NA_INTEGER;
+      out_ymax[i] = NA_INTEGER;
+    } else {
+      if (is_subnet(network[i], canvas_network)) {
+        BoundingBox bbox = network_to_bbox(network[i], mapping, is_morton);
+        out_xmin[i] = bbox.xmin;
+        out_ymin[i] = bbox.ymin;
+        out_xmax[i] = bbox.xmax;
+        out_ymax[i] = bbox.ymax;
+      } else {
+        out_xmin[i] = NA_INTEGER;
+        out_ymin[i] = NA_INTEGER;
+        out_xmax[i] = NA_INTEGER;
+        out_ymax[i] = NA_INTEGER;
+      }
+    }
+  }
+
+  return DataFrame::create(
+    _["xmin"] = out_xmin,
+    _["ymin"] = out_ymin,
+    _["xmax"] = out_xmax,
+    _["ymax"] = out_ymax
+  );
+}
