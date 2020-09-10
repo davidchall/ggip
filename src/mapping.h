@@ -8,7 +8,7 @@ struct AddressMapping {
   unsigned int space_bits, canvas_bits, pixel_bits;
 };
 
-AddressMapping get_mapping(const ipaddress::IpNetwork &canvas_network, int pixel_prefix);
+AddressMapping setup_mapping(const ipaddress::IpNetwork &canvas_network, int pixel_prefix);
 
 uint32_t address_to_integer(const ipaddress::IpAddress &address, AddressMapping mapping);
 

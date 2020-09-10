@@ -97,7 +97,7 @@ DataFrame wrap_network_to_cartesian(List network_r, List canvas_network_r, int p
   IntegerVector out_ymax(vsize);
 
   // setup mapping from IP space to plotting canvas
-  AddressMapping mapping = get_mapping(canvas_network, pixel_prefix);
+  AddressMapping mapping = setup_mapping(canvas_network, pixel_prefix);
 
   // setup curve
   bool is_morton = (curve == "morton");

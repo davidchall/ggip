@@ -4,7 +4,7 @@
 using namespace ipaddress;
 
 
-AddressMapping get_mapping(const IpNetwork &canvas_network, int pixel_prefix) {
+AddressMapping setup_mapping(const IpNetwork &canvas_network, int pixel_prefix) {
   AddressMapping mapping;
 
   mapping.space_bits = canvas_network.address().n_bits();
