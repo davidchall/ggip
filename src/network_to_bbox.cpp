@@ -107,24 +107,17 @@ DataFrame wrap_network_to_cartesian(List network_r, List canvas_network_r, int p
       checkUserInterrupt();
     }
 
-    if (network[i].is_na()) {
+    if (is_subnet(network[i], canvas_network)) {
+      BoundingBox bbox = network_to_bbox(network[i], mapping, is_morton);
+      out_xmin[i] = bbox.xmin;
+      out_ymin[i] = bbox.ymin;
+      out_xmax[i] = bbox.xmax;
+      out_ymax[i] = bbox.ymax;
+    } else {
       out_xmin[i] = NA_INTEGER;
       out_ymin[i] = NA_INTEGER;
       out_xmax[i] = NA_INTEGER;
       out_ymax[i] = NA_INTEGER;
-    } else {
-      if (is_subnet(network[i], canvas_network)) {
-        BoundingBox bbox = network_to_bbox(network[i], mapping, is_morton);
-        out_xmin[i] = bbox.xmin;
-        out_ymin[i] = bbox.ymin;
-        out_xmax[i] = bbox.xmax;
-        out_ymax[i] = bbox.ymax;
-      } else {
-        out_xmin[i] = NA_INTEGER;
-        out_ymin[i] = NA_INTEGER;
-        out_xmax[i] = NA_INTEGER;
-        out_ymax[i] = NA_INTEGER;
-      }
     }
   }
 

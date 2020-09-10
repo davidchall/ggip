@@ -43,19 +43,14 @@ DataFrame wrap_address_to_cartesian(List address_r, List canvas_network_r, int p
       checkUserInterrupt();
     }
 
-    if (address[i].is_na()) {
+    if (address_in_network(address[i], canvas_network)) {
+      uint32_t x, y;
+      address_to_pixel(address[i], mapping, is_morton, &x, &y);
+      out_x[i] = x;
+      out_y[i] = y;
+    } else {
       out_x[i] = NA_INTEGER;
       out_y[i] = NA_INTEGER;
-    } else {
-      if (address_in_network(address[i], canvas_network)) {
-        uint32_t x, y;
-        address_to_pixel(address[i], mapping, is_morton, &x, &y);
-        out_x[i] = x;
-        out_y[i] = y;
-      } else {
-        out_x[i] = NA_INTEGER;
-        out_y[i] = NA_INTEGER;
-      }
     }
   }
 
