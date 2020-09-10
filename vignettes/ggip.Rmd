@@ -14,8 +14,24 @@ knitr::opts_chunk$set(
 )
 ```
 
+The ggip package enables data visualization of IP addresses and networks.
+
+It achieves this by mapping one-dimensional IP data onto a two-dimensional grid.
+For more details about this mapping, please see `vignette("visualizing-ip-data")`.
+
+This introductory vignette is focused on how to use ggip functions to generate plots.
+
+
+## Configuring the coordinate system
+
 ```{r setup, message=FALSE}
 library(tidyverse)
 library(ipaddress)
 library(ggip)
 ```
+
+
+## Using layers from ggplot2 and other packages
+
+
+## Using ggip layers
