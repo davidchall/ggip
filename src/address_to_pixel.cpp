@@ -1,15 +1,15 @@
 #include <Rcpp.h>
 #include <ipaddress.h>
-#include "address_to_pixel_int.h"
+#include "mapping.h"
 #include "curves.h"
 
 using namespace Rcpp;
 using namespace ipaddress;
 
 
-void address_to_xy(const IpAddress &address, AddressMapping mapping, bool is_morton, uint32_t *x, uint32_t *y) {
+void address_to_pixel(const IpAddress &address, AddressMapping mapping, bool is_morton, uint32_t *x, uint32_t *y) {
   int curve_order = (mapping.canvas_bits - mapping.pixel_bits) / 2;
-  uint32_t pixel_int = address_to_pixel_int(address, mapping);
+  uint32_t pixel_int = address_to_integer(address, mapping);
   if (is_morton) {
     morton_curve(pixel_int, curve_order, x, y);
   } else {
@@ -49,7 +49,7 @@ DataFrame wrap_address_to_cartesian(List address_r, List canvas_network_r, int p
     } else {
       if (address_in_network(address[i], canvas_network)) {
         uint32_t x, y;
-        address_to_xy(address[i], mapping, is_morton, &x, &y);
+        address_to_pixel(address[i], mapping, is_morton, &x, &y);
         out_x[i] = x;
         out_y[i] = y;
       } else {

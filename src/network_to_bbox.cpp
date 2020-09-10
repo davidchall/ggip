@@ -1,6 +1,6 @@
 #include <Rcpp.h>
 #include <ipaddress.h>
-#include "address_to_pixel_int.h"
+#include "mapping.h"
 #include "curves.h"
 
 using namespace Rcpp;
@@ -11,35 +11,35 @@ struct BoundingBox {
   uint32_t xmin, xmax, ymin, ymax;
 };
 
-BoundingBox network_to_bbox_hilbert(uint32_t first_pixel_int, AddressMapping mapping) {
+BoundingBox network_to_bbox_hilbert(uint32_t first_pixel, unsigned int network_bits, AddressMapping mapping) {
   BoundingBox bbox;
-  uint32_t diag = 0xAAAAAAAA;
   uint32_t x1, x2, y1, y2;
   unsigned int curve_order = (mapping.canvas_bits - mapping.pixel_bits) / 2;
 
-  if (mapping.network_bits <= mapping.pixel_bits) {  // no area
-    hilbert_curve(first_pixel_int, curve_order, &x1, &y1);
+  if (network_bits <= mapping.pixel_bits) {  // no area
+    hilbert_curve(first_pixel, curve_order, &x1, &y1);
 
     bbox.xmin = x1;
     bbox.ymin = y1;
     bbox.xmax = x1;
     bbox.ymax = y1;
-  } else if (((mapping.network_bits - mapping.pixel_bits) & 1) == 0) {  // square
-    hilbert_curve(first_pixel_int, curve_order, &x1, &y1);
-    hilbert_curve(first_pixel_int | (diag >> (32 - (mapping.network_bits - mapping.pixel_bits))), curve_order, &x2, &y2);
+  } else if (((network_bits - mapping.pixel_bits) & 1) == 0) {  // square
+    uint32_t diag = 0xAAAAAAAA;
+    uint32_t last_pixel = first_pixel | (diag >> (32 - (network_bits - mapping.pixel_bits)));
+
+    hilbert_curve(first_pixel, curve_order, &x1, &y1);
+    hilbert_curve(last_pixel, curve_order, &x2, &y2);
 
     bbox.xmin = std::min(x1, x2);
     bbox.ymin = std::min(y1, y2);
     bbox.xmax = std::max(x1, x2);
     bbox.ymax = std::max(y1, y2);
   } else {  // rectangle
-    mapping.network_bits -= 1;
+    network_bits--;
+    uint32_t mid_pixel = first_pixel | (1 << (network_bits - mapping.pixel_bits));
 
-    BoundingBox square1 = network_to_bbox_hilbert(first_pixel_int, mapping);
-    BoundingBox square2 = network_to_bbox_hilbert(
-      first_pixel_int | (1 << (mapping.network_bits - mapping.pixel_bits)),
-      mapping
-    );
+    BoundingBox square1 = network_to_bbox_hilbert(first_pixel, network_bits, mapping);
+    BoundingBox square2 = network_to_bbox_hilbert(mid_pixel, network_bits, mapping);
 
     bbox.xmin = std::min(square1.xmin, square2.xmin);
     bbox.ymin = std::min(square1.ymin, square2.ymin);
@@ -51,17 +51,17 @@ BoundingBox network_to_bbox_hilbert(uint32_t first_pixel_int, AddressMapping map
 }
 
 BoundingBox network_to_bbox(const IpNetwork &network, AddressMapping mapping, bool is_morton) {
-  mapping.network_bits = mapping.space_bits - network.prefix_length();
-  uint32_t first_int = address_to_pixel_int(network.address(), mapping);
+  uint32_t first_pixel = address_to_integer(network.address(), mapping);
 
   if (is_morton) {
     BoundingBox bbox;
     uint32_t x1, x2, y1, y2;
     unsigned int curve_order = (mapping.canvas_bits - mapping.pixel_bits) / 2;
 
-    uint32_t last_int = address_to_pixel_int(broadcast_address(network), mapping);
-    morton_curve(first_int, curve_order, &x1, &y1);
-    morton_curve(last_int, curve_order, &x2, &y2);
+    uint32_t last_pixel = address_to_integer(broadcast_address(network), mapping);
+
+    morton_curve(first_pixel, curve_order, &x1, &y1);
+    morton_curve(last_pixel, curve_order, &x2, &y2);
 
     bbox.xmin = std::min(x1, x2);
     bbox.ymin = std::min(y1, y2);
@@ -70,7 +70,8 @@ BoundingBox network_to_bbox(const IpNetwork &network, AddressMapping mapping, bo
 
     return bbox;
   } else {
-    return network_to_bbox_hilbert(first_int, mapping);
+    unsigned int network_bits = mapping.space_bits - network.prefix_length();
+    return network_to_bbox_hilbert(first_pixel, network_bits, mapping);
   }
 }
 
