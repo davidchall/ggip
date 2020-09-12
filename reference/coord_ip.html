@@ -140,10 +140,10 @@ Accessing Coordinates). This ensures all layers use a common mapping.</p>
     </div>
 
     <pre class="usage"><span class='fu'>coord_ip</span>(
-  <span class='kw'>canvas_network</span> <span class='kw'>=</span> <span class='fu'>ip_network</span>(<span class='st'>"0.0.0.0/0"</span>),
-  <span class='kw'>pixel_prefix</span> <span class='kw'>=</span> <span class='fl'>16</span>,
-  <span class='kw'>curve</span> <span class='kw'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(<span class='st'>"hilbert"</span>, <span class='st'>"morton"</span>),
-  <span class='kw'>expand</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>
+  canvas_network = <span class='fu'>ip_network</span>(<span class='st'>"0.0.0.0/0"</span>),
+  pixel_prefix = <span class='fl'>16</span>,
+  curve = <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(<span class='st'>"hilbert"</span>, <span class='st'>"morton"</span>),
+  expand = <span class='fl'>TRUE</span>
 )</pre>
 
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
@@ -181,7 +181,7 @@ data grid.</p></td>
 means each <code><a href='https://davidchall.github.io/ipaddress/reference/ip_address.html'>ip_address</a></code> or
 <code><a href='https://davidchall.github.io/ipaddress/reference/ip_network.html'>ip_network</a></code> column in your original dataset is
 converted to a dataframe column. When specifying ggplot2 aesthetics, you'll
-need to use <code>$</code> to access the nested data (see Examples).</p>
+need to use <code><a href='https://rdrr.io/r/base/Extract.html'>$</a></code> to access the nested data (see Examples).</p>
 <p>Each <code><a href='https://davidchall.github.io/ipaddress/reference/ip_address.html'>ip_address</a></code> column will be replaced with a
 dataframe containing the following columns:</p><table class='table'>
 <tr><td>Column name</td><td>Data type</td><td>Description</td></tr>
@@ -208,30 +208,32 @@ dataframe containing the following columns:</p><table class='table'>
     <div class='dont-index'><p><code><a href='../articles/visualizing-ip-data.html'>vignette("visualizing-ip-data")</a></code> describes the mapping in more detail.</p></div>
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
-    <pre class="examples"><div class='input'><span class='fu'><a href='https://rdrr.io/r/base/options.html'>options</a></span>(<span class='kw'>tidyverse.quiet</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>)
-<span class='fu'><a href='https://rdrr.io/r/base/library.html'>library</a></span>(<span class='no'>tidyverse</span>)
-<span class='fu'><a href='https://rdrr.io/r/base/library.html'>library</a></span>(<span class='no'>ipaddress</span>)
+    <pre class="examples"><div class='input'><span class='fu'><a href='https://rdrr.io/r/base/options.html'>options</a></span>(tidyverse.quiet = <span class='fl'>TRUE</span>)
+<span class='fu'><a href='https://rdrr.io/r/base/library.html'>library</a></span>(<span class='kw'><a href='http://tidyverse.tidyverse.org'>tidyverse</a></span>)
+<span class='fu'><a href='https://rdrr.io/r/base/library.html'>library</a></span>(<span class='kw'><a href='https://davidchall.github.io/ipaddress'>ipaddress</a></span>)
 
-<span class='fu'>tibble</span>(<span class='kw'>address</span> <span class='kw'>=</span> <span class='fu'><a href='https://davidchall.github.io/ipaddress/reference/ip_address.html'>ip_address</a></span>(<span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(<span class='st'>"0.0.0.0"</span>, <span class='st'>"128.0.0.0"</span>, <span class='st'>"192.168.0.1"</span>))) <span class='kw'>%&gt;%</span>
-  <span class='fu'>ggplot</span>(<span class='fu'>aes</span>(<span class='kw'>x</span> <span class='kw'>=</span> <span class='no'>address</span>$<span class='no'>x</span>, <span class='kw'>y</span> <span class='kw'>=</span> <span class='no'>address</span>$<span class='no'>y</span>, <span class='kw'>label</span> <span class='kw'>=</span> <span class='no'>address</span>$<span class='no'>ip</span>)) +
-  <span class='fu'>geom_point</span>() +
-  <span class='fu'>geom_label</span>(<span class='kw'>nudge_x</span> <span class='kw'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(<span class='fl'>10</span>, <span class='fl'>0</span>, -<span class='fl'>10</span>), <span class='kw'>nudge_y</span> <span class='kw'>=</span> -<span class='fl'>10</span>) +
-  <span class='fu'>coord_ip</span>() +
-  <span class='fu'><a href='theme_ip.html'>theme_ip_light</a></span>()</div><div class='img'><img src='coord_ip-1.png' alt='' width='480' height='480' /></div><div class='input'>
-<span class='fu'>tibble</span>(<span class='kw'>network</span> <span class='kw'>=</span> <span class='fu'><a href='https://davidchall.github.io/ipaddress/reference/ip_network.html'>ip_network</a></span>(<span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(<span class='st'>"0.0.0.0/8"</span>, <span class='st'>"224.0.0.0/4"</span>))) <span class='kw'>%&gt;%</span>
+<span class='fu'>tibble</span>(address = <span class='fu'><a href='https://davidchall.github.io/ipaddress/reference/ip_address.html'>ip_address</a></span>(<span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(<span class='st'>"0.0.0.0"</span>, <span class='st'>"128.0.0.0"</span>, <span class='st'>"192.168.0.1"</span>))) <span class='op'>%&gt;%</span>
+  <span class='fu'>ggplot</span>(<span class='fu'>aes</span>(x = <span class='kw'>address</span><span class='op'>$</span><span class='kw'>x</span>, y = <span class='kw'>address</span><span class='op'>$</span><span class='kw'>y</span>, label = <span class='kw'>address</span><span class='op'>$</span><span class='kw'>ip</span>)) <span class='op'>+</span>
+  <span class='fu'>geom_point</span>() <span class='op'>+</span>
+  <span class='fu'>geom_label</span>(nudge_x = <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(<span class='fl'>10</span>, <span class='fl'>0</span>, <span class='op'>-</span><span class='fl'>10</span>), nudge_y = <span class='op'>-</span><span class='fl'>10</span>) <span class='op'>+</span>
+  <span class='fu'>coord_ip</span>() <span class='op'>+</span>
+  <span class='fu'><a href='theme_ip.html'>theme_ip_light</a></span>()
+</div><div class='img'><img src='coord_ip-1.png' alt='' width='480' height='480' /></div><div class='input'>
+<span class='fu'>tibble</span>(network = <span class='fu'><a href='https://davidchall.github.io/ipaddress/reference/ip_network.html'>ip_network</a></span>(<span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(<span class='st'>"0.0.0.0/8"</span>, <span class='st'>"224.0.0.0/4"</span>))) <span class='op'>%&gt;%</span>
   <span class='fu'>mutate</span>(
-    <span class='kw'>start</span> <span class='kw'>=</span> <span class='fu'><a href='https://davidchall.github.io/ipaddress/reference/network_size.html'>network_address</a></span>(<span class='no'>network</span>),
-    <span class='kw'>end</span> <span class='kw'>=</span> <span class='fu'><a href='https://davidchall.github.io/ipaddress/reference/network_size.html'>broadcast_address</a></span>(<span class='no'>network</span>)
-  ) <span class='kw'>%&gt;%</span>
-  <span class='fu'>ggplot</span>() +
-  <span class='fu'>geom_point</span>(<span class='fu'>aes</span>(<span class='kw'>x</span> <span class='kw'>=</span> <span class='no'>start</span>$<span class='no'>x</span>, <span class='kw'>y</span> <span class='kw'>=</span> <span class='no'>start</span>$<span class='no'>y</span>), <span class='kw'>color</span> <span class='kw'>=</span> <span class='st'>"blue"</span>) +
-  <span class='fu'>geom_point</span>(<span class='fu'>aes</span>(<span class='kw'>x</span> <span class='kw'>=</span> <span class='no'>end</span>$<span class='no'>x</span>, <span class='kw'>y</span> <span class='kw'>=</span> <span class='no'>end</span>$<span class='no'>y</span>), <span class='kw'>color</span> <span class='kw'>=</span> <span class='st'>"red"</span>) +
+    start = <span class='fu'><a href='https://davidchall.github.io/ipaddress/reference/network_size.html'>network_address</a></span>(<span class='kw'>network</span>),
+    end = <span class='fu'><a href='https://davidchall.github.io/ipaddress/reference/network_size.html'>broadcast_address</a></span>(<span class='kw'>network</span>)
+  ) <span class='op'>%&gt;%</span>
+  <span class='fu'>ggplot</span>() <span class='op'>+</span>
+  <span class='fu'>geom_point</span>(<span class='fu'>aes</span>(x = <span class='kw'>start</span><span class='op'>$</span><span class='kw'>x</span>, y = <span class='kw'>start</span><span class='op'>$</span><span class='kw'>y</span>), color = <span class='st'>"blue"</span>) <span class='op'>+</span>
+  <span class='fu'>geom_point</span>(<span class='fu'>aes</span>(x = <span class='kw'>end</span><span class='op'>$</span><span class='kw'>x</span>, y = <span class='kw'>end</span><span class='op'>$</span><span class='kw'>y</span>), color = <span class='st'>"red"</span>) <span class='op'>+</span>
   <span class='fu'>geom_rect</span>(
-    <span class='fu'>aes</span>(<span class='kw'>xmin</span> <span class='kw'>=</span> <span class='no'>network</span>$<span class='no'>xmin</span>, <span class='kw'>xmax</span> <span class='kw'>=</span> <span class='no'>network</span>$<span class='no'>xmax</span>, <span class='kw'>ymin</span> <span class='kw'>=</span> <span class='no'>network</span>$<span class='no'>ymin</span>, <span class='kw'>ymax</span> <span class='kw'>=</span> <span class='no'>network</span>$<span class='no'>ymax</span>),
-    <span class='kw'>alpha</span> <span class='kw'>=</span> <span class='fl'>0.5</span>, <span class='kw'>fill</span> <span class='kw'>=</span> <span class='st'>"grey"</span>
-  ) +
-  <span class='fu'>coord_ip</span>(<span class='kw'>curve</span> <span class='kw'>=</span> <span class='st'>"morton"</span>) +
-  <span class='fu'><a href='theme_ip.html'>theme_ip_light</a></span>()</div><div class='img'><img src='coord_ip-2.png' alt='' width='480' height='480' /></div></pre>
+    <span class='fu'>aes</span>(xmin = <span class='kw'>network</span><span class='op'>$</span><span class='kw'>xmin</span>, xmax = <span class='kw'>network</span><span class='op'>$</span><span class='kw'>xmax</span>, ymin = <span class='kw'>network</span><span class='op'>$</span><span class='kw'>ymin</span>, ymax = <span class='kw'>network</span><span class='op'>$</span><span class='kw'>ymax</span>),
+    alpha = <span class='fl'>0.5</span>, fill = <span class='st'>"grey"</span>
+  ) <span class='op'>+</span>
+  <span class='fu'>coord_ip</span>(curve = <span class='st'>"morton"</span>) <span class='op'>+</span>
+  <span class='fu'><a href='theme_ip.html'>theme_ip_light</a></span>()
+</div><div class='img'><img src='coord_ip-2.png' alt='' width='480' height='480' /></div></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">
     <nav id="toc" data-toggle="toc" class="sticky-top">
@@ -247,7 +249,7 @@ dataframe containing the following columns:</p><table class='table'>
 </div>
 
 <div class="pkgdown">
-  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.5.1.</p>
+  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.6.1.</p>
 </div>
 
       </footer>
