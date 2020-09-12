@@ -75,10 +75,6 @@ BoundingBox network_to_bbox(const IpNetwork &network, AddressMapping mapping, bo
   }
 }
 
-bool is_subnet(const IpNetwork &network, const IpNetwork &other) {
-  return address_in_network(network.address(), other) && (network.prefix_length() >= other.prefix_length());
-}
-
 // [[Rcpp::export]]
 DataFrame wrap_network_to_cartesian(List network_r, List canvas_network_r, int pixel_prefix, String curve) {
   std::vector<IpNetwork> network = decode_networks(network_r);
