@@ -29,7 +29,7 @@ uint32_t address_to_integer(const IpAddress &address, AddressMapping mapping) {
   // interpret final 4 bytes as integer
   // NOTE: this limits plotting to canvas_bits - pixel_bits <= 32
   uint32_t reduced_integer;
-  std::memcpy(&reduced_integer, reduced_address.cend() - 4, 4);
+  std::memcpy(&reduced_integer, reduced_address.end() - 4, 4);
   reduced_integer = network_to_host_long(reduced_integer);
 
   return reduced_integer;
