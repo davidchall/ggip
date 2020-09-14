@@ -33,7 +33,6 @@ Suggests:
     tidyverse,
     vdiffr
 LinkingTo: 
-    AsioHeaders,
     ipaddress,
     Rcpp
 VignetteBuilder: 
