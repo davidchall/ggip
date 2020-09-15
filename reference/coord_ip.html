@@ -90,6 +90,9 @@ Accessing Coordinates). This ensures all layers use a common mapping." />
   </a>
 </li>
 <li>
+  <a href="../articles/ggip.html">Get started</a>
+</li>
+<li>
   <a href="../reference/index.html">Reference</a>
 </li>
 <li class="dropdown">
@@ -143,7 +146,7 @@ Accessing Coordinates). This ensures all layers use a common mapping.</p>
   canvas_network = <span class='fu'>ip_network</span>(<span class='st'>"0.0.0.0/0"</span>),
   pixel_prefix = <span class='fl'>16</span>,
   curve = <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(<span class='st'>"hilbert"</span>, <span class='st'>"morton"</span>),
-  expand = <span class='fl'>TRUE</span>
+  expand = <span class='fl'>FALSE</span>
 )</pre>
 
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
@@ -168,8 +171,8 @@ corresponding network. The default value is 16.</p></td>
     </tr>
     <tr>
       <th>expand</th>
-      <td><p>If <code>TRUE</code>, the default, adds a small expanded margin around the
-data grid.</p></td>
+      <td><p>If <code>TRUE</code>, adds a small expanded margin around the data grid.
+The default is <code>FALSE</code>.</p></td>
     </tr>
     </table>
 
@@ -216,7 +219,7 @@ dataframe containing the following columns:</p><table class='table'>
   <span class='fu'>ggplot</span>(<span class='fu'>aes</span>(x = <span class='kw'>address</span><span class='op'>$</span><span class='kw'>x</span>, y = <span class='kw'>address</span><span class='op'>$</span><span class='kw'>y</span>, label = <span class='kw'>address</span><span class='op'>$</span><span class='kw'>ip</span>)) <span class='op'>+</span>
   <span class='fu'>geom_point</span>() <span class='op'>+</span>
   <span class='fu'>geom_label</span>(nudge_x = <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(<span class='fl'>10</span>, <span class='fl'>0</span>, <span class='op'>-</span><span class='fl'>10</span>), nudge_y = <span class='op'>-</span><span class='fl'>10</span>) <span class='op'>+</span>
-  <span class='fu'>coord_ip</span>() <span class='op'>+</span>
+  <span class='fu'>coord_ip</span>(expand = <span class='fl'>TRUE</span>) <span class='op'>+</span>
   <span class='fu'><a href='theme_ip.html'>theme_ip_light</a></span>()
 </div><div class='img'><img src='coord_ip-1.png' alt='' width='480' height='480' /></div><div class='input'>
 <span class='fu'>tibble</span>(network = <span class='fu'><a href='https://davidchall.github.io/ipaddress/reference/ip_network.html'>ip_network</a></span>(<span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(<span class='st'>"0.0.0.0/8"</span>, <span class='st'>"224.0.0.0/4"</span>))) <span class='op'>%&gt;%</span>
@@ -231,7 +234,7 @@ dataframe containing the following columns:</p><table class='table'>
     <span class='fu'>aes</span>(xmin = <span class='kw'>network</span><span class='op'>$</span><span class='kw'>xmin</span>, xmax = <span class='kw'>network</span><span class='op'>$</span><span class='kw'>xmax</span>, ymin = <span class='kw'>network</span><span class='op'>$</span><span class='kw'>ymin</span>, ymax = <span class='kw'>network</span><span class='op'>$</span><span class='kw'>ymax</span>),
     alpha = <span class='fl'>0.5</span>, fill = <span class='st'>"grey"</span>
   ) <span class='op'>+</span>
-  <span class='fu'>coord_ip</span>(curve = <span class='st'>"morton"</span>) <span class='op'>+</span>
+  <span class='fu'>coord_ip</span>(curve = <span class='st'>"morton"</span>, expand = <span class='fl'>TRUE</span>) <span class='op'>+</span>
   <span class='fu'><a href='theme_ip.html'>theme_ip_light</a></span>()
 </div><div class='img'><img src='coord_ip-2.png' alt='' width='480' height='480' /></div></pre>
   </div>
