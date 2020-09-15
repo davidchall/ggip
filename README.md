@@ -15,8 +15,9 @@ status](https://github.com/davidchall/ggip/workflows/R-CMD-check/badge.svg)](htt
 status](https://codecov.io/gh/davidchall/ggip/branch/master/graph/badge.svg)](https://codecov.io/gh/davidchall/ggip?branch=master)
 <!-- badges: end -->
 
-ggip facilitates visualizing IP addresses and networks stored in vectors
-from the [ipaddress](https://davidchall.github.io/ipaddress/) package.
+ggip is a [{ggplot2}](https://ggplot2.tidyverse.org) extension for
+visualizing IP addresses and networks stored in
+[{ipaddress}](https://davidchall.github.io/ipaddress/) vectors.
 
 Here are some of the key features:
 
@@ -38,9 +39,9 @@ remotes::install_github("davidchall/ggip")
 
 `coord_ip()` forms the basis of any ggip plot. It determines which
 region of address space is displayed and also the resolution of the
-pixels in terms of network sizes. It also translates
-`ipaddress::ip_address()` and `ipaddress::ip_network()` vectors into
-Cartesian coordinates that can be used by ggplot2 layers.
+pixels in terms of network sizes. It also translates `ip_address()` and
+`ip_network()` vectors into Cartesian coordinates that can be used by
+ggplot2 layers.
 
 With ggip, it is easy to quickly produce visualizations like this:
 
