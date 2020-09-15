@@ -8,7 +8,7 @@ coord_ip(
   canvas_network = ip_network("0.0.0.0/0"),
   pixel_prefix = 16,
   curve = c("hilbert", "morton"),
-  expand = TRUE
+  expand = FALSE
 )
 }
 \arguments{
@@ -23,8 +23,8 @@ corresponding network. The default value is 16.}
 \item{curve}{A string to choose the space-filling curve. Choices are
 \code{"hilbert"} (default) and \code{"morton"}.}
 
-\item{expand}{If \code{TRUE}, the default, adds a small expanded margin around the
-data grid.}
+\item{expand}{If \code{TRUE}, adds a small expanded margin around the data grid.
+The default is \code{FALSE}.}
 }
 \description{
 A ggplot2 coordinate system that maps a range of address space onto a
@@ -72,7 +72,7 @@ tibble(address = ip_address(c("0.0.0.0", "128.0.0.0", "192.168.0.1"))) \%>\%
   ggplot(aes(x = address$x, y = address$y, label = address$ip)) +
   geom_point() +
   geom_label(nudge_x = c(10, 0, -10), nudge_y = -10) +
-  coord_ip() +
+  coord_ip(expand = TRUE) +
   theme_ip_light()
 
 tibble(network = ip_network(c("0.0.0.0/8", "224.0.0.0/4"))) \%>\%
@@ -87,7 +87,7 @@ tibble(network = ip_network(c("0.0.0.0/8", "224.0.0.0/4"))) \%>\%
     aes(xmin = network$xmin, xmax = network$xmax, ymin = network$ymin, ymax = network$ymax),
     alpha = 0.5, fill = "grey"
   ) +
-  coord_ip(curve = "morton") +
+  coord_ip(curve = "morton", expand = TRUE) +
   theme_ip_light()
 }
 \seealso{

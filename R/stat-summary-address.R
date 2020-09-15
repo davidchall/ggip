@@ -53,7 +53,7 @@
 #' )
 #'
 #' p <- ggplot(dat, aes(ip = ip)) +
-#'   coord_ip(expand = FALSE) +
+#'   coord_ip() +
 #'   theme_ip_light()
 #'
 #' # simple count of observations
