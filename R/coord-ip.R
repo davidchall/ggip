@@ -37,8 +37,8 @@
 #' | `ymax`      | `integer`    | Bounding box ymax |
 #'
 #' @inheritParams ip_to_cartesian
-#' @param expand If `TRUE`, the default, adds a small expanded margin around the
-#'   data grid.
+#' @param expand If `TRUE`, adds a small expanded margin around the data grid.
+#'   The default is `FALSE`.
 #'
 #' @examples
 #' options(tidyverse.quiet = TRUE)
@@ -49,7 +49,7 @@
 #'   ggplot(aes(x = address$x, y = address$y, label = address$ip)) +
 #'   geom_point() +
 #'   geom_label(nudge_x = c(10, 0, -10), nudge_y = -10) +
-#'   coord_ip() +
+#'   coord_ip(expand = TRUE) +
 #'   theme_ip_light()
 #'
 #' tibble(network = ip_network(c("0.0.0.0/8", "224.0.0.0/4"))) %>%
@@ -64,7 +64,7 @@
 #'     aes(xmin = network$xmin, xmax = network$xmax, ymin = network$ymin, ymax = network$ymax),
 #'     alpha = 0.5, fill = "grey"
 #'   ) +
-#'   coord_ip(curve = "morton") +
+#'   coord_ip(curve = "morton", expand = TRUE) +
 #'   theme_ip_light()
 #' @seealso
 #' `vignette("visualizing-ip-data")` describes the mapping in more detail.
@@ -72,7 +72,7 @@
 coord_ip <- function(canvas_network = ip_network("0.0.0.0/0"),
                      pixel_prefix = 16,
                      curve = c("hilbert", "morton"),
-                     expand = TRUE) {
+                     expand = FALSE) {
 
   curve <- arg_match(curve)
   curve_order <- as.integer((pixel_prefix - prefix_length(canvas_network)) / 2)

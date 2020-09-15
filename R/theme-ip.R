@@ -36,6 +36,7 @@ theme_ip_dark <- function(background_color = "black", text_color = "white",
   ) %+replace%
     theme(
       legend.background = element_rect(fill = background_color),
+      legend.key = element_rect(fill = background_color),
       panel.background = element_rect(fill = background_color),
       plot.background = element_rect(fill = background_color)
     ) +
