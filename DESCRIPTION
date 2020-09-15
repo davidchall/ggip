@@ -27,6 +27,7 @@ Imports:
     tidyr,
     vctrs
 Suggests: 
+    ggfittext,
     knitr,
     rmarkdown,
     testthat,
