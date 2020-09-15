@@ -19,13 +19,13 @@ BugReports: https://github.com/davidchall/ggip/issues
 Depends: 
     R (>= 3.3.0)
 Imports: 
-    ggplot2,
+    ggplot2 (>= 3.3.0),
     glue,
-    ipaddress,
+    ipaddress (>= 0.5.1),
     Rcpp,
     rlang,
     tidyr,
-    vctrs
+    vctrs (>= 0.3.0)
 Suggests: 
     knitr,
     rmarkdown,
