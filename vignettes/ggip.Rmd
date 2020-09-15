@@ -7,7 +7,7 @@ vignette: >
   %\VignetteEncoding{UTF-8}
 ---
 
-```{r, include = FALSE}
+```{r, include=FALSE}
 knitr::opts_chunk$set(
   collapse = TRUE,
   comment = "#>",
@@ -103,11 +103,28 @@ tibble(address = ip_address(c("0.0.0.0", "128.0.0.0", "192.168.0.1"))) %>%
 
 Similarly, we plot `ip_network()` vectors using layers corresponding to rectangles:
 
-```{r, out.width='80%', fig.asp=0.8, fig.width = 7}
+```{r, out.width='80%', fig.asp=0.8, fig.width=7, eval=rlang::is_installed("ggfittext")}
 iana_ipv4 %>%
   ggplot(aes(xmin = network$xmin, ymin = network$ymin, xmax = network$xmax, ymax = network$ymax)) +
   geom_rect(aes(fill = allocation)) +
   ggfittext::geom_fit_text(aes(label = label), reflow = TRUE) +
+  scale_fill_brewer(palette = "Accent", name = NULL) +
+  coord_ip() +
+  theme_ip_dark()
+```
+
+```{r, out.width='80%', fig.asp=0.8, fig.width=7, eval=!rlang::is_installed("ggfittext")}
+iana_ipv4 %>%
+  ggplot() +
+  geom_rect(aes(
+    xmin = network$xmin, ymin = network$ymin, xmax = network$xmax, ymax = network$ymax,
+    fill = allocation
+  )) +
+  geom_label(aes(
+    x = (network$xmin + network$xmax) / 2,
+    y = (network$ymin + network$ymax) / 2,
+    label = label
+  ), data = ~ filter(.x, prefix_length(network) <= 6)) +
   scale_fill_brewer(palette = "Accent", name = NULL) +
   coord_ip() +
   theme_ip_dark()
