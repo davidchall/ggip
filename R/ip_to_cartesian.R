@@ -8,11 +8,11 @@
 #' @param address An [`ip_address`][`ipaddress::ip_address`] vector
 #' @param network An [`ip_network`][`ipaddress::ip_network`] vector
 #' @param canvas_network An [`ip_network`][`ipaddress::ip_network`] scalar that
-#'   determines the network visualized by the plotted canvas. The default shows
-#'   the entire IPv4 address space.
-#' @param pixel_prefix An integer scalar that determines the number of addresses
-#'   represented by a single pixel. It sets the prefix length of the
-#'   corresponding network. The default value is 16.
+#'   determines the region of IP space visualized by the entire 2D grid. The
+#'   default shows the entire IPv4 address space.
+#' @param pixel_prefix An integer scalar that sets the prefix length of the
+#'   network represented by a single pixel. The default value is 16. Increasing
+#'   this effectively improves the resolution of the plot.
 #' @param curve A string to choose the space-filling curve. Choices are
 #'   `"hilbert"` (default) and `"morton"`.
 #' @return A data.frame containing columns:
@@ -102,7 +102,7 @@ validate_mapping_params <- function(canvas_network, pixel_prefix) {
 
   # enforce a sensible maximum resolution (16.7 million pixels)
   if (n_bits > 24) {
-    n_pixels <- format(2 ^ (n_bits / 2), big.mark = ",")
+    n_pixels <- format(2^(n_bits / 2), big.mark = ",")
     msg <- "The difference between canvas and pixel prefix lengths must not be greater than 24."
     bullets <- format_error_bullets(c(
       "x" = glue::glue("Canvas has prefix length {prefix_length(canvas_network)}."),

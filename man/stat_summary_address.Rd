@@ -44,7 +44,7 @@ to the paired geom/stat.}
 \item{fun}{Summary function (see section below for details). If \code{NULL} (the
 default), the observations are simply counted.}
 
-\item{fun.args}{A list of extra arguments to pass to \code{fun}}
+\item{fun.args}{A list of extra arguments to pass to \code{fun}.}
 
 \item{na.rm}{If \code{FALSE}, the default, missing values are removed with
 a warning. If \code{TRUE}, missing values are silently removed.}
@@ -61,9 +61,8 @@ that define both data and aesthetics and shouldn't inherit behaviour from
 the default plot specification, e.g. \code{\link[ggplot2:borders]{borders()}}.}
 }
 \description{
-The data are grouped into networks determined by the \code{pixel_prefix} argument
-of \code{coord_ip()}. Then the values of \code{z} in each network are summarized with
-\code{fun}.
+Addresses are grouped into networks determined by the \code{pixel_prefix} argument
+of \code{coord_ip()}. Then the \code{z} values are summarized with summary function \code{fun}.
 }
 \section{Aesthetics}{
 
@@ -72,7 +71,7 @@ aesthetics are in bold):
 \itemize{
 \item \strong{\code{ip}}: An \code{\link[ipaddress:ip_address]{ip_address}} column
 \item \code{z}: Value passed to the summary function (required if \code{fun} is used)
-\item \code{fill}: Default: \code{after_stat(value)}
+\item \code{fill}: Default is \code{after_stat(value)}
 \item \code{alpha}
 }
 }
@@ -84,7 +83,7 @@ The following variables are available to \code{\link[ggplot2:aes_eval]{after_sta
 \item \code{value}: Value of summary statistic
 \item \code{count}: Number of observations
 \item \code{ip_count}: Number of unique addresses
-\item \code{ip_propn}: Observed proportion of network
+\item \code{ip_propn}: Observed proportion of pixel network
 }
 }
 

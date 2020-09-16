@@ -1,6 +1,6 @@
 test_that("stop_bad_aes_type() generates useful error message", {
   verify_output(test_path("test-stop-bad-aes-type.txt"), {
-    stop_bad_aes_type("my_layer", "ip", "an ip_address vector")
+    stop_bad_aes_type("my_layer", "ip", "ip_address")
   })
 })
 

@@ -1,21 +1,20 @@
 #' Summarize IP addresses on a heatmap
 #'
-#' The data are grouped into networks determined by the `pixel_prefix` argument
-#' of `coord_ip()`. Then the values of `z` in each network are summarized with
-#' `fun`.
+#' Addresses are grouped into networks determined by the `pixel_prefix` argument
+#' of `coord_ip()`. Then the `z` values are summarized with summary function `fun`.
 #'
 #' @inheritParams ggplot2::layer
 #' @inheritParams ggplot2::geom_point
 #' @param fun Summary function (see section below for details). If `NULL` (the
 #'   default), the observations are simply counted.
-#' @param fun.args A list of extra arguments to pass to `fun`
+#' @param fun.args A list of extra arguments to pass to `fun`.
 #'
 #' @section Aesthetics:
 #' `stat_summary_address()` understands the following aesthetics (required
 #' aesthetics are in bold):
 #'  - **`ip`**: An [`ip_address`][`ipaddress::ip_address`] column
 #'  - `z`: Value passed to the summary function (required if `fun` is used)
-#'  - `fill`: Default: `after_stat(value)`
+#'  - `fill`: Default is `after_stat(value)`
 #'  - `alpha`
 #'
 #' @section Computed variables:
@@ -23,7 +22,7 @@
 #'  - `value`: Value of summary statistic
 #'  - `count`: Number of observations
 #'  - `ip_count`: Number of unique addresses
-#'  - `ip_propn`: Observed proportion of network
+#'  - `ip_propn`: Observed proportion of pixel network
 #'
 #' @section Summary function:
 #' The `data` might contain multiple rows per pixel of the heatmap, so a summary
@@ -88,7 +87,6 @@ stat_summary_address <- function(mapping = NULL, data = NULL, ...,
 }
 
 StatSummaryAddress <- ggplot2::ggproto("StatSummaryAddress", ggplot2::Stat,
-
   required_aes = "ip",
 
   default_aes = ggplot2::aes(z = NULL, fill = ggplot2::after_stat(value)),
@@ -110,7 +108,7 @@ StatSummaryAddress <- ggplot2::ggproto("StatSummaryAddress", ggplot2::Stat,
     } else if (is_ip_address(data$ip)) {
       abort("The `ip` aesthetic of `stat_summary_address()` must map to a `data` variable.")
     } else {
-      stop_bad_aes_type("stat_summary_address", "ip", "an ip_address vector")
+      stop_bad_aes_type("stat_summary_address", "ip", "ip_address")
     }
 
     if (!is.null(params$fun) && !("z" %in% colnames(data))) {

@@ -21,10 +21,10 @@ expect_curve_endpoints <- function(canvas_network, curve) {
 
   expected <- curve_orders %>%
     mutate(
-      start = data.frame(x = 0, y = 2 ^ curve_order - 1),
+      start = data.frame(x = 0, y = 2^curve_order - 1),
       end = data.frame(
-        x = 2 ^ curve_order - 1,
-        y = if (curve == "hilbert") 2 ^ curve_order - 1 else 0
+        x = 2^curve_order - 1,
+        y = if (curve == "hilbert") 2^curve_order - 1 else 0
       )
     )
 

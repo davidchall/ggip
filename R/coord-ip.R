@@ -1,7 +1,7 @@
 #' Coordinate system for IP data
 #'
 #' @description
-#' A ggplot2 coordinate system that maps a range of address space onto a
+#' A ggplot2 coordinate system that maps a range of IP address space onto a
 #' two-dimensional grid using a space-filling curve.
 #'
 #' `coord_ip()` forms the foundation of any ggip plot. It translates all
@@ -10,14 +10,14 @@
 #' Accessing Coordinates). This ensures all layers use a common mapping.
 #'
 #' @section Accessing Coordinates:
-#' `coord_ip()` uses nested dataframes to store the result of the mapping. This
-#' means each [`ip_address`][`ipaddress::ip_address`] or
-#' [`ip_network`][`ipaddress::ip_network`] column in your original dataset is
-#' converted to a dataframe column. When specifying ggplot2 aesthetics, you'll
+#' `coord_ip()` stores the result of the mapping in a nested data frame column.
+#' This means each [`ip_address`][`ipaddress::ip_address`] or
+#' [`ip_network`][`ipaddress::ip_network`] column in the original data set is
+#' converted to a data frame column. When specifying ggplot2 aesthetics, you'll
 #' need to use `$` to access the nested data (see Examples).
 #'
 #' Each [`ip_address`][`ipaddress::ip_address`] column will be replaced with a
-#' dataframe containing the following columns:
+#' data frame containing the following columns:
 #'
 #' | Column name | Data type    | Description      |
 #' |:------------|:-------------|:-----------------|
@@ -26,7 +26,7 @@
 #' | `y`         | `integer`    | Pixel y          |
 #'
 #' Each [`ip_network`][`ipaddress::ip_network`] column will be replaced with a
-#' dataframe containing the following columns:
+#' data frame containing the following columns:
 #'
 #' | Column name | Data type    | Description       |
 #' |:------------|:-------------|:------------------|
@@ -73,10 +73,9 @@ coord_ip <- function(canvas_network = ip_network("0.0.0.0/0"),
                      pixel_prefix = 16,
                      curve = c("hilbert", "morton"),
                      expand = FALSE) {
-
   curve <- arg_match(curve)
   curve_order <- as.integer((pixel_prefix - prefix_length(canvas_network)) / 2)
-  lim <- as.integer(c(0, 2 ^ curve_order - 1))
+  lim <- as.integer(c(0, 2^curve_order - 1))
 
   ggplot2::ggproto(NULL, CoordIp,
     canvas_network = canvas_network,
@@ -115,7 +114,8 @@ CoordIp <- ggplot2::ggproto("CoordIp", ggplot2::CoordFixed,
             layer_data[[col]], params$canvas_network, params$pixel_prefix, params$curve
           )
           layer_data[[col]] <- ip_address_coords(
-            ip = layer_data[[col]], x = coords$x, y = coords$y
+            ip = layer_data[[col]],
+            x = coords$x, y = coords$y
           )
         }
 
@@ -131,6 +131,7 @@ CoordIp <- ggplot2::ggproto("CoordIp", ggplot2::CoordFixed,
           )
         }
       }
+
       layer_data
     })
   }

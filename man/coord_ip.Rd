@@ -13,12 +13,12 @@ coord_ip(
 }
 \arguments{
 \item{canvas_network}{An \code{\link[ipaddress:ip_network]{ip_network}} scalar that
-determines the network visualized by the plotted canvas. The default shows
-the entire IPv4 address space.}
+determines the region of IP space visualized by the entire 2D grid. The
+default shows the entire IPv4 address space.}
 
-\item{pixel_prefix}{An integer scalar that determines the number of addresses
-represented by a single pixel. It sets the prefix length of the
-corresponding network. The default value is 16.}
+\item{pixel_prefix}{An integer scalar that sets the prefix length of the
+network represented by a single pixel. The default value is 16. Increasing
+this effectively improves the resolution of the plot.}
 
 \item{curve}{A string to choose the space-filling curve. Choices are
 \code{"hilbert"} (default) and \code{"morton"}.}
@@ -27,7 +27,7 @@ corresponding network. The default value is 16.}
 The default is \code{FALSE}.}
 }
 \description{
-A ggplot2 coordinate system that maps a range of address space onto a
+A ggplot2 coordinate system that maps a range of IP address space onto a
 two-dimensional grid using a space-filling curve.
 
 \code{coord_ip()} forms the foundation of any ggip plot. It translates all
@@ -37,14 +37,14 @@ Accessing Coordinates). This ensures all layers use a common mapping.
 }
 \section{Accessing Coordinates}{
 
-\code{coord_ip()} uses nested dataframes to store the result of the mapping. This
-means each \code{\link[ipaddress:ip_address]{ip_address}} or
-\code{\link[ipaddress:ip_network]{ip_network}} column in your original dataset is
-converted to a dataframe column. When specifying ggplot2 aesthetics, you'll
+\code{coord_ip()} stores the result of the mapping in a nested data frame column.
+This means each \code{\link[ipaddress:ip_address]{ip_address}} or
+\code{\link[ipaddress:ip_network]{ip_network}} column in the original data set is
+converted to a data frame column. When specifying ggplot2 aesthetics, you'll
 need to use \code{$} to access the nested data (see Examples).
 
 Each \code{\link[ipaddress:ip_address]{ip_address}} column will be replaced with a
-dataframe containing the following columns:\tabular{lll}{
+data frame containing the following columns:\tabular{lll}{
    Column name \tab Data type \tab Description \cr
    \code{ip} \tab \code{ip_address} \tab Original IP data \cr
    \code{x} \tab \code{integer} \tab Pixel x \cr
@@ -53,7 +53,7 @@ dataframe containing the following columns:\tabular{lll}{
 
 
 Each \code{\link[ipaddress:ip_network]{ip_network}} column will be replaced with a
-dataframe containing the following columns:\tabular{lll}{
+data frame containing the following columns:\tabular{lll}{
    Column name \tab Data type \tab Description \cr
    \code{ip} \tab \code{ip_network} \tab Original IP data \cr
    \code{xmin} \tab \code{integer} \tab Bounding box xmin \cr
