@@ -9,6 +9,7 @@
 #'
 #' @examples
 #' library(ggplot2)
+#' library(ipaddress)
 #'
 #' p <- ggplot(data.frame(ip = ip_address("128.0.0.0"))) +
 #'   geom_point(aes(x = ip$x, y = ip$y), color = "grey") +
