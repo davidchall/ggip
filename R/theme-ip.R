@@ -6,6 +6,17 @@
 #' @inheritParams ggplot2::theme_grey
 #' @param background_color Background color
 #' @param text_color Text color
+#'
+#' @examples
+#' library(ggplot2)
+#'
+#' p <- ggplot(data.frame(ip = ip_address("128.0.0.0"))) +
+#'   geom_point(aes(x = ip$x, y = ip$y), color = "grey") +
+#'   coord_ip()
+#'
+#' p + theme_ip_light()
+#'
+#' p + theme_ip_dark()
 #' @name theme_ip
 NULL
 
