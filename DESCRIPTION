@@ -23,7 +23,7 @@ Imports:
     glue,
     ipaddress (>= 0.5.1),
     Rcpp,
-    rlang,
+    rlang (>= 0.4.2),
     tidyr,
     vctrs (>= 0.3.0)
 Suggests: 
