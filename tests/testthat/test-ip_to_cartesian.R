@@ -150,67 +150,28 @@ test_that("Outside canvas mapped to NA", {
 })
 
 test_that("Input validation of mapping parameters", {
-  valid1 <- ip_network("0.0.0.0/0")
-  valid2 <- 16
+  verify_output(test_path("test-stop-bad-coord.txt"), {
+    validate_mapping_params(ip_address("0.0.0.0"), 16)
+    validate_mapping_params(ip_network(rep("0.0.0.0/0", 2)), 16)
 
-  expect_error(
-    validate_mapping_params(ip_address("0.0.0.0"), valid2),
-    "`canvas_network` must be an ip_network scalar"
-  )
-  expect_error(
-    validate_mapping_params(ip_network(rep("0.0.0.0/0", 2)), valid2),
-    "`canvas_network` must be an ip_network scalar"
-  )
-  expect_error(
-    validate_mapping_params(valid1, 2.5),
-    "`pixel_prefix` must be a positive integer scalar"
-  )
-  expect_error(
-    validate_mapping_params(valid1, c(1, 2)),
-    "`pixel_prefix` must be a positive integer scalar"
-  )
-  expect_error(
-    validate_mapping_params(valid1, -1),
-    "`pixel_prefix` must be a positive integer scalar"
-  )
-  expect_silent(validate_mapping_params(ip_network("0.0.0.0/16"), 32))
-  expect_error(
-    validate_mapping_params(ip_network("0.0.0.0/16"), 33),
-    "`pixel_prefix` cannot be greater than 32 for IPv4"
-  )
-  expect_silent(validate_mapping_params(ip_network("::/120"), 128))
-  expect_error(
-    validate_mapping_params(ip_network("::/120"), 129),
-    "`pixel_prefix` cannot be greater than 128 for IPv6"
-  )
-  expect_error(
-    validate_mapping_params(ip_network("0.0.0.0/16"), 14),
-    "`pixel_prefix` must be greater than prefix_length(`canvas_network`)",
-    fixed = TRUE
-  )
-  expect_error(
-    validate_mapping_params(valid1, 31),
-    "The difference between prefix_length(`canvas_network`) and `pixel_prefix` cannot be odd",
-    fixed = TRUE
-  )
-  expect_error(
-    validate_mapping_params(valid1, 32),
-    "Current parameters would result in plot with 65536x65536 pixels"
-  )
+    validate_mapping_params(ip_network("0.0.0.0/0"), 2.5)
+    validate_mapping_params(ip_network("0.0.0.0/0"), c(1, 2))
+    validate_mapping_params(ip_network("0.0.0.0/0"), -1)
 
-  expect_error(
-    address_to_cartesian(ip_address("0.0.0.0"), valid1, valid2, "hilber"),
-    "`curve` must be one of"
-  )
-  expect_error(
-    network_to_cartesian(ip_network("0.0.0.0/0"), valid1, valid2, "hilber"),
-    "`curve` must be one of"
-  )
+    address_to_cartesian(ip_address("0.0.0.0"), curve = "hilber")
+    network_to_cartesian(ip_network("0.0.0.0/0"), curve = "hilber")
+
+    validate_mapping_params(ip_network("0.0.0.0/16"), 33)
+    validate_mapping_params(ip_network("::/120"), 129)
+    validate_mapping_params(ip_network("0.0.0.0/16"), 14)
+    validate_mapping_params(ip_network("0.0.0.0/0"), 31)
+    validate_mapping_params(ip_network("0.0.0.0/0"), 32)
+  })
 })
 
 test_that("Other input validation", {
-  expect_error(address_to_cartesian(ip_network()), "`address` must be an ip_address vector")
-  expect_error(network_to_cartesian(ip_address()), "`network` must be an ip_network vector")
+  expect_error(address_to_cartesian(ip_network()), "`address` must be a vector with type <ip_address>.")
+  expect_error(network_to_cartesian(ip_address()), "`network` must be a vector with type <ip_network>.")
 })
 
 test_that("Missing values", {
