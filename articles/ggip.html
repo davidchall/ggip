@@ -116,11 +116,11 @@
 <tbody>
 <tr class="odd">
 <td align="left"><code>canvas_network</code></td>
-<td align="left">The region of IP space visualized by the plot. By default, the entire IPv4 space is visualized. This argument allows you to zoom into regions of IP space or visualize IPv6 space.</td>
+<td align="left">The region of IP space visualized by the entire 2D grid. By default, the entire IPv4 space is visualized. This argument allows you to zoom into a region of IP space or to visualize IPv6 space.</td>
 </tr>
 <tr class="even">
 <td align="left"><code>pixel_prefix</code></td>
-<td align="left">The network prefix length corresponding to the grid’s pixel. Increasing this argument effectively increases the resolution of the plot.</td>
+<td align="left">The network prefix length corresponding to a pixel in the 2D grid. Increasing this argument effectively improves the resolution of the plot.</td>
 </tr>
 <tr class="odd">
 <td align="left"><code>curve</code></td>
@@ -141,7 +141,7 @@
 #&gt; 1 A             0.0.0.0
 #&gt; 2 B         192.168.0.1
 #&gt; 3 C     255.255.255.255</code></pre>
-<p>This data set is transformed such that the <code>address</code> column is now a data frame. It contains an <code>ip</code> column with the original <code><a href="https://davidchall.github.io/ipaddress/reference/ip_address.html">ip_address()</a></code> vector, and <code>x</code> and <code>y</code> columns with the Cartesian coordinates.</p>
+<p>This data set is transformed such that the <code>address</code> column is now a data frame. It contains an <code>ip</code> column with the original <code><a href="https://davidchall.github.io/ipaddress/reference/ip_address.html">ip_address()</a></code> vector, and <code>x</code> and <code>y</code> columns with the Cartesian coordinates on the 2D grid.</p>
 <pre><code>#&gt; # A tibble: 3 x 2
 #&gt;   label      address$ip    $x    $y
 #&gt;   &lt;chr&gt;       &lt;ip_addr&gt; &lt;int&gt; &lt;int&gt;
@@ -164,7 +164,7 @@
   <span class="fu"><a href="../reference/theme_ip.html">theme_ip_light</a></span>()
 </pre></div>
 <p><img src="ggip_files/figure-html/unnamed-chunk-2-1.png" width="50%" style="display: block; margin: auto;"></p>
-<p>Similarly, we plot <code><a href="https://davidchall.github.io/ipaddress/reference/ip_network.html">ip_network()</a></code> vectors using layers corresponding to rectangles:</p>
+<p>Similarly, we plot <code><a href="https://davidchall.github.io/ipaddress/reference/ip_network.html">ip_network()</a></code> vectors using layers corresponding to rectangles.</p>
 <div class="sourceCode" id="cb5"><pre class="downlit">
 <span class="kw">iana_ipv4</span> <span class="op">%&gt;%</span>
   <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggplot.html">ggplot</a></span>(<span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html">aes</a></span>(xmin = <span class="kw">network</span><span class="op">$</span><span class="kw">xmin</span>, ymin = <span class="kw">network</span><span class="op">$</span><span class="kw">ymin</span>, xmax = <span class="kw">network</span><span class="op">$</span><span class="kw">xmax</span>, ymax = <span class="kw">network</span><span class="op">$</span><span class="kw">ymax</span>)) <span class="op">+</span>
@@ -179,7 +179,7 @@
 <div id="using-ggip-layers" class="section level2">
 <h2 class="hasAnchor">
 <a href="#using-ggip-layers" class="anchor"></a>Using ggip layers</h2>
-<p>Layers from ggip <strong>do</strong> know about the internal data transformation, so they take an <code>ip</code> aesthetic corresponding to the data frame column. They can then extract the relevant information from the data frame column. This is easier because it’s also the name of the original <code><a href="https://davidchall.github.io/ipaddress/reference/ip_address.html">ip_address()</a></code> or <code><a href="https://davidchall.github.io/ipaddress/reference/ip_network.html">ip_network()</a></code> column in the input data set.</p>
+<p>Layers from ggip <strong>do</strong> know about the internal data transformation, so they take an <code>ip</code> aesthetic corresponding to the data frame column. They can then automatically extract the relevant positional information. This is easier because the name of the data frame column is also the name of the original <code><a href="https://davidchall.github.io/ipaddress/reference/ip_address.html">ip_address()</a></code> or <code><a href="https://davidchall.github.io/ipaddress/reference/ip_network.html">ip_network()</a></code> column in the input data set.</p>
 <p>As an example, we plot a heatmap of an <code><a href="https://davidchall.github.io/ipaddress/reference/ip_address.html">ip_address()</a></code> vector.</p>
 <div class="sourceCode" id="cb6"><pre class="downlit">
 <span class="fu">tibble</span>(address = <span class="fu"><a href="https://davidchall.github.io/ipaddress/reference/sample.html">sample_ipv4</a></span>(<span class="fl">10000</span>)) <span class="op">%&gt;%</span>
