@@ -165,6 +165,17 @@ Use <code><a href='https://ggplot2.tidyverse.org/reference/theme.html'>ggplot2::
     </table>
 
 
+    <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
+    <pre class="examples"><div class='input'><span class='fu'><a href='https://rdrr.io/r/base/library.html'>library</a></span>(<span class='kw'><a href='http://ggplot2.tidyverse.org'>ggplot2</a></span>)
+
+<span class='kw'>p</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://ggplot2.tidyverse.org/reference/ggplot.html'>ggplot</a></span>(<span class='fu'><a href='https://rdrr.io/r/base/data.frame.html'>data.frame</a></span>(ip = <span class='fu'><a href='https://davidchall.github.io/ipaddress/reference/ip_address.html'>ip_address</a></span>(<span class='st'>"128.0.0.0"</span>))) <span class='op'>+</span>
+  <span class='fu'><a href='https://ggplot2.tidyverse.org/reference/geom_point.html'>geom_point</a></span>(<span class='fu'><a href='https://ggplot2.tidyverse.org/reference/aes.html'>aes</a></span>(x = <span class='kw'>ip</span><span class='op'>$</span><span class='kw'>x</span>, y = <span class='kw'>ip</span><span class='op'>$</span><span class='kw'>y</span>), color = <span class='st'>"grey"</span>) <span class='op'>+</span>
+  <span class='fu'><a href='coord_ip.html'>coord_ip</a></span>()
+
+<span class='kw'>p</span> <span class='op'>+</span> <span class='fu'>theme_ip_light</span>()
+</div><div class='img'><img src='theme_ip-1.png' alt='' width='480' height='480' /></div><div class='input'>
+<span class='kw'>p</span> <span class='op'>+</span> <span class='fu'>theme_ip_dark</span>()
+</div><div class='img'><img src='theme_ip-2.png' alt='' width='480' height='480' /></div></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">
     <nav id="toc" data-toggle="toc" class="sticky-top">
