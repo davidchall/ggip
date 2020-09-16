@@ -40,8 +40,8 @@ The `coord_ip()` function must be called once per plot, and takes arguments:
 
 Argument  | Description
 :------------ | :-----------------------------------------------------------
-`canvas_network`  | The region of IP space visualized by the plot. By default, the entire IPv4 space is visualized. This argument allows you to zoom into regions of IP space or visualize IPv6 space.
-`pixel_prefix`  | The network prefix length corresponding to the grid's pixel. Increasing this argument effectively increases the resolution of the plot.
+`canvas_network`  | The region of IP space visualized by the entire 2D grid. By default, the entire IPv4 space is visualized. This argument allows you to zoom into a region of IP space or to visualize IPv6 space.
+`pixel_prefix`  | The network prefix length corresponding to a pixel in the 2D grid. Increasing this argument effectively improves the resolution of the plot.
 `curve` | The path taken across the 2D grid while mapping IP data.
 
 More details about this mapping are found in `vignette("visualizing-ip-data")`.
@@ -64,7 +64,7 @@ tibble(
 ```
 
 This data set is transformed such that the `address` column is now a data frame.
-It contains an `ip` column with the original `ip_address()` vector, and `x` and `y` columns with the Cartesian coordinates.
+It contains an `ip` column with the original `ip_address()` vector, and `x` and `y` columns with the Cartesian coordinates on the 2D grid.
 
 ```{r after_transform, echo=FALSE}
 tibble(
@@ -99,7 +99,7 @@ tibble(address = ip_address(c("0.0.0.0", "128.0.0.0", "192.168.0.1"))) %>%
   theme_ip_light()
 ```
 
-Similarly, we plot `ip_network()` vectors using layers corresponding to rectangles:
+Similarly, we plot `ip_network()` vectors using layers corresponding to rectangles.
 
 ```{r, out.width='80%', fig.asp=0.8, fig.width=7}
 iana_ipv4 %>%
@@ -118,8 +118,8 @@ However, this gap is often helpful to distinguish networks.
 ## Using ggip layers
 
 Layers from ggip **do** know about the internal data transformation, so they take an `ip` aesthetic corresponding to the data frame column.
-They can then extract the relevant information from the data frame column.
-This is easier because it's also the name of the original `ip_address()` or `ip_network()` column in the input data set.
+They can then automatically extract the relevant positional information.
+This is easier because the name of the data frame column is also the name of the original `ip_address()` or `ip_network()` column in the input data set.
 
 As an example, we plot a heatmap of an `ip_address()` vector.
 
