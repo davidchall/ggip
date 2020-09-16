@@ -40,9 +40,8 @@
 
 
 <meta property="og:title" content="Summarize IP addresses on a heatmap — stat_summary_address" />
-<meta property="og:description" content="The data are grouped into networks determined by the pixel_prefix argument
-of coord_ip(). Then the values of z in each network are summarized with
-fun." />
+<meta property="og:description" content="Addresses are grouped into networks determined by the pixel_prefix argument
+of coord_ip(). Then the z values are summarized with summary function fun." />
 
 
 
@@ -131,9 +130,8 @@ fun." />
     </div>
 
     <div class="ref-description">
-    <p>The data are grouped into networks determined by the <code>pixel_prefix</code> argument
-of <code><a href='coord_ip.html'>coord_ip()</a></code>. Then the values of <code>z</code> in each network are summarized with
-<code>fun</code>.</p>
+    <p>Addresses are grouped into networks determined by the <code>pixel_prefix</code> argument
+of <code><a href='coord_ip.html'>coord_ip()</a></code>. Then the <code>z</code> values are summarized with summary function <code>fun</code>.</p>
     </div>
 
     <pre class="usage"><span class='fu'>stat_summary_address</span>(
@@ -185,7 +183,7 @@ default), the observations are simply counted.</p></td>
     </tr>
     <tr>
       <th>fun.args</th>
-      <td><p>A list of extra arguments to pass to <code>fun</code></p></td>
+      <td><p>A list of extra arguments to pass to <code>fun</code>.</p></td>
     </tr>
     <tr>
       <th>na.rm</th>
@@ -217,7 +215,7 @@ the default plot specification, e.g. <code><a href='https://ggplot2.tidyverse.or
 aesthetics are in bold):</p><ul>
 <li><p><strong><code>ip</code></strong>: An <code><a href='https://davidchall.github.io/ipaddress/reference/ip_address.html'>ip_address</a></code> column</p></li>
 <li><p><code>z</code>: Value passed to the summary function (required if <code>fun</code> is used)</p></li>
-<li><p><code>fill</code>: Default: <code><a href='https://ggplot2.tidyverse.org/reference/aes_eval.html'>after_stat(value)</a></code></p></li>
+<li><p><code>fill</code>: Default is <code><a href='https://ggplot2.tidyverse.org/reference/aes_eval.html'>after_stat(value)</a></code></p></li>
 <li><p><code>alpha</code></p></li>
 </ul>
 
@@ -229,7 +227,7 @@ aesthetics are in bold):</p><ul>
 <li><p><code>value</code>: Value of summary statistic</p></li>
 <li><p><code>count</code>: Number of observations</p></li>
 <li><p><code>ip_count</code>: Number of unique addresses</p></li>
-<li><p><code>ip_propn</code>: Observed proportion of network</p></li>
+<li><p><code>ip_propn</code>: Observed proportion of pixel network</p></li>
 </ul>
 
     <h2 class="hasAnchor" id="summary-function"><a class="anchor" href="#summary-function"></a>Summary function</h2>

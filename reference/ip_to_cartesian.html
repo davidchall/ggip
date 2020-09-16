@@ -162,14 +162,14 @@ of these coordinates outside of ggplot2.</p>
     <tr>
       <th>canvas_network</th>
       <td><p>An <code><a href='https://davidchall.github.io/ipaddress/reference/ip_network.html'>ip_network</a></code> scalar that
-determines the network visualized by the plotted canvas. The default shows
-the entire IPv4 address space.</p></td>
+determines the region of IP space visualized by the entire 2D grid. The
+default shows the entire IPv4 address space.</p></td>
     </tr>
     <tr>
       <th>pixel_prefix</th>
-      <td><p>An integer scalar that determines the number of addresses
-represented by a single pixel. It sets the prefix length of the
-corresponding network. The default value is 16.</p></td>
+      <td><p>An integer scalar that sets the prefix length of the
+network represented by a single pixel. The default value is 16. Increasing
+this effectively improves the resolution of the plot.</p></td>
     </tr>
     <tr>
       <th>curve</th>
