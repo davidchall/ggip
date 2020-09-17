@@ -42,27 +42,44 @@ test_that("input validation", {
   )
 })
 
-test_that("data summarized onto grid", {
-  dat <- data.frame(ip = ip_address(c("0.0.0.0", "0.0.0.0", "255.255.255.255")))
+test_that("alternative ways to specify data/aesthetics", {
+  dat <- data.frame(
+    ip = ip_address(c("0.0.0.0", "0.0.0.0", "255.255.255.255"))
+  )
 
-  full_direct <- ggplot() +
+  p1 <- ggplot() +
     coord_ip(pixel_prefix = 2) +
     stat_summary_address(aes(ip = ip), data = dat)
-  ret_direct <- layer_data(full_direct)
 
-  full_inherit_data <- ggplot(dat) +
+  p2 <- ggplot(dat) +
     coord_ip(pixel_prefix = 2) +
     stat_summary_address(aes(ip = ip))
-  ret_inherit_data <- layer_data(full_inherit_data)
 
-  full_inherit_aes <- ggplot(dat, aes(ip = ip)) +
+  p3 <- ggplot(dat, aes(ip = ip)) +
     coord_ip(pixel_prefix = 2) +
     stat_summary_address()
-  ret_inherit_aes <- layer_data(full_inherit_aes)
 
-  expect_equal(ret_direct, ret_inherit_data)
-  expect_equal(ret_direct, ret_inherit_aes)
-  expect_equal(ret_direct$x, c(0, 0, 1, 1))
-  expect_equal(ret_direct$y, c(0, 1, 0, 1))
-  expect_equal(ret_direct$count, c(0, 2, 0, 1))
+  expect_equal(layer_data(p1), layer_data(p2))
+  expect_equal(layer_data(p1), layer_data(p3))
+
+  expect_equal(layer_data(p1)$x, c(0, 0, 1, 1))
+  expect_equal(layer_data(p1)$y, c(0, 1, 0, 1))
+  expect_equal(layer_data(p1)$count, c(0, 2, 0, 1))
+})
+
+test_that("alternative ways to specify summary function", {
+  dat <- data.frame(
+    ip = ip_address(c("0.0.0.0", "0.0.0.0", "255.255.255.255")),
+    z = c(1, 2, 3)
+  )
+
+  p_base <- ggplot(dat, aes(ip = ip, z = z)) +
+    coord_ip(pixel_prefix = 2)
+
+  p1 <- p_base + stat_summary_address(fun = "mean")
+  p2 <- p_base + stat_summary_address(fun = mean)
+  p3 <- p_base + stat_summary_address(fun = ~ mean(.x))
+
+  expect_equal(layer_data(p1), layer_data(p2))
+  expect_equal(layer_data(p1), layer_data(p3))
 })
