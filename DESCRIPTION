@@ -30,8 +30,7 @@ Suggests:
     dplyr (>= 1.0.0),
     knitr,
     rmarkdown,
-    testthat,
-    vdiffr
+    testthat
 LinkingTo: 
     ipaddress,
     Rcpp
