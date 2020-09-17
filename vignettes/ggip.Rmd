@@ -12,10 +12,8 @@ knitr::opts_chunk$set(
   collapse = TRUE,
   comment = "#>",
   fig.align = "center",
-  fig.width = 5,
   fig.asp = 1,
-  fig.retina = 2,
-  fig.dpi = 96
+  fig.width = 5
 )
 ```
 
@@ -89,7 +87,7 @@ Fortunately, we can extract the Cartesian coordinates from our data frame column
 As an example, we plot an `ip_address()` vector as points accompanied by labels.
 Note that we've specified the `x`, `y` and `label` aesthetics at the top level of the plot, and then the `geom_point()` and `geom_label()` layers have picked them up later.
 
-```{r, out.width='50%'}
+```{r}
 tibble(address = ip_address(c("0.0.0.0", "128.0.0.0", "192.168.0.1"))) %>%
   ggplot(aes(x = address$x, y = address$y, label = address$ip)) +
   geom_point() +
@@ -100,7 +98,7 @@ tibble(address = ip_address(c("0.0.0.0", "128.0.0.0", "192.168.0.1"))) %>%
 
 Similarly, we plot `ip_network()` vectors using layers corresponding to rectangles.
 
-```{r, out.width='80%', fig.asp=0.8, fig.width=7}
+```{r, fig.asp=0.8, fig.width=6.25}
 iana_ipv4 %>%
   ggplot(aes(xmin = network$xmin, ymin = network$ymin, xmax = network$xmax, ymax = network$ymax)) +
   geom_rect(aes(fill = allocation)) +
