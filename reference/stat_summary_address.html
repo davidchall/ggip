@@ -226,8 +226,6 @@ aesthetics are in bold):</p><ul>
 <p>The following variables are available to <code><a href='https://ggplot2.tidyverse.org/reference/aes_eval.html'>after_stat()</a></code>:</p><ul>
 <li><p><code>value</code>: Value of summary statistic</p></li>
 <li><p><code>count</code>: Number of observations</p></li>
-<li><p><code>ip_count</code>: Number of unique addresses</p></li>
-<li><p><code>ip_propn</code>: Observed proportion of pixel network</p></li>
 </ul>
 
     <h2 class="hasAnchor" id="summary-function"><a class="anchor" href="#summary-function"></a>Summary function</h2>
@@ -266,16 +264,11 @@ as the summarized variable (e.g. <code>fun = ~ sum(.x^2)</code>).</p></dd>
   <span class='fu'>stat_summary_address</span>() <span class='op'>+</span>
   <span class='fu'>scale_fill_viridis_c</span>(trans = <span class='st'>"log2"</span>, na.value = <span class='st'>"black"</span>, guide = <span class='st'>"none"</span>)
 </div><div class='output co'>#&gt; <span class='warning'>Warning: Transformation introduced infinite values in discrete y-axis</span></div><div class='img'><img src='stat_summary_address-1.png' alt='' width='480' height='480' /></div><div class='input'>
-<span class='co'># count unique addresses</span>
-<span class='kw'>p</span> <span class='op'>+</span>
-  <span class='fu'>stat_summary_address</span>(<span class='fu'>aes</span>(fill = <span class='fu'>after_stat</span>(<span class='kw'>ip_count</span>))) <span class='op'>+</span>
-  <span class='fu'>scale_fill_viridis_c</span>(trans = <span class='st'>"log2"</span>, na.value = <span class='st'>"black"</span>, guide = <span class='st'>"none"</span>)
-</div><div class='output co'>#&gt; <span class='warning'>Warning: Transformation introduced infinite values in discrete y-axis</span></div><div class='img'><img src='stat_summary_address-2.png' alt='' width='480' height='480' /></div><div class='input'>
 <span class='co'># compute mean weight</span>
 <span class='kw'>p</span> <span class='op'>+</span>
   <span class='fu'>stat_summary_address</span>(<span class='fu'>aes</span>(z = <span class='kw'>weight</span>), fun = <span class='op'>~</span> <span class='fu'><a href='https://rdrr.io/r/base/mean.html'>mean</a></span>(<span class='kw'>.x</span>)) <span class='op'>+</span>
   <span class='fu'>scale_fill_viridis_c</span>(na.value = <span class='st'>"black"</span>, guide = <span class='st'>"none"</span>)
-</div><div class='img'><img src='stat_summary_address-3.png' alt='' width='480' height='480' /></div></pre>
+</div><div class='img'><img src='stat_summary_address-2.png' alt='' width='480' height='480' /></div></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">
     <nav id="toc" data-toggle="toc" class="sticky-top">
