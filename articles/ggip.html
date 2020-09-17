@@ -162,7 +162,7 @@
   <span class="fu"><a href="../reference/coord_ip.html">coord_ip</a></span>(expand = <span class="fl">TRUE</span>) <span class="op">+</span>
   <span class="fu"><a href="../reference/theme_ip.html">theme_ip_light</a></span>()
 </pre></div>
-<p><img src="ggip_files/figure-html/unnamed-chunk-2-1.png" width="50%" style="display: block; margin: auto;"></p>
+<p><img src="ggip_files/figure-html/unnamed-chunk-2-1.png" width="480" style="display: block; margin: auto;"></p>
 <p>Similarly, we plot <code>ip_network()</code> vectors using layers corresponding to rectangles.</p>
 <div class="sourceCode" id="cb5"><pre class="downlit">
 <span class="kw">iana_ipv4</span> <span class="op">%&gt;%</span>
@@ -172,7 +172,7 @@
   <span class="fu"><a href="../reference/coord_ip.html">coord_ip</a></span>() <span class="op">+</span>
   <span class="fu"><a href="../reference/theme_ip.html">theme_ip_dark</a></span>()
 </pre></div>
-<p><img src="ggip_files/figure-html/unnamed-chunk-3-1.png" width="80%" style="display: block; margin: auto;"></p>
+<p><img src="ggip_files/figure-html/unnamed-chunk-3-1.png" width="600" style="display: block; margin: auto;"></p>
 <p><strong>Note:</strong> There are small gaps between the rectangles because networks are mapped onto a 2D grid (i.e. discrete), whereas ggplot2 visualizes the continuous 2D plane. This can be resolved by adding/subtracting 0.5 to the positional aesthetics. However, this gap is often helpful to distinguish networks.</p>
 </div>
 <div id="using-ggip-layers" class="section level2">
