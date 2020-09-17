@@ -105,12 +105,32 @@
 <span class="kw">remotes</span>::<span class="fu"><a href="https://remotes.r-lib.org/reference/install_github.html">install_github</a></span>(<span class="st">"davidchall/ggip"</span>)
 </pre></div>
 </div>
-<div id="quick-start" class="section level2">
+<div id="example-usage" class="section level2">
 <h2 class="hasAnchor">
-<a href="#quick-start" class="anchor"></a>Quick start</h2>
-<p><code><a href="reference/coord_ip.html">coord_ip()</a></code> forms the basis of any ggip plot. It determines which region of address space is displayed and also the resolution of the pixels in terms of network sizes. It also translates <code>ip_address()</code> and <code>ip_network()</code> vectors into Cartesian coordinates that can be used by ggplot2 layers.</p>
-<p>With ggip, it is easy to quickly produce visualizations like this:</p>
-<p><img src="reference/figures/ipv4-heatmap.png" alt="IPv4 heatmap" width="100%"></p>
+<a href="#example-usage" class="anchor"></a>Example usage</h2>
+<p>The <code><a href="reference/coord_ip.html">coord_ip()</a></code> function configures the mapping of IP data to the 2D grid (addresses to points and networks to rectangles). This is fundamental to every ggip plot.</p>
+<p>Here’s a quick example for some IPv4 data:</p>
+<div class="sourceCode" id="cb2"><pre class="downlit">
+<span class="fu"><a href="https://rdrr.io/r/base/library.html">library</a></span>(<span class="kw"><a href="https://davidchall.github.io/ggip">ggip</a></span>)
+<span class="fu"><a href="https://rdrr.io/r/base/library.html">library</a></span>(<span class="kw">ggfittext</span>)
+
+<span class="fu">ggplot</span>(<span class="kw">iana_ipv4</span>) <span class="op">+</span>
+  <span class="fu"><a href="reference/stat_summary_address.html">stat_summary_address</a></span>(<span class="fu">aes</span>(ip = <span class="kw">address</span>), data = <span class="kw">ip_data</span>) <span class="op">+</span>
+  <span class="fu">geom_rect</span>(
+    <span class="fu">aes</span>(xmin = <span class="kw">network</span><span class="op">$</span><span class="kw">xmin</span>, xmax = <span class="kw">network</span><span class="op">$</span><span class="kw">xmax</span>, ymin = <span class="kw">network</span><span class="op">$</span><span class="kw">ymin</span>, ymax = <span class="kw">network</span><span class="op">$</span><span class="kw">ymax</span>),
+    alpha = <span class="fl">0.2</span>, fill = <span class="st">"white"</span>
+  ) <span class="op">+</span>
+  <span class="fu">geom_fit_text</span>(<span class="fu">aes</span>(
+    xmin = <span class="kw">network</span><span class="op">$</span><span class="kw">xmin</span>, xmax = <span class="kw">network</span><span class="op">$</span><span class="kw">xmax</span>, ymin = <span class="kw">network</span><span class="op">$</span><span class="kw">ymin</span>, ymax = <span class="kw">network</span><span class="op">$</span><span class="kw">ymax</span>,
+    label = <span class="kw">label</span>, color = <span class="kw">allocation</span>
+  ), reflow = <span class="fl">TRUE</span>) <span class="op">+</span>
+  <span class="fu">scale_fill_viridis_c</span>(trans = <span class="st">"log2"</span>, na.value = <span class="st">"black"</span>, guide = <span class="st">"none"</span>) <span class="op">+</span>
+  <span class="fu">scale_color_brewer</span>(name = <span class="kw">NULL</span>, palette = <span class="st">"Accent"</span>) <span class="op">+</span>
+  <span class="fu"><a href="reference/coord_ip.html">coord_ip</a></span>(pixel_prefix = <span class="fl">20</span>) <span class="op">+</span>
+  <span class="fu"><a href="reference/theme_ip.html">theme_ip_dark</a></span>()
+<span class="co">#&gt; Warning: Transformation introduced infinite values in discrete y-axis</span>
+</pre></div>
+<p><img src="reference/figures/README-ipv4-heatmap-1.png" width="100%"></p>
 </div>
 </div>
   </div>
