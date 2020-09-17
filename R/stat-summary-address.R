@@ -120,42 +120,46 @@ StatSummaryAddress <- ggplot2::ggproto("StatSummaryAddress", ggplot2::Stat,
   compute_group = function(data, scales, coord,
                            fun = NULL, fun.args = list(), ...) {
 
-    # support formula interface
-    if (is_formula(fun)) {
-      fun <- as_function(fun)
-    }
-
-    summarize_count <- is.null(fun)
-
-    # summarize grid found in data
-    index <- list(x = data$x, y = data$y)
-    labels <- lapply(index, function(x) sort(unique(x)))
-    out <- expand.grid(labels, KEEP.OUT.ATTRS = FALSE)
-
-    out$count <- summarize_grid(data$x, index, length)
-    out$value <- if (summarize_count) {
-      out$count
-    } else {
-      f <- function(x) do.call(fun, c(list(quote(x)), fun.args))
-      summarize_grid(data$z, index, f)
-    }
-
-    out$ip_count <- summarize_grid(data$ip, index, function(x) length(unique(x)))
-    bits_per_pixel <- max_prefix_length(coord$canvas_network) - coord$pixel_prefix
-    out$ip_propn <- out$ip_count / (2^bits_per_pixel)
-
-    # fill remaining grid so raster works
-    range <- coord$limits$x[1]:coord$limits$x[2]
-    fill_na <- list(count = 0, ip_count = 0, ip_propn = 0)
-    if (summarize_count) {
-      fill_na$value <- 0
-    }
-    tidyr::complete(out, tidyr::expand(out, x = range, y = range), fill = fill_na)
+    summarize_addresses(data, scales, coord, fun, fun.args)
   }
 )
 
-summarize_grid <- function(x, index, fun) {
-  grps <- split(x, index)
-  names(grps) <- NULL
-  unlist(lapply(grps, fun))
+summarize_addresses <- function(data, scales, coord, fun, fun.args) {
+  summarize_grid <- function(x, index, fun) {
+    grps <- split(x, index)
+    names(grps) <- NULL
+    unlist(lapply(grps, fun))
+  }
+
+  # support formula interface
+  if (is_formula(fun)) {
+    fun <- as_function(fun)
+  }
+
+  summarize_count <- is.null(fun)
+
+  # summarize grid found in data
+  index <- list(x = data$x, y = data$y)
+  labels <- lapply(index, function(x) sort(unique(x)))
+  out <- expand.grid(labels, KEEP.OUT.ATTRS = FALSE)
+
+  out$count <- summarize_grid(data$x, index, length)
+  out$value <- if (summarize_count) {
+    out$count
+  } else {
+    f <- function(x) do.call(fun, c(list(quote(x)), fun.args))
+    summarize_grid(data$z, index, f)
+  }
+
+  out$ip_count <- summarize_grid(data$ip, index, function(x) length(unique(x)))
+  bits_per_pixel <- max_prefix_length(coord$canvas_network) - coord$pixel_prefix
+  out$ip_propn <- out$ip_count / (2^bits_per_pixel)
+
+  # fill remaining grid so raster works
+  range <- coord$limits$x[1]:coord$limits$x[2]
+  fill_na <- list(count = 0, ip_count = 0, ip_propn = 0)
+  if (summarize_count) {
+    fill_na$value <- 0
+  }
+  tidyr::complete(out, tidyr::expand(out, x = range, y = range), fill = fill_na)
 }
