@@ -1,7 +1,5 @@
 context("theme-ip")
 
-library(ggplot2)
-
 test_that("visual tests", {
   plot <- ggplot(data = data.frame(ip = ip_address("128.0.0.0"))) +
     geom_point(aes(x = ip$x, y = ip$y), color = "grey") +

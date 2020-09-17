@@ -25,8 +25,7 @@ It achieves this by mapping one-dimensional IP data onto a two-dimensional grid.
 This introductory vignette gives a quickstart guide on how to use ggip functions to generate plots.
 
 ```{r setup, message=FALSE}
-library(tidyverse)
-library(ipaddress)
+library(dplyr)
 library(ggip)
 ```
 

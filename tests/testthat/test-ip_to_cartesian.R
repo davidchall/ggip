@@ -1,4 +1,4 @@
-library(tidyverse)
+library(dplyr)
 
 expect_curve_endpoints <- function(canvas_network, curve) {
   max_plotted_bits <- 24

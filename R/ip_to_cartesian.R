@@ -20,8 +20,6 @@
 #'  * `network_to_cartesian()`: `xmin`, `ymin`, `xmax` and `ymax`
 #'
 #' @examples
-#' library(ipaddress)
-#'
 #' address_to_cartesian(ip_address("192.168.0.1"))
 #'
 #' network_to_cartesian(ip_network("224.0.0.0/4"))

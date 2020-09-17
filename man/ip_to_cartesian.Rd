@@ -50,8 +50,6 @@ vectors to Cartesian coordinates. They are exposed externally to support use
 of these coordinates outside of ggplot2.
 }
 \examples{
-library(ipaddress)
-
 address_to_cartesian(ip_address("192.168.0.1"))
 
 network_to_cartesian(ip_network("224.0.0.0/4"))
