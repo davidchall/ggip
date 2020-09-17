@@ -35,14 +35,33 @@ You can install the development version from GitHub:
 remotes::install_github("davidchall/ggip")
 ```
 
-## Quick start
+## Example usage
 
-`coord_ip()` forms the basis of any ggip plot. It determines which
-region of address space is displayed and also the resolution of the
-pixels in terms of network sizes. It also translates `ip_address()` and
-`ip_network()` vectors into Cartesian coordinates that can be used by
-ggplot2 layers.
+The `coord_ip()` function configures the mapping of IP data to the 2D
+grid (addresses to points and networks to rectangles). This is
+fundamental to every ggip plot.
 
-With ggip, it is easy to quickly produce visualizations like this:
+Here’s a quick example for some IPv4 data:
 
-<img src="man/figures/ipv4-heatmap.png" alt="IPv4 heatmap" width="100%" />
+``` r
+library(ggip)
+library(ggfittext)
+
+ggplot(iana_ipv4) +
+  stat_summary_address(aes(ip = address), data = ip_data) +
+  geom_rect(
+    aes(xmin = network$xmin, xmax = network$xmax, ymin = network$ymin, ymax = network$ymax),
+    alpha = 0.2, fill = "white"
+  ) +
+  geom_fit_text(aes(
+    xmin = network$xmin, xmax = network$xmax, ymin = network$ymin, ymax = network$ymax,
+    label = label, color = allocation
+  ), reflow = TRUE) +
+  scale_fill_viridis_c(trans = "log2", na.value = "black", guide = "none") +
+  scale_color_brewer(name = NULL, palette = "Accent") +
+  coord_ip(pixel_prefix = 20) +
+  theme_ip_dark()
+#> Warning: Transformation introduced infinite values in discrete y-axis
+```
+
+<img src="man/figures/README-ipv4-heatmap-1.png" width="100%" />

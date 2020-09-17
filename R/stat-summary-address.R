@@ -112,7 +112,6 @@ StatSummaryAddress <- ggplot2::ggproto("StatSummaryAddress", ggplot2::Stat,
 
   compute_group = function(data, scales, coord,
                            fun = NULL, fun.args = list(), ...) {
-
     summarize_addresses(data, scales, coord, fun, fun.args)
   }
 )
