@@ -13,7 +13,7 @@ Description: A 'ggplot2' extension that enables visualization of
     curve. Offers full support for both IPv4 and IPv6 (Internet Protocol
     versions 4 and 6) address spaces.
 License: MIT + file LICENSE
-URL: https://davidchall.github.io/ggip,
+URL: https://davidchall.github.io/ggip/,
     https://github.com/davidchall/ggip
 BugReports: https://github.com/davidchall/ggip/issues
 Depends: 
