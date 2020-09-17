@@ -65,5 +65,4 @@ test_that("data summarized onto grid", {
   expect_equal(ret_direct$x, c(0, 0, 1, 1))
   expect_equal(ret_direct$y, c(0, 1, 0, 1))
   expect_equal(ret_direct$count, c(0, 2, 0, 1))
-  expect_equal(ret_direct$ip_count, c(0, 1, 0, 1))
 })

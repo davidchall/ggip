@@ -21,8 +21,6 @@
 #' The following variables are available to [`after_stat()`][ggplot2::after_stat()]:
 #'  - `value`: Value of summary statistic
 #'  - `count`: Number of observations
-#'  - `ip_count`: Number of unique addresses
-#'  - `ip_propn`: Observed proportion of pixel network
 #'
 #' @section Summary function:
 #' The `data` might contain multiple rows per pixel of the heatmap, so a summary
@@ -55,11 +53,6 @@
 #' # simple count of observations
 #' p +
 #'   stat_summary_address() +
-#'   scale_fill_viridis_c(trans = "log2", na.value = "black", guide = "none")
-#'
-#' # count unique addresses
-#' p +
-#'   stat_summary_address(aes(fill = after_stat(ip_count))) +
 #'   scale_fill_viridis_c(trans = "log2", na.value = "black", guide = "none")
 #'
 #' # compute mean weight
@@ -151,13 +144,9 @@ summarize_addresses <- function(data, scales, coord, fun, fun.args) {
     summarize_grid(data$z, index, f)
   }
 
-  out$ip_count <- summarize_grid(data$ip, index, function(x) length(unique(x)))
-  bits_per_pixel <- max_prefix_length(coord$canvas_network) - coord$pixel_prefix
-  out$ip_propn <- out$ip_count / (2^bits_per_pixel)
-
   # fill remaining grid so raster works
   range <- coord$limits$x[1]:coord$limits$x[2]
-  fill_na <- list(count = 0, ip_count = 0, ip_propn = 0)
+  fill_na <- list(count = 0)
   if (summarize_count) {
     fill_na$value <- 0
   }

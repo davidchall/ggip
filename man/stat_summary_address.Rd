@@ -82,8 +82,6 @@ The following variables are available to \code{\link[ggplot2:aes_eval]{after_sta
 \itemize{
 \item \code{value}: Value of summary statistic
 \item \code{count}: Number of observations
-\item \code{ip_count}: Number of unique addresses
-\item \code{ip_propn}: Observed proportion of pixel network
 }
 }
 
@@ -120,11 +118,6 @@ p <- ggplot(dat, aes(ip = ip)) +
 # simple count of observations
 p +
   stat_summary_address() +
-  scale_fill_viridis_c(trans = "log2", na.value = "black", guide = "none")
-
-# count unique addresses
-p +
-  stat_summary_address(aes(fill = after_stat(ip_count))) +
   scale_fill_viridis_c(trans = "log2", na.value = "black", guide = "none")
 
 # compute mean weight
