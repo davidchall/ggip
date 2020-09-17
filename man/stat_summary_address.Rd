@@ -108,9 +108,6 @@ as the summarized variable (e.g. \code{fun = ~ sum(.x^2)}).}
 }
 
 \examples{
-library(ggplot2)
-library(ipaddress)
-
 dat <- data.frame(
   ip = sample_ipv4(10000),
   weight = runif(10000)

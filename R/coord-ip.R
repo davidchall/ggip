@@ -41,9 +41,7 @@
 #'   The default is `FALSE`.
 #'
 #' @examples
-#' options(tidyverse.quiet = TRUE)
-#' library(tidyverse)
-#' library(ipaddress)
+#' suppressPackageStartupMessages(library(dplyr))
 #'
 #' tibble(address = ip_address(c("0.0.0.0", "128.0.0.0", "192.168.0.1"))) %>%
 #'   ggplot(aes(x = address$x, y = address$y, label = address$ip)) +

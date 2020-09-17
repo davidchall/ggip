@@ -17,20 +17,20 @@ URL: https://davidchall.github.io/ggip,
     https://github.com/davidchall/ggip
 BugReports: https://github.com/davidchall/ggip/issues
 Depends: 
+    ggplot2 (>= 3.3.0),
+    ipaddress (>= 0.5.1),
     R (>= 3.3.0)
 Imports: 
-    ggplot2 (>= 3.3.0),
     glue,
-    ipaddress (>= 0.5.1),
     Rcpp,
     rlang (>= 0.4.2),
     tidyr,
     vctrs (>= 0.3.0)
 Suggests: 
+    dplyr (>= 1.0.0),
     knitr,
     rmarkdown,
     testthat,
-    tidyverse,
     vdiffr
 LinkingTo: 
     ipaddress,

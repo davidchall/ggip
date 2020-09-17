@@ -17,8 +17,6 @@ knitr::opts_chunk$set(
 ```
 
 ```{r setup, warning=FALSE}
-library(tidyverse)
-library(ipaddress)
 library(ggip)
 ```
 
@@ -98,8 +96,7 @@ plot_curve <- function(curve, curve_order) {
   canvas_network <- ip_network(ip_address("0.0.0.0"), canvas_prefix)
   n_pixels <- 2 ^ curve_order
   
-  tibble(address = seq(canvas_network)) %>%
-    ggplot() +
+  ggplot(data.frame(address = seq(canvas_network))) +
     geom_path(aes(address$x, address$y)) +
     coord_ip(
       canvas_network = canvas_network,
