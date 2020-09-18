@@ -35,15 +35,17 @@ You can install the development version from GitHub:
 remotes::install_github("davidchall/ggip")
 ```
 
-## Example usage
+## Usage
 
-The `coord_ip()` function configures the mapping of IP data to the 2D
-grid (addresses to points and networks to rectangles). This is
-fundamental to every ggip plot.
+Plotting with {ggip} follows most of the conventions set by
+[{ggplot2}](https://ggplot2.tidyverse.org). A major difference is that
+`coord_ip()` is required to map IP data to the 2D grid (addresses to
+points and networks to rectangles). Learn more in `vignette("ggip")`.
 
-Here’s a quick example for some IPv4 data:
+Here’s a quick showcase of what’s possible:
 
 ``` r
+library(ggplot2)
 library(ggip)
 library(ggfittext)
 
