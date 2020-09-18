@@ -95,7 +95,9 @@
 <p>The ggip package provides data visualization of IP addresses and networks. It achieves this by mapping one-dimensional IP data onto a two-dimensional grid.</p>
 <p>This introductory vignette gives a quickstart guide on how to use ggip functions to generate plots.</p>
 <div class="sourceCode" id="cb1"><pre class="downlit">
+<span class="fu"><a href="https://rdrr.io/r/base/library.html">library</a></span>(<span class="kw"><a href="http://ggplot2.tidyverse.org">ggplot2</a></span>)
 <span class="fu"><a href="https://rdrr.io/r/base/library.html">library</a></span>(<span class="kw"><a href="https://dplyr.tidyverse.org">dplyr</a></span>)
+<span class="fu"><a href="https://rdrr.io/r/base/library.html">library</a></span>(<span class="kw"><a href="https://davidchall.github.io/ipaddress">ipaddress</a></span>)
 <span class="fu"><a href="https://rdrr.io/r/base/library.html">library</a></span>(<span class="kw"><a href="https://davidchall.github.io/ggip">ggip</a></span>)
 </pre></div>
 <div id="configuring-the-coordinate-system" class="section level2">
@@ -132,15 +134,15 @@
 <div id="internal-data-transformation" class="section level2">
 <h2 class="hasAnchor">
 <a href="#internal-data-transformation" class="anchor"></a>Internal data transformation</h2>
-<p>Behind the scenes, ggip searches the plotted data sets for any columns that are <code>ip_address()</code> or <code>ip_network()</code> vectors. For each matching column, it replaces the vector with a data frame containing both the original IP data and the mapped Cartesian coordinates. This means the plotted data set now contains a nested data frame column.</p>
-<p>As an example, consider a data set featuring two columns. The <code>label</code> column is a character vector and the <code>address</code> column is an <code>ip_address()</code> vector.</p>
+<p>Behind the scenes, ggip searches the plotted data sets for any columns that are <code><a href="https://davidchall.github.io/ipaddress/reference/ip_address.html">ip_address()</a></code> or <code><a href="https://davidchall.github.io/ipaddress/reference/ip_network.html">ip_network()</a></code> vectors. For each matching column, it replaces the vector with a data frame containing both the original IP data and the mapped Cartesian coordinates. This means the plotted data set now contains a nested data frame column.</p>
+<p>As an example, consider a data set featuring two columns. The <code>label</code> column is a character vector and the <code>address</code> column is an <code><a href="https://davidchall.github.io/ipaddress/reference/ip_address.html">ip_address()</a></code> vector.</p>
 <pre><code>#&gt; # A tibble: 3 x 2
 #&gt;   label         address
 #&gt;   &lt;chr&gt;       &lt;ip_addr&gt;
 #&gt; 1 A             0.0.0.0
 #&gt; 2 B         192.168.0.1
 #&gt; 3 C     255.255.255.255</code></pre>
-<p>This data set is transformed such that the <code>address</code> column is now a data frame. It contains an <code>ip</code> column with the original <code>ip_address()</code> vector, and <code>x</code> and <code>y</code> columns with the Cartesian coordinates on the 2D grid.</p>
+<p>This data set is transformed such that the <code>address</code> column is now a data frame. It contains an <code>ip</code> column with the original <code><a href="https://davidchall.github.io/ipaddress/reference/ip_address.html">ip_address()</a></code> vector, and <code>x</code> and <code>y</code> columns with the Cartesian coordinates on the 2D grid.</p>
 <pre><code>#&gt; # A tibble: 3 x 2
 #&gt;   label      address$ip    $x    $y
 #&gt;   &lt;chr&gt;       &lt;ip_addr&gt; &lt;int&gt; &lt;int&gt;
@@ -153,22 +155,22 @@
 <h2 class="hasAnchor">
 <a href="#using-layers-from-ggplot2-and-other-packages" class="anchor"></a>Using layers from ggplot2 and other packages</h2>
 <p>Layers from ggplot2 and other external packages don’t know about the internal data transformation used by ggip. For this reason, these layers expect their positional aesthetics (e.g. <code>x</code> and <code>y</code>) to be specified explicitly. Fortunately, we can extract the Cartesian coordinates from our data frame columns using the <code><a href="https://rdrr.io/r/base/Extract.html">$</a></code> syntax.</p>
-<p>As an example, we plot an <code>ip_address()</code> vector as points accompanied by labels. Note that we’ve specified the <code>x</code>, <code>y</code> and <code>label</code> aesthetics at the top level of the plot, and then the <code>geom_point()</code> and <code>geom_label()</code> layers have picked them up later.</p>
+<p>As an example, we plot an <code><a href="https://davidchall.github.io/ipaddress/reference/ip_address.html">ip_address()</a></code> vector as points accompanied by labels. Note that we’ve specified the <code>x</code>, <code>y</code> and <code>label</code> aesthetics at the top level of the plot, and then the <code><a href="https://ggplot2.tidyverse.org/reference/geom_point.html">geom_point()</a></code> and <code><a href="https://ggplot2.tidyverse.org/reference/geom_text.html">geom_label()</a></code> layers have picked them up later.</p>
 <div class="sourceCode" id="cb4"><pre class="downlit">
-<span class="fu"><a href="https://tibble.tidyverse.org/reference/tibble.html">tibble</a></span>(address = <span class="fu">ip_address</span>(<span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span>(<span class="st">"0.0.0.0"</span>, <span class="st">"128.0.0.0"</span>, <span class="st">"192.168.0.1"</span>))) <span class="op">%&gt;%</span>
-  <span class="fu">ggplot</span>(<span class="fu">aes</span>(x = <span class="kw">address</span><span class="op">$</span><span class="kw">x</span>, y = <span class="kw">address</span><span class="op">$</span><span class="kw">y</span>, label = <span class="kw">address</span><span class="op">$</span><span class="kw">ip</span>)) <span class="op">+</span>
-  <span class="fu">geom_point</span>() <span class="op">+</span>
-  <span class="fu">geom_label</span>(nudge_x = <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span>(<span class="fl">10</span>, <span class="fl">0</span>, <span class="op">-</span><span class="fl">10</span>), nudge_y = <span class="op">-</span><span class="fl">10</span>) <span class="op">+</span>
+<span class="fu"><a href="https://tibble.tidyverse.org/reference/tibble.html">tibble</a></span>(address = <span class="fu"><a href="https://davidchall.github.io/ipaddress/reference/ip_address.html">ip_address</a></span>(<span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span>(<span class="st">"0.0.0.0"</span>, <span class="st">"128.0.0.0"</span>, <span class="st">"192.168.0.1"</span>))) <span class="op">%&gt;%</span>
+  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggplot.html">ggplot</a></span>(<span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html">aes</a></span>(x = <span class="kw">address</span><span class="op">$</span><span class="kw">x</span>, y = <span class="kw">address</span><span class="op">$</span><span class="kw">y</span>, label = <span class="kw">address</span><span class="op">$</span><span class="kw">ip</span>)) <span class="op">+</span>
+  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/geom_point.html">geom_point</a></span>() <span class="op">+</span>
+  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/geom_text.html">geom_label</a></span>(nudge_x = <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span>(<span class="fl">10</span>, <span class="fl">0</span>, <span class="op">-</span><span class="fl">10</span>), nudge_y = <span class="op">-</span><span class="fl">10</span>) <span class="op">+</span>
   <span class="fu"><a href="../reference/coord_ip.html">coord_ip</a></span>(expand = <span class="fl">TRUE</span>) <span class="op">+</span>
   <span class="fu"><a href="../reference/theme_ip.html">theme_ip_light</a></span>()
 </pre></div>
 <p><img src="ggip_files/figure-html/unnamed-chunk-2-1.png" width="480" style="display: block; margin: auto;"></p>
-<p>Similarly, we plot <code>ip_network()</code> vectors using layers corresponding to rectangles.</p>
+<p>Similarly, we plot <code><a href="https://davidchall.github.io/ipaddress/reference/ip_network.html">ip_network()</a></code> vectors using layers corresponding to rectangles.</p>
 <div class="sourceCode" id="cb5"><pre class="downlit">
 <span class="kw">iana_ipv4</span> <span class="op">%&gt;%</span>
-  <span class="fu">ggplot</span>(<span class="fu">aes</span>(xmin = <span class="kw">network</span><span class="op">$</span><span class="kw">xmin</span>, ymin = <span class="kw">network</span><span class="op">$</span><span class="kw">ymin</span>, xmax = <span class="kw">network</span><span class="op">$</span><span class="kw">xmax</span>, ymax = <span class="kw">network</span><span class="op">$</span><span class="kw">ymax</span>)) <span class="op">+</span>
-  <span class="fu">geom_rect</span>(<span class="fu">aes</span>(fill = <span class="kw">allocation</span>)) <span class="op">+</span>
-  <span class="fu">scale_fill_brewer</span>(palette = <span class="st">"Accent"</span>, name = <span class="kw">NULL</span>) <span class="op">+</span>
+  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggplot.html">ggplot</a></span>(<span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html">aes</a></span>(xmin = <span class="kw">network</span><span class="op">$</span><span class="kw">xmin</span>, ymin = <span class="kw">network</span><span class="op">$</span><span class="kw">ymin</span>, xmax = <span class="kw">network</span><span class="op">$</span><span class="kw">xmax</span>, ymax = <span class="kw">network</span><span class="op">$</span><span class="kw">ymax</span>)) <span class="op">+</span>
+  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/geom_tile.html">geom_rect</a></span>(<span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html">aes</a></span>(fill = <span class="kw">allocation</span>)) <span class="op">+</span>
+  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/scale_brewer.html">scale_fill_brewer</a></span>(palette = <span class="st">"Accent"</span>, name = <span class="kw">NULL</span>) <span class="op">+</span>
   <span class="fu"><a href="../reference/coord_ip.html">coord_ip</a></span>() <span class="op">+</span>
   <span class="fu"><a href="../reference/theme_ip.html">theme_ip_dark</a></span>()
 </pre></div>
@@ -178,13 +180,13 @@
 <div id="using-ggip-layers" class="section level2">
 <h2 class="hasAnchor">
 <a href="#using-ggip-layers" class="anchor"></a>Using ggip layers</h2>
-<p>Layers from ggip <strong>do</strong> know about the internal data transformation, so they take an <code>ip</code> aesthetic corresponding to the data frame column. They can then automatically extract the relevant positional information. This is easier because the name of the data frame column is also the name of the original <code>ip_address()</code> or <code>ip_network()</code> column in the input data set.</p>
-<p>As an example, we plot a heatmap of an <code>ip_address()</code> vector.</p>
+<p>Layers from ggip <strong>do</strong> know about the internal data transformation, so they take an <code>ip</code> aesthetic corresponding to the data frame column. They can then automatically extract the relevant positional information. This is easier because the name of the data frame column is also the name of the original <code><a href="https://davidchall.github.io/ipaddress/reference/ip_address.html">ip_address()</a></code> or <code><a href="https://davidchall.github.io/ipaddress/reference/ip_network.html">ip_network()</a></code> column in the input data set.</p>
+<p>As an example, we plot a heatmap of an <code><a href="https://davidchall.github.io/ipaddress/reference/ip_address.html">ip_address()</a></code> vector.</p>
 <div class="sourceCode" id="cb6"><pre class="downlit">
-<span class="fu"><a href="https://tibble.tidyverse.org/reference/tibble.html">tibble</a></span>(address = <span class="fu">sample_ipv4</span>(<span class="fl">10000</span>)) <span class="op">%&gt;%</span>
-  <span class="fu">ggplot</span>(<span class="fu">aes</span>(ip = <span class="kw">address</span>)) <span class="op">+</span>
+<span class="fu"><a href="https://tibble.tidyverse.org/reference/tibble.html">tibble</a></span>(address = <span class="fu"><a href="https://davidchall.github.io/ipaddress/reference/sample.html">sample_ipv4</a></span>(<span class="fl">10000</span>)) <span class="op">%&gt;%</span>
+  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggplot.html">ggplot</a></span>(<span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html">aes</a></span>(ip = <span class="kw">address</span>)) <span class="op">+</span>
   <span class="fu"><a href="../reference/stat_summary_address.html">stat_summary_address</a></span>() <span class="op">+</span>
-  <span class="fu">scale_fill_viridis_c</span>(guide = <span class="st">"none"</span>) <span class="op">+</span>
+  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/scale_viridis.html">scale_fill_viridis_c</a></span>(guide = <span class="st">"none"</span>) <span class="op">+</span>
   <span class="fu"><a href="../reference/coord_ip.html">coord_ip</a></span>() <span class="op">+</span>
   <span class="fu"><a href="../reference/theme_ip.html">theme_ip_dark</a></span>()
 </pre></div>

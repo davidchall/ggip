@@ -105,27 +105,28 @@
 <span class="kw">remotes</span>::<span class="fu"><a href="https://remotes.r-lib.org/reference/install_github.html">install_github</a></span>(<span class="st">"davidchall/ggip"</span>)
 </pre></div>
 </div>
-<div id="example-usage" class="section level2">
+<div id="usage" class="section level2">
 <h2 class="hasAnchor">
-<a href="#example-usage" class="anchor"></a>Example usage</h2>
-<p>The <code><a href="reference/coord_ip.html">coord_ip()</a></code> function configures the mapping of IP data to the 2D grid (addresses to points and networks to rectangles). This is fundamental to every ggip plot.</p>
-<p>Here’s a quick example for some IPv4 data:</p>
+<a href="#usage" class="anchor"></a>Usage</h2>
+<p>Plotting with {ggip} follows most of the conventions set by <a href="https://ggplot2.tidyverse.org">{ggplot2}</a>. A major difference is that <code><a href="reference/coord_ip.html">coord_ip()</a></code> is required to map IP data to the 2D grid (addresses to points and networks to rectangles). Learn more in <code><a href="articles/ggip.html">vignette("ggip")</a></code>.</p>
+<p>Here’s a quick showcase of what’s possible:</p>
 <div class="sourceCode" id="cb2"><pre class="downlit">
+<span class="fu"><a href="https://rdrr.io/r/base/library.html">library</a></span>(<span class="kw"><a href="http://ggplot2.tidyverse.org">ggplot2</a></span>)
 <span class="fu"><a href="https://rdrr.io/r/base/library.html">library</a></span>(<span class="kw"><a href="https://davidchall.github.io/ggip">ggip</a></span>)
 <span class="fu"><a href="https://rdrr.io/r/base/library.html">library</a></span>(<span class="kw">ggfittext</span>)
 
-<span class="fu">ggplot</span>(<span class="kw">iana_ipv4</span>) <span class="op">+</span>
-  <span class="fu"><a href="reference/stat_summary_address.html">stat_summary_address</a></span>(<span class="fu">aes</span>(ip = <span class="kw">address</span>), data = <span class="kw">ip_data</span>) <span class="op">+</span>
-  <span class="fu">geom_rect</span>(
-    <span class="fu">aes</span>(xmin = <span class="kw">network</span><span class="op">$</span><span class="kw">xmin</span>, xmax = <span class="kw">network</span><span class="op">$</span><span class="kw">xmax</span>, ymin = <span class="kw">network</span><span class="op">$</span><span class="kw">ymin</span>, ymax = <span class="kw">network</span><span class="op">$</span><span class="kw">ymax</span>),
+<span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggplot.html">ggplot</a></span>(<span class="kw">iana_ipv4</span>) <span class="op">+</span>
+  <span class="fu"><a href="reference/stat_summary_address.html">stat_summary_address</a></span>(<span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html">aes</a></span>(ip = <span class="kw">address</span>), data = <span class="kw">ip_data</span>) <span class="op">+</span>
+  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/geom_tile.html">geom_rect</a></span>(
+    <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html">aes</a></span>(xmin = <span class="kw">network</span><span class="op">$</span><span class="kw">xmin</span>, xmax = <span class="kw">network</span><span class="op">$</span><span class="kw">xmax</span>, ymin = <span class="kw">network</span><span class="op">$</span><span class="kw">ymin</span>, ymax = <span class="kw">network</span><span class="op">$</span><span class="kw">ymax</span>),
     alpha = <span class="fl">0.2</span>, fill = <span class="st">"white"</span>
   ) <span class="op">+</span>
-  <span class="fu">geom_fit_text</span>(<span class="fu">aes</span>(
+  <span class="fu">geom_fit_text</span>(<span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html">aes</a></span>(
     xmin = <span class="kw">network</span><span class="op">$</span><span class="kw">xmin</span>, xmax = <span class="kw">network</span><span class="op">$</span><span class="kw">xmax</span>, ymin = <span class="kw">network</span><span class="op">$</span><span class="kw">ymin</span>, ymax = <span class="kw">network</span><span class="op">$</span><span class="kw">ymax</span>,
     label = <span class="kw">label</span>, color = <span class="kw">allocation</span>
   ), reflow = <span class="fl">TRUE</span>) <span class="op">+</span>
-  <span class="fu">scale_fill_viridis_c</span>(trans = <span class="st">"log2"</span>, na.value = <span class="st">"black"</span>, guide = <span class="st">"none"</span>) <span class="op">+</span>
-  <span class="fu">scale_color_brewer</span>(name = <span class="kw">NULL</span>, palette = <span class="st">"Accent"</span>) <span class="op">+</span>
+  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/scale_viridis.html">scale_fill_viridis_c</a></span>(trans = <span class="st">"log2"</span>, na.value = <span class="st">"black"</span>, guide = <span class="st">"none"</span>) <span class="op">+</span>
+  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/scale_brewer.html">scale_color_brewer</a></span>(name = <span class="kw">NULL</span>, palette = <span class="st">"Accent"</span>) <span class="op">+</span>
   <span class="fu"><a href="reference/coord_ip.html">coord_ip</a></span>(pixel_prefix = <span class="fl">20</span>) <span class="op">+</span>
   <span class="fu"><a href="reference/theme_ip.html">theme_ip_dark</a></span>()
 <span class="co">#&gt; Warning: Transformation introduced infinite values in discrete y-axis</span>
