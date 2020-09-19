@@ -45,22 +45,19 @@ points and networks to rectangles). Learn more in `vignette("ggip")`.
 Here’s a quick showcase of what’s possible:
 
 ``` r
-library(ggplot2)
-library(ggip)
+library(tidyverse)
 library(ggfittext)
+library(ggip)
 
-ggplot(iana_ipv4) +
-  stat_summary_address(aes(ip = address), data = ip_data) +
-  geom_rect(
-    aes(xmin = network$xmin, xmax = network$xmax, ymin = network$ymin, ymax = network$ymax),
-    alpha = 0.2, fill = "white"
+ggplot(ip_data) +
+  stat_summary_address(aes(ip = address)) +
+  geom_fit_text(
+    aes(xmin = network$xmin, xmax = network$xmax, ymin = network$ymin, ymax = network$ymax, label = label),
+    data = iana_ipv4 %>% filter(allocation == "Reserved"),
+    color = "#fdc086",
+    grow = TRUE
   ) +
-  geom_fit_text(aes(
-    xmin = network$xmin, xmax = network$xmax, ymin = network$ymin, ymax = network$ymax,
-    label = label, color = allocation
-  ), reflow = TRUE) +
-  scale_fill_viridis_c(trans = "log2", na.value = "black", guide = "none") +
-  scale_color_brewer(name = NULL, palette = "Accent") +
+  scale_fill_viridis_c(name = NULL, trans = "log2", na.value = "black") +
   coord_ip(pixel_prefix = 20) +
   theme_ip_dark()
 #> Warning: Transformation introduced infinite values in discrete y-axis
