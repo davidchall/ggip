@@ -13,28 +13,25 @@ Description: A 'ggplot2' extension that enables visualization of
     curve. Offers full support for both IPv4 and IPv6 (Internet Protocol
     versions 4 and 6) address spaces.
 License: MIT + file LICENSE
-URL: https://davidchall.github.io/ggip,
+URL: https://davidchall.github.io/ggip/,
     https://github.com/davidchall/ggip
 BugReports: https://github.com/davidchall/ggip/issues
 Depends: 
+    ggplot2 (>= 3.3.0),
+    ipaddress (>= 0.5.1),
     R (>= 3.3.0)
 Imports: 
-    dplyr,
-    ggplot2,
+    dplyr (>= 1.0.0),
     glue,
-    ipaddress,
     Rcpp,
-    rlang,
+    rlang (>= 0.4.2),
     tidyr,
-    vctrs
+    vctrs (>= 0.3.0)
 Suggests: 
     knitr,
     rmarkdown,
-    testthat,
-    tidyverse,
-    vdiffr
+    testthat
 LinkingTo: 
-    AsioHeaders,
     ipaddress,
     Rcpp
 VignetteBuilder: 

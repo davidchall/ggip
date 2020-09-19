@@ -1,24 +1,26 @@
-#' Summarize IP addresses on heatmap
+#' Summarize IP addresses on a heatmap
+#'
+#' Addresses are grouped into networks determined by the `pixel_prefix` argument
+#' of `coord_ip()`. Then the `z` values are summarized with summary function `fun`.
 #'
 #' @inheritParams ggplot2::layer
 #' @inheritParams ggplot2::geom_point
 #' @param fun Summary function (see section below for details). If `NULL` (the
-#'   default), the number of observations is computed.
-#' @param fun.args A list of extra arguments to pass to `fun`
+#'   default), the observations are simply counted.
+#' @param fun.args A list of extra arguments to pass to `fun`.
 #'
 #' @section Aesthetics:
-#' `stat_summary_address()` understands the following aesthetics:
-#'  - `ip`: An [`ip_address`][`ipaddress::ip_address`] column
+#' `stat_summary_address()` understands the following aesthetics (required
+#' aesthetics are in bold):
+#'  - **`ip`**: An [`ip_address`][`ipaddress::ip_address`] column
 #'  - `z`: Value passed to the summary function (required if `fun` is used)
-#'  - `fill`: Must use a computed variable (default: `after_stat(value)`)
+#'  - `fill`: Default is `after_stat(value)`
 #'  - `alpha`
 #'
 #' @section Computed variables:
 #' The following variables are available to [`after_stat()`][ggplot2::after_stat()]:
 #'  - `value`: Value of summary statistic
 #'  - `count`: Number of observations
-#'  - `ip_count`: Number of unique addresses
-#'  - `ip_propn`: Observed proportion of network
 #'
 #' @section Summary function:
 #' The `data` might contain multiple rows per pixel of the heatmap, so a summary
@@ -37,6 +39,26 @@
 #' \item{formula}{A function can also be created from a formula. This uses `.x`
 #'   as the summarized variable (e.g. `fun = ~ sum(.x^2)`).}
 #' }
+#'
+#' @examples
+#' dat <- data.frame(
+#'   ip = sample_ipv4(10000),
+#'   weight = runif(10000)
+#' )
+#'
+#' p <- ggplot(dat, aes(ip = ip)) +
+#'   coord_ip() +
+#'   theme_ip_light()
+#'
+#' # simple count of observations
+#' p +
+#'   stat_summary_address() +
+#'   scale_fill_viridis_c(trans = "log2", na.value = "black", guide = "none")
+#'
+#' # compute mean weight
+#' p +
+#'   stat_summary_address(aes(z = weight), fun = ~ mean(.x)) +
+#'   scale_fill_viridis_c(na.value = "black", guide = "none")
 #' @export
 stat_summary_address <- function(mapping = NULL, data = NULL, ...,
                                  fun = NULL, fun.args = list(),
@@ -55,7 +77,6 @@ stat_summary_address <- function(mapping = NULL, data = NULL, ...,
 }
 
 StatSummaryAddress <- ggplot2::ggproto("StatSummaryAddress", ggplot2::Stat,
-
   required_aes = "ip",
 
   default_aes = ggplot2::aes(z = NULL, fill = ggplot2::after_stat(value)),
@@ -69,7 +90,7 @@ StatSummaryAddress <- ggplot2::ggproto("StatSummaryAddress", ggplot2::Stat,
 
     # validate ip aesthetic
     if (is.null(data$ip)) {
-      stop_missing_aes(snake_class(self), "ip")
+      stop_missing_aes("stat_summary_address", "ip")
     } else if (is_ip_address_coords(data$ip)) {
       data$x <- data$ip$x
       data$y <- data$ip$y
@@ -77,7 +98,7 @@ StatSummaryAddress <- ggplot2::ggproto("StatSummaryAddress", ggplot2::Stat,
     } else if (is_ip_address(data$ip)) {
       abort("The `ip` aesthetic of `stat_summary_address()` must map to a `data` variable.")
     } else {
-      stop_bad_aes_type(snake_class(self), "ip", "an ip_address vector")
+      stop_bad_aes_type("stat_summary_address", "ip", "ip_address")
     }
 
     if (!is.null(params$fun) && !("z" %in% colnames(data))) {
@@ -91,43 +112,42 @@ StatSummaryAddress <- ggplot2::ggproto("StatSummaryAddress", ggplot2::Stat,
 
   compute_group = function(data, scales, coord,
                            fun = NULL, fun.args = list(), ...) {
-
-    # support formula interface
-    if (is_formula(fun)) {
-      fun <- as_function(fun)
-    }
-
-    summarize_count <- is.null(fun)
-
-    # summarize grid found in data
-    index <- list(x = data$x, y = data$y)
-    labels <- lapply(index, function(x) sort(unique(x)))
-    out <- expand.grid(labels, KEEP.OUT.ATTRS = FALSE)
-
-    out$count <- summarize_grid(data$x, index, length)
-    out$value <- if (summarize_count) {
-      out$count
-    } else {
-      f <- function(x) do.call(fun, c(list(quote(x)), fun.args))
-      summarize_grid(data$z, index, f)
-    }
-
-    out$ip_count <- summarize_grid(data$ip, index, function(x) length(unique(x)))
-    bits_per_pixel <- max_prefix_length(coord$canvas_network) - coord$pixel_prefix
-    out$ip_propn <- out$ip_count / (2^bits_per_pixel)
-
-    # fill remaining grid so raster works
-    range <- coord$limits$x[1]:coord$limits$x[2]
-    fill_na <- list(count = 0, ip_count = 0, ip_propn = 0)
-    if (summarize_count) {
-      fill_na$value <- 0
-    }
-    tidyr::complete(out, tidyr::expand(out, x = range, y = range), fill = fill_na)
+    summarize_addresses(data, scales, coord, fun, fun.args)
   }
 )
 
-summarize_grid <- function(x, index, fun) {
-  grps <- split(x, index)
-  names(grps) <- NULL
-  unlist(lapply(grps, fun))
+summarize_addresses <- function(data, scales, coord, fun, fun.args) {
+  summarize_grid <- function(x, index, fun) {
+    grps <- split(x, index)
+    names(grps) <- NULL
+    unlist(lapply(grps, fun))
+  }
+
+  # support formula interface
+  if (is_formula(fun)) {
+    fun <- as_function(fun)
+  }
+
+  summarize_count <- is.null(fun)
+
+  # summarize grid found in data
+  index <- list(x = data$x, y = data$y)
+  labels <- lapply(index, function(x) sort(unique(x)))
+  out <- expand.grid(labels, KEEP.OUT.ATTRS = FALSE)
+
+  out$count <- summarize_grid(data$x, index, length)
+  out$value <- if (summarize_count) {
+    out$count
+  } else {
+    f <- function(x) do.call(fun, c(list(quote(x)), fun.args))
+    summarize_grid(data$z, index, f)
+  }
+
+  # fill remaining grid so raster works
+  range <- coord$limits$x[1]:coord$limits$x[2]
+  fill_na <- list(count = 0)
+  if (summarize_count) {
+    fill_na$value <- 0
+  }
+  tidyr::complete(out, tidyr::expand(out, x = range, y = range), fill = fill_na)
 }

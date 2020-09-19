@@ -24,12 +24,12 @@ network_to_cartesian(
 \item{address}{An \code{\link[ipaddress:ip_address]{ip_address}} vector}
 
 \item{canvas_network}{An \code{\link[ipaddress:ip_network]{ip_network}} scalar that
-determines the network visualized by the plotted canvas. The default shows
-the entire IPv4 address space.}
+determines the region of IP space visualized by the entire 2D grid. The
+default shows the entire IPv4 address space.}
 
-\item{pixel_prefix}{An integer scalar that determines the number of addresses
-represented by a single pixel. It sets the prefix length of the
-corresponding network. The default value is 16.}
+\item{pixel_prefix}{An integer scalar that sets the prefix length of the
+network represented by a single pixel. The default value is 16. Increasing
+this effectively improves the resolution of the plot.}
 
 \item{curve}{A string to choose the space-filling curve. Choices are
 \code{"hilbert"} (default) and \code{"morton"}.}
@@ -50,8 +50,6 @@ vectors to Cartesian coordinates. They are exposed externally to support use
 of these coordinates outside of ggplot2.
 }
 \examples{
-library(ipaddress)
-
 address_to_cartesian(ip_address("192.168.0.1"))
 
 network_to_cartesian(ip_network("224.0.0.0/4"))

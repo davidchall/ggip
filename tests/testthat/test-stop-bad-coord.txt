@@ -1,0 +1,49 @@
+> validate_mapping_params(ip_address("0.0.0.0"), 16)
+Error: `canvas_network` must be a scalar with type <ip_network>.
+
+> validate_mapping_params(ip_network(rep("0.0.0.0/0", 2)), 16)
+Error: `canvas_network` must be a scalar with type <ip_network>.
+
+> validate_mapping_params(ip_network("0.0.0.0/0"), 2.5)
+Error: `pixel_prefix` must be a positive integer scalar.
+
+> validate_mapping_params(ip_network("0.0.0.0/0"), c(1, 2))
+Error: `pixel_prefix` must be a positive integer scalar.
+
+> validate_mapping_params(ip_network("0.0.0.0/0"), -1)
+Error: `pixel_prefix` must be a positive integer scalar.
+
+> address_to_cartesian(ip_address("0.0.0.0"), curve = "hilber")
+Error: `curve` must be one of "hilbert" or "morton".
+Did you mean "hilbert"?
+
+> network_to_cartesian(ip_network("0.0.0.0/0"), curve = "hilber")
+Error: `curve` must be one of "hilbert" or "morton".
+Did you mean "hilbert"?
+
+> validate_mapping_params(ip_network("0.0.0.0/16"), 33)
+Error: Pixel prefix length must not be greater than 32.
+i Canvas uses IPv4 address space.
+x Pixel has prefix length 33.
+
+> validate_mapping_params(ip_network("::/120"), 129)
+Error: Pixel prefix length must not be greater than 128.
+i Canvas uses IPv6 address space.
+x Pixel has prefix length 129.
+
+> validate_mapping_params(ip_network("0.0.0.0/16"), 14)
+Error: Pixel prefix length must be greater than canvas.
+x Canvas has prefix length 16.
+x Pixel has prefix length 14.
+
+> validate_mapping_params(ip_network("0.0.0.0/0"), 31)
+Error: The difference between canvas and pixel prefix lengths must be even.
+x Canvas has prefix length 0.
+x Pixel has prefix length 31.
+
+> validate_mapping_params(ip_network("0.0.0.0/0"), 32)
+Error: The difference between canvas and pixel prefix lengths must not be greater than 24.
+x Canvas has prefix length 0.
+x Pixel has prefix length 32.
+i These values would produce a plot with 65,536 x 65,536 pixels.
+

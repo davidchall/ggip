@@ -60,7 +60,7 @@ scale_type.ip_address_coords <- function(x) "identity"
 
 # ip_network_coords ---------------------------------------------------
 
-new_ip_network_coords <- function(ip = ip_address(),
+new_ip_network_coords <- function(ip = ip_network(),
                                   xmin = integer(), ymin = integer(),
                                   xmax = integer(), ymax = integer()) {
   vctrs::vec_assert(ip, ip_network())
@@ -75,7 +75,7 @@ new_ip_network_coords <- function(ip = ip_address(),
   )
 }
 
-ip_network_coords <- function(ip = ip_address(),
+ip_network_coords <- function(ip = ip_network(),
                               xmin = integer(), ymin = integer(),
                               xmax = integer(), ymax = integer()) {
   vctrs::vec_cast(ip, ip_network())

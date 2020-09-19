@@ -15,7 +15,7 @@ A 'ggplot2' extension that enables visualization of
 \seealso{
 Useful links:
 \itemize{
-  \item \url{https://davidchall.github.io/ggip}
+  \item \url{https://davidchall.github.io/ggip/}
   \item \url{https://github.com/davidchall/ggip}
   \item Report bugs at \url{https://github.com/davidchall/ggip/issues}
 }
