@@ -1,7 +1,7 @@
 
 <!-- README.md is generated from README.Rmd. Please edit that file -->
 
-# ggip
+# ggip <a href='https://davidchall.github.io/ggip/'><img src='man/figures/logo.png' align="right" height="139" /></a>
 
 <!-- badges: start -->
 
@@ -28,7 +28,14 @@ Here are some of the key features:
 
 ## Installation
 
-You can install the development version from GitHub:
+You can install the released version of ggip from
+[CRAN](https://CRAN.R-project.org) with:
+
+``` r
+install.packages("ggip")
+```
+
+Or you can install the development version from GitHub:
 
 ``` r
 # install.packages("remotes")
