@@ -110,8 +110,12 @@
 <div id="installation" class="section level2">
 <h2 class="hasAnchor">
 <a href="#installation" class="anchor"></a>Installation</h2>
-<p>You can install the development version from GitHub:</p>
+<p>You can install the released version of ggip from <a href="https://CRAN.R-project.org">CRAN</a> with:</p>
 <div class="sourceCode" id="cb1"><pre class="downlit">
+<span class="fu"><a href="https://rdrr.io/r/utils/install.packages.html">install.packages</a></span>(<span class="st">"ggip"</span>)
+</pre></div>
+<p>Or you can install the development version from GitHub:</p>
+<div class="sourceCode" id="cb2"><pre class="downlit">
 <span class="co"># install.packages("remotes")</span>
 <span class="kw">remotes</span>::<span class="fu"><a href="https://remotes.r-lib.org/reference/install_github.html">install_github</a></span>(<span class="st">"davidchall/ggip"</span>)
 </pre></div>
@@ -121,7 +125,7 @@
 <a href="#usage" class="anchor"></a>Usage</h2>
 <p>Plotting with {ggip} follows most of the conventions set by <a href="https://ggplot2.tidyverse.org">{ggplot2}</a>. A major difference is that <code><a href="reference/coord_ip.html">coord_ip()</a></code> is required to map IP data to the 2D grid (addresses to points and networks to rectangles). Learn more in <code><a href="articles/ggip.html">vignette("ggip")</a></code>.</p>
 <p>Here’s a quick showcase of what’s possible:</p>
-<div class="sourceCode" id="cb2"><pre class="downlit">
+<div class="sourceCode" id="cb3"><pre class="downlit">
 <span class="fu"><a href="https://rdrr.io/r/base/library.html">library</a></span>(<span class="kw"><a href="http://tidyverse.tidyverse.org">tidyverse</a></span>)
 <span class="fu"><a href="https://rdrr.io/r/base/library.html">library</a></span>(<span class="kw">ggfittext</span>)
 <span class="fu"><a href="https://rdrr.io/r/base/library.html">library</a></span>(<span class="kw"><a href="https://davidchall.github.io/ggip">ggip</a></span>)
