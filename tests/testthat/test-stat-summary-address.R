@@ -83,3 +83,16 @@ test_that("alternative ways to specify summary function", {
   expect_equal(layer_data(p1), layer_data(p2))
   expect_equal(layer_data(p1), layer_data(p3))
 })
+
+test_that("addresses outside 2D grid raise warning", {
+  dat <- data.frame(ip = ip_address(c("0.0.0.0", "255.255.255.255")))
+
+  p <- ggplot(dat, aes(ip = ip)) +
+    coord_ip(
+      canvas_network = ip_network("0.0.0.0/2"),
+      pixel_prefix = 2
+    )
+
+  expect_warning(layer_data(p + stat_summary_address()))
+  expect_silent(layer_data(p + stat_summary_address(na.rm = TRUE)))
+})
