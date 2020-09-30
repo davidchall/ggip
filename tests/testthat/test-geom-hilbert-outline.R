@@ -1,5 +1,3 @@
-library(ggplot2)
-
 test_that("input validation", {
   address_data <- data.frame(address = ip_address("0.0.0.0"))
   network_data <- data.frame(network = ip_network("0.0.0.0/16"))
