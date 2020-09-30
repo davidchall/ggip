@@ -80,7 +80,7 @@ GeomHilbertOutline <- ggplot2::ggproto("GeomHilbertOutline", ggplot2::Geom,
       data$ip <- data$ip$ip
     }
     if (!is_ip_network(data$ip)) {
-      stop_bad_aes_type("geom_hilbert_outline", "ip", "an ip_network vector")
+      stop_bad_aes_type("geom_hilbert_outline", "ip", "ip_network")
     }
 
     lines <- data %>%
