@@ -4,13 +4,7 @@
 \alias{geom_hilbert_outline}
 \title{Hilbert curve outline}
 \usage{
-geom_hilbert_outline(
-  mapping = NULL,
-  data = NULL,
-  ...,
-  enclosed = FALSE,
-  na.rm = FALSE
-)
+geom_hilbert_outline(mapping = NULL, data = NULL, ..., na.rm = FALSE)
 }
 \arguments{
 \item{mapping}{Set of aesthetic mappings created by \code{\link[ggplot2:aes]{aes()}} or
@@ -38,25 +32,35 @@ often aesthetics, used to set an aesthetic to a fixed value, like
 \code{colour = "red"} or \code{size = 3}. They may also be parameters
 to the paired geom/stat.}
 
-\item{enclosed}{A logical scalar indicating whether the curve outline should
-have closed ends (default: \code{FALSE}).}
-
 \item{na.rm}{If \code{FALSE}, the default, missing values are removed with
 a warning. If \code{TRUE}, missing values are silently removed.}
 }
 \description{
-Hilbert curve outline
+Computes and draws the outline of the Hilbert curve used to map IP data to
+the Cartesian plane. By superimposing this outline on top of a ggip plot,
+it guides the eye to regions that are close in IP address space.
 }
 \section{Aesthetics}{
 
 \code{geom_curve_outline()} understands the following aesthetics:
 \itemize{
-\item \code{ip}
-\item \code{curve_order}
+\item \code{ip}: An \code{\link[ipaddress:ip_network]{ip_network}} column. By default, the
+entire Hilbert curve is shown.
+\item \code{curve_order}: How nested is the curve? (default: \code{4}).
+\item \code{enclosed}: Should the curve outline have closed ends? (default: \code{FALSE}).
 \item \code{alpha}
 \item \code{colour}
 \item \code{linetype}
 \item \code{size}
+}
+}
+
+\section{Computed variables}{
+
+
+\describe{
+\item{x, y}{The start coordinates for the segment}
+\item{xend, yend}{The end coordinates for the segment}
 }
 }
 

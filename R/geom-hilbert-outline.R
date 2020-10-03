@@ -1,18 +1,29 @@
 #' Hilbert curve outline
 #'
+#' Computes and draws the outline of the Hilbert curve used to map IP data to
+#' the Cartesian plane. By superimposing this outline on top of a ggip plot,
+#' it guides the eye to regions that are close in IP address space.
+#'
 #' @inheritParams ggplot2::layer
 #' @inheritParams ggplot2::geom_point
-#' @param enclosed A logical scalar indicating whether the curve outline should
-#'   have closed ends (default: `FALSE`).
 #'
 #' @section Aesthetics:
 #' `geom_curve_outline()` understands the following aesthetics:
-#'  - `ip`
-#'  - `curve_order`
+#'  - `ip`: An [`ip_network`][`ipaddress::ip_network`] column. By default, the
+#'    entire Hilbert curve is shown.
+#'  - `curve_order`: How nested is the curve? (default: `4`).
+#'  - `enclosed`: Should the curve outline have closed ends? (default: `FALSE`).
 #'  - `alpha`
 #'  - `colour`
 #'  - `linetype`
 #'  - `size`
+#'
+#' @section Computed variables:
+#'
+#' \describe{
+#'  \item{x, y}{The start coordinates for the segment}
+#'  \item{xend, yend}{The end coordinates for the segment}
+#' }
 #'
 #' @examples
 #' library(ggplot2)
@@ -37,7 +48,7 @@
 #' p + geom_hilbert_outline(aes(ip = ip, curve_order = curve_order), data = df)
 #' @export
 geom_hilbert_outline <- function(mapping = NULL, data = NULL, ...,
-                                 enclosed = FALSE, na.rm = FALSE) {
+                                 na.rm = FALSE) {
   # can use layer without any data
   if (is.null(data)) {
     data <- ensure_nonempty_data
@@ -47,7 +58,6 @@ geom_hilbert_outline <- function(mapping = NULL, data = NULL, ...,
     geom = GeomHilbertOutline, data = data, mapping = mapping, stat = "identity",
     position = "identity", show.legend = FALSE, inherit.aes = FALSE,
     params = list(
-      enclosed = enclosed,
       na.rm = na.rm,
       ...
     )
@@ -58,13 +68,14 @@ GeomHilbertOutline <- ggplot2::ggproto("GeomHilbertOutline", ggplot2::Geom,
   default_aes = ggplot2::aes(
     ip = NULL,
     curve_order = 4,
+    enclosed = FALSE,
     colour = "black",
     size = 0.5,
     linetype = 1,
     alpha = NA
   ),
 
-  draw_panel = function(data, panel_params, coord, enclosed = FALSE, na.rm = FALSE) {
+  draw_panel = function(data, panel_params, coord, na.rm = FALSE) {
 
     if (!is_CoordIp(coord)) {
       stop_missing_coord()
