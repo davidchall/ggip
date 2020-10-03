@@ -65,9 +65,6 @@ entire Hilbert curve is shown.
 }
 
 \examples{
-library(ggplot2)
-library(ipaddress)
-
 p <- ggplot() + coord_ip() + theme_ip_light()
 
 # default shows curve across entire canvas
