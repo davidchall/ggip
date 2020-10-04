@@ -78,7 +78,7 @@ GeomHilbertOutline <- ggplot2::ggproto("GeomHilbertOutline", ggplot2::Geom,
       stop_missing_coord()
     }
     if (coord$curve != "hilbert") {
-      abort(glue::glue('`geom_hilbert_outline()` requires `coord_ip(curve = "hilbert")`.'))
+      abort('`geom_hilbert_outline()` requires `coord_ip(curve = "hilbert")`.')
     }
 
     # validate ip aesthetic
