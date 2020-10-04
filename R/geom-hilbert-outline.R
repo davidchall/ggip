@@ -94,7 +94,7 @@ GeomHilbertOutline <- ggplot2::ggproto("GeomHilbertOutline", ggplot2::Geom,
     segments <- data %>%
       dplyr::distinct() %>%
       dplyr::rowwise(-ip, -curve_order) %>%
-      dplyr::summarize(generate_curve_data(ip, curve_order, coord, enclosed)) %>%
+      dplyr::summarize(generate_curve_outline(ip, curve_order, coord, enclosed)) %>%
       dplyr::ungroup() %>%
       dplyr::distinct()
 
@@ -105,7 +105,18 @@ GeomHilbertOutline <- ggplot2::ggproto("GeomHilbertOutline", ggplot2::Geom,
   draw_key = ggplot2::draw_key_path
 )
 
-generate_curve_data <- function(network, curve_order, coord, enclosed) {
+#' Generate a set of line segments that should be drawn to show the outline of
+#' the Hilbert curve for a single network.
+#'
+#' @param network `ip_network` scalar
+#' @param curve_order Integer scalar
+#' @param coord The `CoordIp` coordinate system.
+#' @param enclosed Logical scalar indicating whether to visualize the sides at
+#'   the beginning and end of the path.
+#' @return A data.frame with 4 columns: `x`, `y`, `xend`, `yend`.
+#'
+#' @noRd
+generate_curve_outline <- function(network, curve_order, coord, enclosed) {
   curve_prefix <- (2 * curve_order) + prefix_length(coord$canvas_network)
 
   if (curve_prefix > prefix_length(network)) {
@@ -152,13 +163,13 @@ snap_to_grid <- function(x, add_offset, limits) {
   )
 }
 
-#' Turns a path of squares into a sequence of square sides to display in order
-#' to visualize the outline of the path.
+#' Translate a path of squares into a sequence of square sides to be drawn,
+#' in order to visualize the path outline.
 #'
 #' @param data A data.frame with 4 columns: `xmin`, `ymin`, `xmax`, `ymax`.
 #'   There is 1 row per square of the path.
-#' @param enclosed Logical indicating whether to visualize the sides at the
-#'   beginning and end of the path.
+#' @param enclosed Logical scalar indicating whether to visualize the sides at
+#'   the beginning and end of the path.
 #' @return A data.frame with 5 columns: `xmin`, `ymin`, `xmax`, `ymax`, `side`.
 #'   There is 1 row per side of the path outline.
 #'
