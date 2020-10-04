@@ -11,7 +11,7 @@
 #' `geom_curve_outline()` understands the following aesthetics:
 #'  - `ip`: An [`ip_network`][`ipaddress::ip_network`] column. By default, the
 #'    entire Hilbert curve is shown.
-#'  - `curve_order`: How nested is the curve? (default: `4`).
+#'  - `curve_order`: How nested is the curve? (default: `3`).
 #'  - `enclosed`: Should the curve outline have closed ends? (default: `FALSE`).
 #'  - `alpha`
 #'  - `colour`
@@ -32,10 +32,10 @@
 #' p + geom_hilbert_outline()
 #'
 #' # only show subnetwork
-#' p + geom_hilbert_outline(ip = ip_network("128.0.0.0/4"))
+#' p + geom_hilbert_outline(ip = ip_network("128.0.0.0/2"))
 #'
 #' # increased nesting
-#' p + geom_hilbert_outline(curve_order = 5)
+#' p + geom_hilbert_outline(curve_order = 4)
 #'
 #' # show multiple networks
 #' df <- data.frame(
@@ -64,7 +64,7 @@ geom_hilbert_outline <- function(mapping = NULL, data = NULL, ...,
 GeomHilbertOutline <- ggplot2::ggproto("GeomHilbertOutline", ggplot2::Geom,
   default_aes = ggplot2::aes(
     ip = NULL,
-    curve_order = 4,
+    curve_order = 3,
     enclosed = FALSE,
     colour = "black",
     size = 0.5,
@@ -91,13 +91,14 @@ GeomHilbertOutline <- ggplot2::ggproto("GeomHilbertOutline", ggplot2::Geom,
       stop_bad_aes_type("geom_hilbert_outline", "ip", "ip_network")
     }
 
-    lines <- data %>%
+    segments <- data %>%
       dplyr::distinct() %>%
       dplyr::rowwise(-ip, -curve_order) %>%
       dplyr::summarize(generate_curve_data(ip, curve_order, coord, enclosed)) %>%
+      dplyr::ungroup() %>%
       dplyr::distinct()
 
-    ggplot2::GeomSegment$draw_panel(lines, panel_params, coord,
+    ggplot2::GeomSegment$draw_panel(segments, panel_params, coord,
                                     lineend = "round", na.rm = na.rm)
   },
 
@@ -108,90 +109,102 @@ generate_curve_data <- function(network, curve_order, coord, enclosed) {
   curve_prefix <- (2 * curve_order) + prefix_length(coord$canvas_network)
 
   if (curve_prefix > prefix_length(network)) {
-    data.frame(network = subnets(network, new_prefix = curve_prefix)) %>%
-      dplyr::mutate(network_to_cartesian(
-        network,
+    network %>%
+      subnets(new_prefix = curve_prefix) %>%
+      network_to_cartesian(
         canvas_network = coord$canvas_network,
         pixel_prefix = coord$pixel_prefix,
         curve = coord$curve
-      )) %>%
-      squares_to_outline_sides(enclosed) %>%
-      outline_sides_to_segments(coord)
+      ) %>%
+      squares_to_sides(enclosed) %>%
+      sides_to_segments(coord)
   } else {
     data.frame(x = double(), y = double(), xend = double(), yend = double())
   }
 }
 
-find_direction <- function(x_from, y_from, x_to, y_to) {
-  as.factor(dplyr::case_when(
+path_direction <- function(x_from, y_from, x_to, y_to) {
+  factor(dplyr::case_when(
     x_to > x_from ~ "right",
     x_to < x_from ~ "left",
     y_to > y_from ~ "up",
     y_to < y_from ~ "down",
-    TRUE ~ "endpoint"
-  ))
+    TRUE ~ NA_character_
+  ), levels = c("right", "left", "up", "down"))
 }
 
-squares_to_outline_sides <- function(data, enclosed) {
-  sides <- factor(c("left", "right", "up", "down"))
-  levels(sides) <- c(levels(sides), "endpoint")
+translate_endpoints <- function(side, opposite, enclosed) {
+  dplyr::case_when(
+    enclosed ~ side,
+    !is.na(side) ~ side,
+    opposite == "right" ~ factor("left"),
+    opposite == "left" ~ factor("right"),
+    opposite == "up" ~ factor("down"),
+    opposite == "down" ~ factor("up")
+  )
+}
 
-  data %>%
+snap_to_grid <- function(x, add_offset, limits) {
+  dplyr::case_when(
+    x %in% limits ~ as.numeric(x),
+    add_offset ~ x + 0.5,
+    TRUE ~ x - 0.5
+  )
+}
+
+#' Turns a path of squares into a sequence of square sides to display in order
+#' to visualize the outline of the path.
+#'
+#' @param data A data.frame with 4 columns: `xmin`, `ymin`, `xmax`, `ymax`.
+#'   There is 1 row per square of the path.
+#' @param enclosed Logical indicating whether to visualize the sides at the
+#'   beginning and end of the path.
+#' @return A data.frame with 5 columns: `xmin`, `ymin`, `xmax`, `ymax`, `side`.
+#'   There is 1 row per side of the path outline.
+#'
+#' @noRd
+squares_to_sides <- function(data, enclosed) {
+  sides_all <- data.frame(side = factor(c("right", "left", "up", "down")))
+
+  sides_not_drawn <- data %>%
     dplyr::mutate(
       xmid = (.data$xmin + .data$xmax) / 2,
       ymid = (.data$ymin + .data$ymax) / 2,
-      from = find_direction(.data$xmid, .data$ymid, dplyr::lag(.data$xmid), dplyr::lag(.data$ymid)),
-      to = find_direction(.data$xmid, .data$ymid, dplyr::lead(.data$xmid), dplyr::lead(.data$ymid)),
-      from = dplyr::case_when(
-        enclosed ~ from,
-        from != "endpoint" ~ from,
-        to == "right" ~ factor("left"),
-        to == "down" ~ factor("up")
-      ),
-      to = dplyr::case_when(
-        enclosed ~ to,
-        to != "endpoint" ~ to,
-        from == "left" ~ factor("right"),
-        from == "down" ~ factor("up")
-      ),
+      from = path_direction(.data$xmid, .data$ymid, dplyr::lag(.data$xmid), dplyr::lag(.data$ymid)),
+      to = path_direction(.data$xmid, .data$ymid, dplyr::lead(.data$xmid), dplyr::lead(.data$ymid)),
+      from = translate_endpoints(.data$from, .data$to, enclosed),
+      to = translate_endpoints(.data$to, .data$from, enclosed)
     ) %>%
-    dplyr::select(-.data$xmid, -.data$ymid) %>%
-    dplyr::full_join(data.frame(side = sides), by = character()) %>%
+    dplyr::select(-.data$xmid, -.data$ymid)
+
+  dplyr::full_join(sides_all, sides_not_drawn, by = character()) %>%
     dplyr::filter(.data$side != .data$from, .data$side != .data$to) %>%
     dplyr::select(-.data$from, -.data$to)
 }
 
-outline_sides_to_segments <- function(data, coord) {
+#' Transforms a sequence of square sides into a sequence of line segments.
+#'
+#' @param data A data.frame with 5 columns: `xmin`, `ymin`, `xmax`, `ymax`, `side`.
+#'   There is 1 row per side of the path outline.
+#' @param coord The `CoordIp` coordinate system.
+#' @return A data.frame with 4 columns: `x`, `y`, `xend`, `yend`.
+#'   There is 1 row per side of the path outline.
+#'
+#' @noRd
+sides_to_segments <- function(data, coord) {
   data %>%
-    dplyr::transmute(
-      .data$side,
+    dplyr::mutate(
       x = dplyr::if_else(.data$side == "right", .data$xmax, .data$xmin),
       y = dplyr::if_else(.data$side == "up", .data$ymax, .data$ymin),
       xend = dplyr::if_else(.data$side == "left", .data$xmin, .data$xmax),
-      yend = dplyr::if_else(.data$side == "down", .data$ymin, .data$ymax)
+      yend = dplyr::if_else(.data$side == "down", .data$ymin, .data$ymax),
+
+      x = snap_to_grid(.data$x, .data$side == "right", coord$limits$x),
+      y = snap_to_grid(.data$y, .data$side == "up", coord$limits$y),
+      xend = snap_to_grid(.data$xend, .data$side != "left", coord$limits$x),
+      yend = snap_to_grid(.data$yend, .data$side != "down", coord$limits$y)
     ) %>%
-    dplyr::transmute(
-      x = dplyr::case_when(
-        x %in% coord$limits$x ~ as.numeric(x),
-        side == "right" ~ x + 0.5,
-        TRUE ~ x - 0.5
-      ),
-      y = dplyr::case_when(
-        y %in% coord$limits$y ~ as.numeric(y),
-        side == "up" ~ y + 0.5,
-        TRUE ~ y - 0.5
-      ),
-      xend = dplyr::case_when(
-        xend %in% coord$limits$x ~ as.numeric(xend),
-        side == "left" ~ xend - 0.5,
-        TRUE ~ xend + 0.5
-      ),
-      yend = dplyr::case_when(
-        yend %in% coord$limits$y ~ as.numeric(yend),
-        side == "down" ~ yend - 0.5,
-        TRUE ~ yend + 0.5
-      )
-    )
+    dplyr::select(.data$x, .data$y, .data$xend, .data$yend)
 }
 
 

@@ -46,7 +46,7 @@ it guides the eye to regions that are close in IP address space.
 \itemize{
 \item \code{ip}: An \code{\link[ipaddress:ip_network]{ip_network}} column. By default, the
 entire Hilbert curve is shown.
-\item \code{curve_order}: How nested is the curve? (default: \code{4}).
+\item \code{curve_order}: How nested is the curve? (default: \code{3}).
 \item \code{enclosed}: Should the curve outline have closed ends? (default: \code{FALSE}).
 \item \code{alpha}
 \item \code{colour}
@@ -71,10 +71,10 @@ p <- ggplot() + coord_ip() + theme_ip_light()
 p + geom_hilbert_outline()
 
 # only show subnetwork
-p + geom_hilbert_outline(ip = ip_network("128.0.0.0/4"))
+p + geom_hilbert_outline(ip = ip_network("128.0.0.0/2"))
 
 # increased nesting
-p + geom_hilbert_outline(curve_order = 5)
+p + geom_hilbert_outline(curve_order = 4)
 
 # show multiple networks
 df <- data.frame(
