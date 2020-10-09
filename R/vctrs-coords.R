@@ -46,6 +46,12 @@ format.ip_address_coords <- function(x, ...) {
   format(vctrs::field(x, "ip"))
 }
 
+#' @importFrom vctrs vec_proxy_equal
+#' @export
+vec_proxy_equal.ip_address_coords <- function(x, ...) {
+  vctrs::vec_proxy_equal(vctrs::field(x, "ip"))
+}
+
 #' @export
 `$.ip_address_coords` <- function(x, i, ...) {
   out <- vctrs::field(x, i)
@@ -94,6 +100,12 @@ is_ip_network_coords <- function(x) {
 #' @export
 format.ip_network_coords <- function(x, ...) {
   format(vctrs::field(x, "ip"))
+}
+
+#' @importFrom vctrs vec_proxy_equal
+#' @export
+vec_proxy_equal.ip_network_coords <- function(x, ...) {
+  vctrs::vec_proxy_equal(vctrs::field(x, "ip"))
 }
 
 #' @export
