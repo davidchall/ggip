@@ -2,6 +2,8 @@
 
 S3method("$",ip_address_coords)
 S3method("$",ip_network_coords)
+S3method(as.character,ip_address_coords)
+S3method(as.character,ip_network_coords)
 S3method(conditionMessage,ggip_error_bad_aes_type)
 S3method(conditionMessage,ggip_error_missing_aes)
 S3method(format,ip_address_coords)
