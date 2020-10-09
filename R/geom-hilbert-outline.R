@@ -93,7 +93,7 @@ GeomHilbertOutline <- ggplot2::ggproto("GeomHilbertOutline", ggplot2::Geom,
 
     segments <- data %>%
       dplyr::distinct() %>%
-      dplyr::rowwise(-ip, -curve_order) %>%
+      dplyr::rowwise(-ip, -curve_order, -enclosed) %>%
       dplyr::summarize(generate_curve_outline(ip, curve_order, coord, enclosed)) %>%
       dplyr::ungroup() %>%
       dplyr::distinct()
