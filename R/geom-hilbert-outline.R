@@ -45,7 +45,8 @@
 #' p + geom_hilbert_outline(aes(ip = ip, curve_order = curve_order), data = df)
 #' @export
 geom_hilbert_outline <- function(mapping = NULL, data = NULL, ...,
-                                 na.rm = FALSE) {
+                                 na.rm = FALSE, show.legend = NA,
+                                 inherit.aes = TRUE) {
   # can use layer without any data
   if (is.null(data)) {
     data <- ensure_nonempty_data
@@ -53,7 +54,7 @@ geom_hilbert_outline <- function(mapping = NULL, data = NULL, ...,
 
   ggplot2::layer(
     geom = GeomHilbertOutline, data = data, mapping = mapping, stat = "identity",
-    position = "identity", show.legend = FALSE, inherit.aes = FALSE,
+    position = "identity", show.legend = show.legend, inherit.aes = inherit.aes,
     params = list(
       na.rm = na.rm,
       ...
