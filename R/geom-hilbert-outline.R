@@ -12,7 +12,7 @@
 #'  - `ip`: An [`ip_network`][`ipaddress::ip_network`] column. By default, the
 #'    entire Hilbert curve is shown.
 #'  - `curve_order`: How nested is the curve? (default: `3`).
-#'  - `enclosed`: Should the curve outline have closed ends? (default: `FALSE`).
+#'  - `closed`: Should the curve outline have closed ends? (default: `FALSE`).
 #'  - `alpha`
 #'  - `colour`
 #'  - `linetype`
@@ -66,7 +66,7 @@ GeomHilbertOutline <- ggplot2::ggproto("GeomHilbertOutline", ggplot2::Geom,
   default_aes = ggplot2::aes(
     ip = NULL,
     curve_order = 3,
-    enclosed = FALSE,
+    closed = FALSE,
     colour = "black",
     size = 0.5,
     linetype = 1,
@@ -94,8 +94,8 @@ GeomHilbertOutline <- ggplot2::ggproto("GeomHilbertOutline", ggplot2::Geom,
 
     segments <- data %>%
       dplyr::distinct() %>%
-      dplyr::rowwise(-ip, -curve_order, -enclosed) %>%
-      dplyr::summarize(generate_curve_outline(ip, curve_order, coord, enclosed)) %>%
+      dplyr::rowwise(-ip, -curve_order, -closed) %>%
+      dplyr::summarize(generate_curve_outline(ip, curve_order, coord, closed)) %>%
       dplyr::ungroup() %>%
       dplyr::distinct()
 
@@ -112,12 +112,12 @@ GeomHilbertOutline <- ggplot2::ggproto("GeomHilbertOutline", ggplot2::Geom,
 #' @param network `ip_network` scalar
 #' @param curve_order Integer scalar
 #' @param coord The `CoordIp` coordinate system.
-#' @param enclosed Logical scalar indicating whether to visualize the sides at
+#' @param closed Logical scalar indicating whether to visualize the sides at
 #'   the beginning and end of the path.
 #' @return A data.frame with 4 columns: `x`, `y`, `xend`, `yend`.
 #'
 #' @noRd
-generate_curve_outline <- function(network, curve_order, coord, enclosed) {
+generate_curve_outline <- function(network, curve_order, coord, closed) {
   curve_prefix <- (2 * curve_order) + prefix_length(coord$canvas_network)
 
   if (curve_prefix > prefix_length(network)) {
@@ -128,7 +128,7 @@ generate_curve_outline <- function(network, curve_order, coord, enclosed) {
         pixel_prefix = coord$pixel_prefix,
         curve = coord$curve
       ) %>%
-      squares_to_sides(enclosed) %>%
+      squares_to_sides(closed) %>%
       sides_to_segments(coord)
   } else {
     data.frame(x = double(), y = double(), xend = double(), yend = double())
@@ -145,9 +145,9 @@ path_direction <- function(x_from, y_from, x_to, y_to) {
   ), levels = c("right", "left", "up", "down"))
 }
 
-translate_endpoints <- function(side, opposite, enclosed) {
+translate_endpoints <- function(side, opposite, closed) {
   dplyr::case_when(
-    enclosed ~ side,
+    closed ~ side,
     !is.na(side) ~ side,
     opposite == "right" ~ factor("left"),
     opposite == "left" ~ factor("right"),
@@ -169,13 +169,13 @@ snap_to_grid <- function(x, add_offset, limits) {
 #'
 #' @param data A data.frame with 4 columns: `xmin`, `ymin`, `xmax`, `ymax`.
 #'   There is 1 row per square of the path.
-#' @param enclosed Logical scalar indicating whether to visualize the sides at
+#' @param closed Logical scalar indicating whether to visualize the sides at
 #'   the beginning and end of the path.
 #' @return A data.frame with 5 columns: `xmin`, `ymin`, `xmax`, `ymax`, `side`.
 #'   There is 1 row per side of the path outline.
 #'
 #' @noRd
-squares_to_sides <- function(data, enclosed) {
+squares_to_sides <- function(data, closed) {
   sides_all <- data.frame(side = factor(c("right", "left", "up", "down")))
 
   sides_not_drawn <- data %>%
@@ -184,8 +184,8 @@ squares_to_sides <- function(data, enclosed) {
       ymid = (.data$ymin + .data$ymax) / 2,
       from = path_direction(.data$xmid, .data$ymid, dplyr::lag(.data$xmid), dplyr::lag(.data$ymid)),
       to = path_direction(.data$xmid, .data$ymid, dplyr::lead(.data$xmid), dplyr::lead(.data$ymid)),
-      from = translate_endpoints(.data$from, .data$to, enclosed),
-      to = translate_endpoints(.data$to, .data$from, enclosed)
+      from = translate_endpoints(.data$from, .data$to, closed),
+      to = translate_endpoints(.data$to, .data$from, closed)
     ) %>%
     dplyr::select(-.data$xmid, -.data$ymid)
 

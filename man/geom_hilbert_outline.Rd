@@ -65,7 +65,7 @@ it guides the eye to regions that are close in IP address space.
 \item \code{ip}: An \code{\link[ipaddress:ip_network]{ip_network}} column. By default, the
 entire Hilbert curve is shown.
 \item \code{curve_order}: How nested is the curve? (default: \code{3}).
-\item \code{enclosed}: Should the curve outline have closed ends? (default: \code{FALSE}).
+\item \code{closed}: Should the curve outline have closed ends? (default: \code{FALSE}).
 \item \code{alpha}
 \item \code{colour}
 \item \code{linetype}
