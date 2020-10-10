@@ -43,7 +43,7 @@ This vignette describes these actions in more detail.
 As an example, consider the 32-bit representation of the IPv4 address `192.168.0.124`.
 If we wanted to visualize this single address within the full context of the IPv4 address space, we'd need to simultaneously display $2^{32}$ discrete levels (roughly 4.3 billion).
 
-```{r, echo=FALSE, out.width="100%"}
+```{r, out.width="100%"}
 knitr::include_graphics("bits_raw.png")
 ```
 
@@ -51,7 +51,7 @@ To reduce the visualized information, we could only show a subnetwork of the ful
 In our example, we could only display the `192.0.0.0/8` network.
 This would effectively filter addresses where the leading 8 bits match the specified network, thereby reducing the number of discrete levels to $2^{24}$ (roughly 16.8 million).
 
-```{r, echo=FALSE, out.width="100%"}
+```{r, out.width="100%"}
 knitr::include_graphics("bits_half_reduced.png")
 ```
 
@@ -60,7 +60,7 @@ To do this, we'd need to use a summary function to reduce the network data to a 
 In our example, we could make each discrete level represent a network with a prefix length of 24.
 This would effectively neglect the trailing 8 bits of the 32-bit address, thereby further reducing the number of discrete levels to $2^{16}$ (65,536).
 
-```{r, echo=FALSE, out.width="100%"}
+```{r, out.width="100%"}
 knitr::include_graphics("bits_reduced.png")
 ```
 
@@ -94,7 +94,7 @@ plot_curve <- function(curve, curve_order) {
   pixel_prefix <- 32L
   canvas_prefix <- as.integer(pixel_prefix - (2 * curve_order))
   canvas_network <- ip_network(ip_address("0.0.0.0"), canvas_prefix)
-  n_pixels <- 2 ^ curve_order
+  n_pixels <- 2^curve_order
   
   ggplot(data.frame(address = seq(canvas_network))) +
     geom_path(aes(address$x, address$y)) +
@@ -139,3 +139,35 @@ plot_curve("morton", 2)
 plot_curve("morton", 3)
 plot_curve("morton", 4)
 ```
+
+
+## Putting it all together
+
+Finally, let's consider a specific example.
+
+```{r, echo=TRUE, eval=FALSE}
+coord_ip(
+  canvas_prefix = ip_network("0.0.0.0/0"),
+  pixel_prefix = 4,
+  curve = "hilbert"
+)
+```
+
+This coordinate system will use a 2nd order Hilbert curve to visualize the entire IPv4 address space, where each vertex represents a `/4` network.
+
+```{r, fig.align="center", fig.asp=1, fig.width=5}
+curve_order <- 2
+pixel_prefix <- 2 * curve_order
+vertices <- subnets(ip_network("0.0.0.0/0"), new_prefix = pixel_prefix)
+
+data <- data.frame(ip = network_address(vertices), label = as.character(vertices))
+nudge <- c(1, 0, 0, 1, 1, 1, 0, 0, 0, 0, -1, -1, -1, 0, 0, -1)
+
+ggplot(data, aes(ip$x, ip$y)) +
+  geom_path() +
+  geom_label(aes(label = label), nudge_x = 0.2 * nudge) +
+  coord_ip(pixel_prefix = pixel_prefix, expand = TRUE) +
+  theme_ip_light() +
+  labs(title = paste0("Hilbert curve: ", curve_order, ordinal_suffix(curve_order), " order"))
+```
+
