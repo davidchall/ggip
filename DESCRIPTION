@@ -21,13 +21,13 @@ Depends:
     ipaddress (>= 0.5.1),
     R (>= 3.3.0)
 Imports: 
+    dplyr (>= 1.0.0),
     glue,
     Rcpp,
     rlang (>= 0.4.2),
     tidyr,
     vctrs (>= 0.3.0)
 Suggests: 
-    dplyr (>= 1.0.0),
     knitr,
     rmarkdown,
     testthat

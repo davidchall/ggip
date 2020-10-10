@@ -43,7 +43,18 @@ is_ip_address_coords <- function(x) {
 
 #' @export
 format.ip_address_coords <- function(x, ...) {
-  format(vctrs::field(x, "ip"))
+  format(vctrs::field(x, "ip"), ...)
+}
+
+#' @export
+as.character.ip_address_coords <- function(x, ...) {
+  format(x, ...)
+}
+
+#' @importFrom vctrs vec_proxy_equal
+#' @export
+vec_proxy_equal.ip_address_coords <- function(x, ...) {
+  vctrs::vec_proxy_equal(vctrs::field(x, "ip"))
 }
 
 #' @export
@@ -93,7 +104,18 @@ is_ip_network_coords <- function(x) {
 
 #' @export
 format.ip_network_coords <- function(x, ...) {
-  format(vctrs::field(x, "ip"))
+  format(vctrs::field(x, "ip"), ...)
+}
+
+#' @export
+as.character.ip_network_coords <- function(x, ...) {
+  format(x, ...)
+}
+
+#' @importFrom vctrs vec_proxy_equal
+#' @export
+vec_proxy_equal.ip_network_coords <- function(x, ...) {
+  vctrs::vec_proxy_equal(vctrs::field(x, "ip"))
 }
 
 #' @export

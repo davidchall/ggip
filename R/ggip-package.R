@@ -6,5 +6,6 @@
 ## usethis namespace: start
 #' @importFrom Rcpp sourceCpp
 #' @useDynLib ggip, .registration = TRUE
+#' @importFrom dplyr %>%
 ## usethis namespace: end
 NULL
