@@ -58,11 +58,15 @@ library(ggip)
 
 ggplot(ip_data) +
   stat_summary_address(aes(ip = address)) +
+  geom_hilbert_outline(color = "grey80") +
   geom_fit_text(
-    aes(xmin = network$xmin, xmax = network$xmax, ymin = network$ymin, ymax = network$ymax, label = label),
+    aes(
+      xmin = network$xmin, xmax = network$xmax,
+      ymin = network$ymin, ymax = network$ymax,
+      label = label
+    ),
     data = iana_ipv4 %>% filter(allocation == "Reserved"),
-    color = "#fdc086",
-    grow = TRUE
+    color = "#fdc086", grow = TRUE
   ) +
   scale_fill_viridis_c(name = NULL, trans = "log2", na.value = "black") +
   coord_ip(pixel_prefix = 20) +
