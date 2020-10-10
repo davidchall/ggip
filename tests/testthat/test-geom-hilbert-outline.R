@@ -78,3 +78,24 @@ test_that("validate drawn segments", {
   expect_segments(3, FALSE)
   expect_segments(4, TRUE)
 })
+
+test_that("networks outside 2D grid raise warning", {
+  dat <- data.frame(ip = ip_network("128.0.0.0/4"))
+
+  p <- ggplot(dat, aes(ip = ip)) +
+    coord_ip(canvas_network = ip_network("0.0.0.0/2"))
+
+  expect_warning(layer_grob(p + geom_hilbert_outline()))
+  expect_silent(layer_grob(p + geom_hilbert_outline(na.rm = TRUE)))
+})
+
+test_that("networks without outline are silently ignored", {
+  dat <- data.frame(ip = ip_network("128.0.0.0/4"))
+
+  p <- ggplot(dat, aes(ip = ip)) +
+    coord_ip() +
+    geom_hilbert_outline(curve_order = 2)
+
+  expect_silent(layer_grob(p))
+  expect_s3_class(layer_grob(p)[[1]], "zeroGrob")
+})
