@@ -189,8 +189,12 @@ squares_to_sides <- function(data, enclosed) {
     ) %>%
     dplyr::select(-.data$xmid, -.data$ymid)
 
+  # compute drawn sides
   dplyr::full_join(sides_all, sides_not_drawn, by = character()) %>%
-    dplyr::filter(.data$side != .data$from, .data$side != .data$to) %>%
+    dplyr::filter(
+      .data$side != dplyr::coalesce(.data$from, "endcap"),
+      .data$side != dplyr::coalesce(.data$to, "endcap")
+    ) %>%
     dplyr::select(-.data$from, -.data$to)
 }
 
