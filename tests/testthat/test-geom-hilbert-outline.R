@@ -51,3 +51,30 @@ test_that("alternative ways to specify data/aesthetics", {
   expect_equal(g1$y1, g2$y1)
   expect_equal(g1$y1, g3$y1)
 })
+
+test_that("works without data", {
+  p <- ggplot() + coord_ip() + geom_hilbert_outline()
+  g <- layer_grob(p)[[1]]
+
+  expect_s3_class(g, "segments")
+})
+
+test_that("validate drawn segments", {
+  expect_segments <- function(curve_order, closed) {
+    n_segments <- (2^curve_order + 1)^2
+    n_segments <- ifelse(closed, n_segments, n_segments - 2)
+
+    p <- ggplot() +
+      coord_ip() +
+      geom_hilbert_outline(curve_order = curve_order, closed = closed)
+
+    g <- layer_grob(p)[[1]]
+
+    expect_length(g$x0, n_segments)
+  }
+
+  expect_segments(1, FALSE)
+  expect_segments(2, TRUE)
+  expect_segments(3, FALSE)
+  expect_segments(4, TRUE)
+})
