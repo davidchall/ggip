@@ -97,7 +97,11 @@ p + geom_hilbert_outline(curve_order = 4)
 # show multiple networks
 df <- data.frame(
   ip = ip_network(c("0.0.0.0/2", "128.0.0.0/4")),
-  curve_order = c(4, 5)
+  curve_order = c(4, 5),
+  closed = c(FALSE, TRUE)
 )
-p + geom_hilbert_outline(aes(ip = ip, curve_order = curve_order), data = df)
+p + geom_hilbert_outline(
+  aes(ip = ip, curve_order = curve_order, closed = closed),
+  data = df
+)
 }
