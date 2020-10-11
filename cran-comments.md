@@ -14,14 +14,8 @@
 
 ## R CMD check results
 
-0 errors | 0 warnings | 2 notes
+0 errors | 0 warnings | 0 notes
 
-> New submission
+## Reverse dependencies
 
-This is a new release.
-
-> Possibly mis-spelled words in DESCRIPTION:
->   IP (2:31, 11:5)
->   IPv (13:41, 13:50)
-
-The acronyms IP, IPv4 and IPv6 are defined in parentheses.
+There are currently no reverse dependencies for this package.
