@@ -85,7 +85,7 @@ Accessing Coordinates). This ensures all layers use a common mapping." />
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">ggip</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.1.0</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.2.0</span>
       </span>
     </div>
 
@@ -153,12 +153,12 @@ vectors to Cartesian coordinates, ready for use by ggplot2 layers (see
 Accessing Coordinates). This ensures all layers use a common mapping.</p>
     </div>
 
-    <pre class="usage"><span class='fu'>coord_ip</span>(
-  canvas_network = <span class='fu'>ip_network</span>(<span class='st'>"0.0.0.0/0"</span>),
-  pixel_prefix = <span class='fl'>16</span>,
-  curve = <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(<span class='st'>"hilbert"</span>, <span class='st'>"morton"</span>),
-  expand = <span class='fl'>FALSE</span>
-)</pre>
+    <pre class="usage"><span class='fu'>coord_ip</span><span class='op'>(</span>
+  canvas_network <span class='op'>=</span> <span class='fu'>ip_network</span><span class='op'>(</span><span class='st'>"0.0.0.0/0"</span><span class='op'>)</span>,
+  pixel_prefix <span class='op'>=</span> <span class='fl'>16</span>,
+  curve <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='st'>"hilbert"</span>, <span class='st'>"morton"</span><span class='op'>)</span>,
+  expand <span class='op'>=</span> <span class='cn'>FALSE</span>
+<span class='op'>)</span></pre>
 
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">
@@ -222,29 +222,29 @@ data frame containing the following columns:</p><table class='table'>
     <div class='dont-index'><p><code><a href='../articles/visualizing-ip-data.html'>vignette("visualizing-ip-data")</a></code> describes the mapping in more detail.</p></div>
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
-    <pre class="examples"><div class='input'><span class='fu'><a href='https://rdrr.io/r/base/message.html'>suppressPackageStartupMessages</a></span>(<span class='fu'><a href='https://rdrr.io/r/base/library.html'>library</a></span>(<span class='kw'><a href='https://dplyr.tidyverse.org'>dplyr</a></span>))
+    <pre class="examples"><div class='input'><span class='fu'><a href='https://rdrr.io/r/base/message.html'>suppressPackageStartupMessages</a></span><span class='op'>(</span><span class='kw'><a href='https://rdrr.io/r/base/library.html'>library</a></span><span class='op'>(</span><span class='va'><a href='https://dplyr.tidyverse.org'>dplyr</a></span><span class='op'>)</span><span class='op'>)</span>
 
-<span class='fu'><a href='https://tibble.tidyverse.org/reference/tibble.html'>tibble</a></span>(address = <span class='fu'>ip_address</span>(<span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(<span class='st'>"0.0.0.0"</span>, <span class='st'>"128.0.0.0"</span>, <span class='st'>"192.168.0.1"</span>))) <span class='op'>%&gt;%</span>
-  <span class='fu'>ggplot</span>(<span class='fu'>aes</span>(x = <span class='kw'>address</span><span class='op'>$</span><span class='kw'>x</span>, y = <span class='kw'>address</span><span class='op'>$</span><span class='kw'>y</span>, label = <span class='kw'>address</span><span class='op'>$</span><span class='kw'>ip</span>)) <span class='op'>+</span>
-  <span class='fu'>geom_point</span>() <span class='op'>+</span>
-  <span class='fu'>geom_label</span>(nudge_x = <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(<span class='fl'>10</span>, <span class='fl'>0</span>, <span class='op'>-</span><span class='fl'>10</span>), nudge_y = <span class='op'>-</span><span class='fl'>10</span>) <span class='op'>+</span>
-  <span class='fu'>coord_ip</span>(expand = <span class='fl'>TRUE</span>) <span class='op'>+</span>
-  <span class='fu'><a href='theme_ip.html'>theme_ip_light</a></span>()
+<span class='fu'><a href='https://tibble.tidyverse.org/reference/tibble.html'>tibble</a></span><span class='op'>(</span>address <span class='op'>=</span> <span class='fu'>ip_address</span><span class='op'>(</span><span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='st'>"0.0.0.0"</span>, <span class='st'>"128.0.0.0"</span>, <span class='st'>"192.168.0.1"</span><span class='op'>)</span><span class='op'>)</span><span class='op'>)</span> <span class='op'>%&gt;%</span>
+  <span class='fu'>ggplot</span><span class='op'>(</span><span class='fu'>aes</span><span class='op'>(</span>x <span class='op'>=</span> <span class='va'>address</span><span class='op'>$</span><span class='va'>x</span>, y <span class='op'>=</span> <span class='va'>address</span><span class='op'>$</span><span class='va'>y</span>, label <span class='op'>=</span> <span class='va'>address</span><span class='op'>$</span><span class='va'>ip</span><span class='op'>)</span><span class='op'>)</span> <span class='op'>+</span>
+  <span class='fu'>geom_point</span><span class='op'>(</span><span class='op'>)</span> <span class='op'>+</span>
+  <span class='fu'>geom_label</span><span class='op'>(</span>nudge_x <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='fl'>10</span>, <span class='fl'>0</span>, <span class='op'>-</span><span class='fl'>10</span><span class='op'>)</span>, nudge_y <span class='op'>=</span> <span class='op'>-</span><span class='fl'>10</span><span class='op'>)</span> <span class='op'>+</span>
+  <span class='fu'>coord_ip</span><span class='op'>(</span>expand <span class='op'>=</span> <span class='cn'>TRUE</span><span class='op'>)</span> <span class='op'>+</span>
+  <span class='fu'><a href='theme_ip.html'>theme_ip_light</a></span><span class='op'>(</span><span class='op'>)</span>
 </div><div class='img'><img src='coord_ip-1.png' alt='' width='480' height='480' /></div><div class='input'>
-<span class='fu'><a href='https://tibble.tidyverse.org/reference/tibble.html'>tibble</a></span>(network = <span class='fu'>ip_network</span>(<span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(<span class='st'>"0.0.0.0/8"</span>, <span class='st'>"224.0.0.0/4"</span>))) <span class='op'>%&gt;%</span>
-  <span class='fu'><a href='https://dplyr.tidyverse.org/reference/mutate.html'>mutate</a></span>(
-    start = <span class='fu'>network_address</span>(<span class='kw'>network</span>),
-    end = <span class='fu'>broadcast_address</span>(<span class='kw'>network</span>)
-  ) <span class='op'>%&gt;%</span>
-  <span class='fu'>ggplot</span>() <span class='op'>+</span>
-  <span class='fu'>geom_point</span>(<span class='fu'>aes</span>(x = <span class='kw'>start</span><span class='op'>$</span><span class='kw'>x</span>, y = <span class='kw'>start</span><span class='op'>$</span><span class='kw'>y</span>), color = <span class='st'>"blue"</span>) <span class='op'>+</span>
-  <span class='fu'>geom_point</span>(<span class='fu'>aes</span>(x = <span class='kw'>end</span><span class='op'>$</span><span class='kw'>x</span>, y = <span class='kw'>end</span><span class='op'>$</span><span class='kw'>y</span>), color = <span class='st'>"red"</span>) <span class='op'>+</span>
-  <span class='fu'>geom_rect</span>(
-    <span class='fu'>aes</span>(xmin = <span class='kw'>network</span><span class='op'>$</span><span class='kw'>xmin</span>, xmax = <span class='kw'>network</span><span class='op'>$</span><span class='kw'>xmax</span>, ymin = <span class='kw'>network</span><span class='op'>$</span><span class='kw'>ymin</span>, ymax = <span class='kw'>network</span><span class='op'>$</span><span class='kw'>ymax</span>),
-    alpha = <span class='fl'>0.5</span>, fill = <span class='st'>"grey"</span>
-  ) <span class='op'>+</span>
-  <span class='fu'>coord_ip</span>(curve = <span class='st'>"morton"</span>, expand = <span class='fl'>TRUE</span>) <span class='op'>+</span>
-  <span class='fu'><a href='theme_ip.html'>theme_ip_light</a></span>()
+<span class='fu'><a href='https://tibble.tidyverse.org/reference/tibble.html'>tibble</a></span><span class='op'>(</span>network <span class='op'>=</span> <span class='fu'>ip_network</span><span class='op'>(</span><span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='st'>"0.0.0.0/8"</span>, <span class='st'>"224.0.0.0/4"</span><span class='op'>)</span><span class='op'>)</span><span class='op'>)</span> <span class='op'>%&gt;%</span>
+  <span class='fu'><a href='https://dplyr.tidyverse.org/reference/mutate.html'>mutate</a></span><span class='op'>(</span>
+    start <span class='op'>=</span> <span class='fu'>network_address</span><span class='op'>(</span><span class='va'>network</span><span class='op'>)</span>,
+    end <span class='op'>=</span> <span class='fu'>broadcast_address</span><span class='op'>(</span><span class='va'>network</span><span class='op'>)</span>
+  <span class='op'>)</span> <span class='op'>%&gt;%</span>
+  <span class='fu'>ggplot</span><span class='op'>(</span><span class='op'>)</span> <span class='op'>+</span>
+  <span class='fu'>geom_point</span><span class='op'>(</span><span class='fu'>aes</span><span class='op'>(</span>x <span class='op'>=</span> <span class='va'>start</span><span class='op'>$</span><span class='va'>x</span>, y <span class='op'>=</span> <span class='va'>start</span><span class='op'>$</span><span class='va'>y</span><span class='op'>)</span>, color <span class='op'>=</span> <span class='st'>"blue"</span><span class='op'>)</span> <span class='op'>+</span>
+  <span class='fu'>geom_point</span><span class='op'>(</span><span class='fu'>aes</span><span class='op'>(</span>x <span class='op'>=</span> <span class='va'>end</span><span class='op'>$</span><span class='va'>x</span>, y <span class='op'>=</span> <span class='va'>end</span><span class='op'>$</span><span class='va'>y</span><span class='op'>)</span>, color <span class='op'>=</span> <span class='st'>"red"</span><span class='op'>)</span> <span class='op'>+</span>
+  <span class='fu'>geom_rect</span><span class='op'>(</span>
+    <span class='fu'>aes</span><span class='op'>(</span>xmin <span class='op'>=</span> <span class='va'>network</span><span class='op'>$</span><span class='va'>xmin</span>, xmax <span class='op'>=</span> <span class='va'>network</span><span class='op'>$</span><span class='va'>xmax</span>, ymin <span class='op'>=</span> <span class='va'>network</span><span class='op'>$</span><span class='va'>ymin</span>, ymax <span class='op'>=</span> <span class='va'>network</span><span class='op'>$</span><span class='va'>ymax</span><span class='op'>)</span>,
+    alpha <span class='op'>=</span> <span class='fl'>0.5</span>, fill <span class='op'>=</span> <span class='st'>"grey"</span>
+  <span class='op'>)</span> <span class='op'>+</span>
+  <span class='fu'>coord_ip</span><span class='op'>(</span>curve <span class='op'>=</span> <span class='st'>"morton"</span>, expand <span class='op'>=</span> <span class='cn'>TRUE</span><span class='op'>)</span> <span class='op'>+</span>
+  <span class='fu'><a href='theme_ip.html'>theme_ip_light</a></span><span class='op'>(</span><span class='op'>)</span>
 </div><div class='img'><img src='coord_ip-2.png' alt='' width='480' height='480' /></div></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">

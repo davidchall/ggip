@@ -38,7 +38,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="index.html">ggip</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.1.0</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.2.0</span>
       </span>
     </div>
 
@@ -112,13 +112,11 @@
 <a href="#installation" class="anchor"></a>Installation</h2>
 <p>You can install the released version of ggip from <a href="https://CRAN.R-project.org">CRAN</a> with:</p>
 <div class="sourceCode" id="cb1"><pre class="downlit">
-<span class="fu"><a href="https://rdrr.io/r/utils/install.packages.html">install.packages</a></span>(<span class="st">"ggip"</span>)
-</pre></div>
+<span class="fu"><a href="https://rdrr.io/r/utils/install.packages.html">install.packages</a></span><span class="op">(</span><span class="st">"ggip"</span><span class="op">)</span></pre></div>
 <p>Or you can install the development version from GitHub:</p>
 <div class="sourceCode" id="cb2"><pre class="downlit">
 <span class="co"># install.packages("remotes")</span>
-<span class="kw">remotes</span>::<span class="fu"><a href="https://remotes.r-lib.org/reference/install_github.html">install_github</a></span>(<span class="st">"davidchall/ggip"</span>)
-</pre></div>
+<span class="fu">remotes</span><span class="fu">::</span><span class="fu"><a href="https://remotes.r-lib.org/reference/install_github.html">install_github</a></span><span class="op">(</span><span class="st">"davidchall/ggip"</span><span class="op">)</span></pre></div>
 </div>
 <div id="usage" class="section level2">
 <h2 class="hasAnchor">
@@ -126,23 +124,26 @@
 <p>Plotting with {ggip} follows most of the conventions set by <a href="https://ggplot2.tidyverse.org">{ggplot2}</a>. A major difference is that <code><a href="reference/coord_ip.html">coord_ip()</a></code> is required to map IP data to the 2D grid (addresses to points and networks to rectangles). Learn more in <code><a href="articles/ggip.html">vignette("ggip")</a></code>.</p>
 <p>Here’s a quick showcase of what’s possible:</p>
 <div class="sourceCode" id="cb3"><pre class="downlit">
-<span class="fu"><a href="https://rdrr.io/r/base/library.html">library</a></span>(<span class="kw"><a href="http://tidyverse.tidyverse.org">tidyverse</a></span>)
-<span class="fu"><a href="https://rdrr.io/r/base/library.html">library</a></span>(<span class="kw">ggfittext</span>)
-<span class="fu"><a href="https://rdrr.io/r/base/library.html">library</a></span>(<span class="kw"><a href="https://davidchall.github.io/ggip">ggip</a></span>)
+<span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va">tidyverse</span><span class="op">)</span>
+<span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va">ggfittext</span><span class="op">)</span>
+<span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="https://davidchall.github.io/ggip/">ggip</a></span><span class="op">)</span>
 
-<span class="fu">ggplot</span>(<span class="kw">ip_data</span>) <span class="op">+</span>
-  <span class="fu"><a href="reference/stat_summary_address.html">stat_summary_address</a></span>(<span class="fu">aes</span>(ip = <span class="kw">address</span>)) <span class="op">+</span>
-  <span class="fu">geom_fit_text</span>(
-    <span class="fu">aes</span>(xmin = <span class="kw">network</span><span class="op">$</span><span class="kw">xmin</span>, xmax = <span class="kw">network</span><span class="op">$</span><span class="kw">xmax</span>, ymin = <span class="kw">network</span><span class="op">$</span><span class="kw">ymin</span>, ymax = <span class="kw">network</span><span class="op">$</span><span class="kw">ymax</span>, label = <span class="kw">label</span>),
-    data = <span class="kw">iana_ipv4</span> <span class="op">%&gt;%</span> <span class="fu"><a href="https://rdrr.io/r/stats/filter.html">filter</a></span>(<span class="kw">allocation</span> <span class="op">==</span> <span class="st">"Reserved"</span>),
-    color = <span class="st">"#fdc086"</span>,
-    grow = <span class="fl">TRUE</span>
-  ) <span class="op">+</span>
-  <span class="fu">scale_fill_viridis_c</span>(name = <span class="kw">NULL</span>, trans = <span class="st">"log2"</span>, na.value = <span class="st">"black"</span>) <span class="op">+</span>
-  <span class="fu"><a href="reference/coord_ip.html">coord_ip</a></span>(pixel_prefix = <span class="fl">20</span>) <span class="op">+</span>
-  <span class="fu"><a href="reference/theme_ip.html">theme_ip_dark</a></span>()
-<span class="co">#&gt; Warning: Transformation introduced infinite values in discrete y-axis</span>
-</pre></div>
+<span class="fu">ggplot</span><span class="op">(</span><span class="va">ip_data</span><span class="op">)</span> <span class="op">+</span>
+  <span class="fu"><a href="reference/stat_summary_address.html">stat_summary_address</a></span><span class="op">(</span><span class="fu">aes</span><span class="op">(</span>ip <span class="op">=</span> <span class="va">address</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span>
+  <span class="fu"><a href="reference/geom_hilbert_outline.html">geom_hilbert_outline</a></span><span class="op">(</span>color <span class="op">=</span> <span class="st">"grey80"</span><span class="op">)</span> <span class="op">+</span>
+  <span class="fu">geom_fit_text</span><span class="op">(</span>
+    <span class="fu">aes</span><span class="op">(</span>
+      xmin <span class="op">=</span> <span class="va">network</span><span class="op">$</span><span class="va">xmin</span>, xmax <span class="op">=</span> <span class="va">network</span><span class="op">$</span><span class="va">xmax</span>,
+      ymin <span class="op">=</span> <span class="va">network</span><span class="op">$</span><span class="va">ymin</span>, ymax <span class="op">=</span> <span class="va">network</span><span class="op">$</span><span class="va">ymax</span>,
+      label <span class="op">=</span> <span class="va">label</span>
+    <span class="op">)</span>,
+    data <span class="op">=</span> <span class="va">iana_ipv4</span> <span class="op">%&gt;%</span> <span class="fu"><a href="https://rdrr.io/r/stats/filter.html">filter</a></span><span class="op">(</span><span class="va">allocation</span> <span class="op">==</span> <span class="st">"Reserved"</span><span class="op">)</span>,
+    color <span class="op">=</span> <span class="st">"#fdc086"</span>, grow <span class="op">=</span> <span class="cn">TRUE</span>
+  <span class="op">)</span> <span class="op">+</span>
+  <span class="fu">scale_fill_viridis_c</span><span class="op">(</span>name <span class="op">=</span> <span class="cn">NULL</span>, trans <span class="op">=</span> <span class="st">"log2"</span>, na.value <span class="op">=</span> <span class="st">"black"</span><span class="op">)</span> <span class="op">+</span>
+  <span class="fu"><a href="reference/coord_ip.html">coord_ip</a></span><span class="op">(</span>pixel_prefix <span class="op">=</span> <span class="fl">20</span><span class="op">)</span> <span class="op">+</span>
+  <span class="fu"><a href="reference/theme_ip.html">theme_ip_dark</a></span><span class="op">(</span><span class="op">)</span>
+<span class="co">#&gt; Warning: Transformation introduced infinite values in discrete y-axis</span></pre></div>
 <p><img src="reference/figures/README-ipv4-heatmap-1.png" width="100%"></p>
 </div>
 </div>

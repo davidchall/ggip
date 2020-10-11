@@ -38,7 +38,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">ggip</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.1.0</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.2.0</span>
       </span>
     </div>
 
@@ -147,6 +147,19 @@
 <p>This curve starts in the top-left corner and ends in the bottom-right corner.</p>
 <p><img src="visualizing-ip-data_files/figure-html/morton-1.png" width="30%"><img src="visualizing-ip-data_files/figure-html/morton-2.png" width="30%"><img src="visualizing-ip-data_files/figure-html/morton-3.png" width="30%"></p>
 </div>
+</div>
+<div id="putting-it-all-together" class="section level2">
+<h2 class="hasAnchor">
+<a href="#putting-it-all-together" class="anchor"></a>Putting it all together</h2>
+<p>Finally, let’s consider a specific example.</p>
+<div class="sourceCode" id="cb2"><pre class="downlit">
+<span class="fu"><a href="../reference/coord_ip.html">coord_ip</a></span><span class="op">(</span>
+  canvas_prefix <span class="op">=</span> <span class="fu"><a href="https://davidchall.github.io/ipaddress/reference/ip_network.html">ip_network</a></span><span class="op">(</span><span class="st">"0.0.0.0/0"</span><span class="op">)</span>,
+  pixel_prefix <span class="op">=</span> <span class="fl">4</span>,
+  curve <span class="op">=</span> <span class="st">"hilbert"</span>
+<span class="op">)</span></pre></div>
+<p>This coordinate system will use a 2nd order Hilbert curve to visualize the entire IPv4 address space, where each vertex represents a <code>/4</code> network.</p>
+<p><img src="visualizing-ip-data_files/figure-html/unnamed-chunk-6-1.png" width="480" style="display: block; margin: auto;"></p>
 </div>
   </div>
 
