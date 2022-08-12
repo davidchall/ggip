@@ -1,7 +1,34 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   <url>
+    <loc>https://davidchall.github.io/ggip/CODE_OF_CONDUCT.html</loc>
+  </url>
+  <url>
+    <loc>https://davidchall.github.io/ggip/CONTRIBUTING.html</loc>
+  </url>
+  <url>
+    <loc>https://davidchall.github.io/ggip/LICENSE-text.html</loc>
+  </url>
+  <url>
+    <loc>https://davidchall.github.io/ggip/LICENSE.html</loc>
+  </url>
+  <url>
+    <loc>https://davidchall.github.io/ggip/articles/ggip.html</loc>
+  </url>
+  <url>
+    <loc>https://davidchall.github.io/ggip/articles/index.html</loc>
+  </url>
+  <url>
+    <loc>https://davidchall.github.io/ggip/articles/visualizing-ip-data.html</loc>
+  </url>
+  <url>
+    <loc>https://davidchall.github.io/ggip/authors.html</loc>
+  </url>
+  <url>
     <loc>https://davidchall.github.io/ggip/index.html</loc>
+  </url>
+  <url>
+    <loc>https://davidchall.github.io/ggip/news/index.html</loc>
   </url>
   <url>
     <loc>https://davidchall.github.io/ggip/reference/coord_ip.html</loc>
@@ -13,6 +40,9 @@
     <loc>https://davidchall.github.io/ggip/reference/ggip-package.html</loc>
   </url>
   <url>
+    <loc>https://davidchall.github.io/ggip/reference/index.html</loc>
+  </url>
+  <url>
     <loc>https://davidchall.github.io/ggip/reference/ip_to_cartesian.html</loc>
   </url>
   <url>
@@ -20,11 +50,5 @@
   </url>
   <url>
     <loc>https://davidchall.github.io/ggip/reference/theme_ip.html</loc>
-  </url>
-  <url>
-    <loc>https://davidchall.github.io/ggip/articles/ggip.html</loc>
-  </url>
-  <url>
-    <loc>https://davidchall.github.io/ggip/articles/visualizing-ip-data.html</loc>
   </url>
 </urlset>
