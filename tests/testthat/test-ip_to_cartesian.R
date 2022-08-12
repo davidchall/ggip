@@ -1,4 +1,4 @@
-library(dplyr)
+suppressPackageStartupMessages(library(dplyr))
 
 expect_curve_endpoints <- function(canvas_network, curve) {
   max_plotted_bits <- 24
@@ -150,28 +150,26 @@ test_that("Outside canvas mapped to NA", {
 })
 
 test_that("Input validation of mapping parameters", {
-  verify_output(test_path("test-stop-bad-coord.txt"), {
-    validate_mapping_params(ip_address("0.0.0.0"), 16)
-    validate_mapping_params(ip_network(rep("0.0.0.0/0", 2)), 16)
+  expect_snapshot_error(validate_mapping_params(ip_address("0.0.0.0"), 16))
+  expect_snapshot_error(validate_mapping_params(ip_network(rep("0.0.0.0/0", 2)), 16))
 
-    validate_mapping_params(ip_network("0.0.0.0/0"), 2.5)
-    validate_mapping_params(ip_network("0.0.0.0/0"), c(1, 2))
-    validate_mapping_params(ip_network("0.0.0.0/0"), -1)
+  expect_snapshot_error(validate_mapping_params(ip_network("0.0.0.0/0"), 2.5))
+  expect_snapshot_error(validate_mapping_params(ip_network("0.0.0.0/0"), c(1, 2)))
+  expect_snapshot_error(validate_mapping_params(ip_network("0.0.0.0/0"), -1))
 
-    address_to_cartesian(ip_address("0.0.0.0"), curve = "hilber")
-    network_to_cartesian(ip_network("0.0.0.0/0"), curve = "hilber")
+  expect_snapshot_error(address_to_cartesian(ip_address("0.0.0.0"), curve = "hilber"))
+  expect_snapshot_error(network_to_cartesian(ip_network("0.0.0.0/0"), curve = "hilber"))
 
-    validate_mapping_params(ip_network("0.0.0.0/16"), 33)
-    validate_mapping_params(ip_network("::/120"), 129)
-    validate_mapping_params(ip_network("0.0.0.0/16"), 14)
-    validate_mapping_params(ip_network("0.0.0.0/0"), 31)
-    validate_mapping_params(ip_network("0.0.0.0/0"), 32)
-  })
+  expect_snapshot_error(validate_mapping_params(ip_network("0.0.0.0/16"), 33))
+  expect_snapshot_error(validate_mapping_params(ip_network("::/120"), 129))
+  expect_snapshot_error(validate_mapping_params(ip_network("0.0.0.0/16"), 14))
+  expect_snapshot_error(validate_mapping_params(ip_network("0.0.0.0/0"), 31))
+  expect_snapshot_error(validate_mapping_params(ip_network("0.0.0.0/0"), 32))
 })
 
 test_that("Other input validation", {
-  expect_error(address_to_cartesian(ip_network()), "`address` must be a vector with type <ip_address>.")
-  expect_error(network_to_cartesian(ip_address()), "`network` must be a vector with type <ip_network>.")
+  expect_snapshot_error(address_to_cartesian(ip_network()))
+  expect_snapshot_error(network_to_cartesian(ip_address()))
 })
 
 test_that("Missing values", {

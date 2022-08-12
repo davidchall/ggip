@@ -1,3 +1,0 @@
-> stop_missing_coord()
-Error: ggip plots must use the `coord_ip()` coordinate system.
-

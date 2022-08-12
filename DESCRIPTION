@@ -2,13 +2,10 @@ Package: ggip
 Title: Data Visualization for IP Addresses and Networks
 Version: 0.2.0.9000
 Authors@R: 
-    person(given = "David",
-           family = "Hall",
-           role = c("aut", "cre"),
-           email = "david.hall.physics@gmail.com",
+    person("David", "Hall", , "david.hall.physics@gmail.com", role = c("aut", "cre"),
            comment = c(ORCID = "0000-0002-2193-0480"))
-Description: A 'ggplot2' extension that enables visualization of
-    IP (Internet Protocol) addresses and networks. The address space is
+Description: A 'ggplot2' extension that enables visualization of IP
+    (Internet Protocol) addresses and networks. The address space is
     mapped onto the Cartesian coordinate system using a space-filling
     curve. Offers full support for both IPv4 and IPv6 (Internet Protocol
     versions 4 and 6) address spaces.
@@ -18,8 +15,7 @@ URL: https://davidchall.github.io/ggip/,
 BugReports: https://github.com/davidchall/ggip/issues
 Depends: 
     ggplot2 (>= 3.3.0),
-    ipaddress (>= 0.5.1),
-    R (>= 3.3.0)
+    ipaddress (>= 0.5.1)
 Imports: 
     dplyr (>= 1.0.0),
     glue,
@@ -36,6 +32,7 @@ LinkingTo:
     Rcpp
 VignetteBuilder: 
     knitr
+Config/testthat/edition: 3
 Encoding: UTF-8
 Roxygen: list(markdown = TRUE)
 RoxygenNote: 7.2.1
