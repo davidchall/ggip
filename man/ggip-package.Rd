@@ -6,13 +6,9 @@
 \alias{ggip-package}
 \title{ggip: Data Visualization for IP Addresses and Networks}
 \description{
-\if{html}{\figure{logo.png}{options: align='right' alt='logo' width='120'}}
+\if{html}{\figure{logo.png}{options: style='float: right' alt='logo' width='120'}}
 
-A 'ggplot2' extension that enables visualization of
-    IP (Internet Protocol) addresses and networks. The address space is
-    mapped onto the Cartesian coordinate system using a space-filling
-    curve. Offers full support for both IPv4 and IPv6 (Internet Protocol
-    versions 4 and 6) address spaces.
+A 'ggplot2' extension that enables visualization of IP (Internet Protocol) addresses and networks. The address space is mapped onto the Cartesian coordinate system using a space-filling curve. Offers full support for both IPv4 and IPv6 (Internet Protocol versions 4 and 6) address spaces.
 }
 \seealso{
 Useful links:

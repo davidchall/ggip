@@ -8,7 +8,7 @@
 ^docs$
 ^pkgdown$
 ^codecov\.yml$
-^vignettes/bit-figures.R$
-^man/figures/logo.R$
-^man/figures/logo.svg$
+^vignettes/bit-figures\.R$
+^man/figures/logo\.R$
+^man/figures/logo\.svg$
 ^CRAN-RELEASE$

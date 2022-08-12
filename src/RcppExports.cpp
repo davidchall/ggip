@@ -5,6 +5,11 @@
 
 using namespace Rcpp;
 
+#ifdef RCPP_USE_GLOBAL_ROSTREAM
+Rcpp::Rostream<true>&  Rcpp::Rcout = Rcpp::Rcpp_cout_get();
+Rcpp::Rostream<false>& Rcpp::Rcerr = Rcpp::Rcpp_cerr_get();
+#endif
+
 // wrap_address_to_cartesian
 DataFrame wrap_address_to_cartesian(List address_r, List canvas_network_r, int pixel_prefix, String curve);
 RcppExport SEXP _ggip_wrap_address_to_cartesian(SEXP address_rSEXP, SEXP canvas_network_rSEXP, SEXP pixel_prefixSEXP, SEXP curveSEXP) {
