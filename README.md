@@ -6,13 +6,13 @@
 <!-- badges: start -->
 
 [![Lifecycle:
-experimental](https://img.shields.io/badge/lifecycle-experimental-orange.svg)](https://www.tidyverse.org/lifecycle/#experimental)
+experimental](https://img.shields.io/badge/lifecycle-experimental-orange.svg)](https://lifecycle.r-lib.org/articles/stages.html)
 [![CRAN
 status](https://www.r-pkg.org/badges/version/ggip)](https://CRAN.R-project.org/package=ggip)
 [![R build
 status](https://github.com/davidchall/ggip/workflows/R-CMD-check/badge.svg)](https://github.com/davidchall/ggip/actions)
 [![Coverage
-status](https://codecov.io/gh/davidchall/ggip/branch/master/graph/badge.svg)](https://codecov.io/gh/davidchall/ggip?branch=master)
+status](https://codecov.io/gh/davidchall/ggip/branch/master/graph/badge.svg)](https://app.codecov.io/gh/davidchall/ggip?branch=master)
 <!-- badges: end -->
 
 ggip is a [{ggplot2}](https://ggplot2.tidyverse.org) extension for

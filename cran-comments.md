@@ -1,16 +1,14 @@
 ## Test environments
 
-* macOS 10.15 (local): 4.0
-* macOS 10.15 (GitHub Actions): 4.0
-* Ubuntu 16.04 (GitHub Actions): 3.3, 3.4, 3.5, 3.6, 4.0, devel
-* Ubuntu 16.04 (RHub): 4.0
+* macOS 12 (local): 4.2
+* macOS 11 (GitHub Actions): 4.2
+* Ubuntu 18.04 (GitHub Actions): 3.5, 3.6, 4.0, 4.1, 4.2, devel
+* Ubuntu 20.04 (RHub): 4.2
 * Fedora Linux (RHub): devel
 * Debian Linux (RHub): devel
-* Windows Server 2019 (GitHub Actions): 4.0
-* Windows Server 2019 (GitHub Actions): 3.6.3
+* Windows Server 2022 (GitHub Actions): 4.2
+* Windows Server 2022 (RHub): devel
 * Windows Server 2008 R2 SP1 32/64-bit (win-builder): devel
-* Windows Server 2008 R2 SP1 32/64-bit (RHub): devel
-* Oracle Solaris 10, x86, 32-bit (RHub): patched
 
 ## R CMD check results
 
