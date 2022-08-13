@@ -12,3 +12,4 @@
 ^man/figures/logo\.R$
 ^man/figures/logo\.svg$
 ^CRAN-RELEASE$
+^CRAN-SUBMISSION$
