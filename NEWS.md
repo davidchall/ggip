@@ -1,4 +1,4 @@
-# ggip (development version)
+# ggip 0.2.1
 
 Resolve CRAN check notes about HTML5 by upgrading to latest {roxygen}.
 
