@@ -191,7 +191,7 @@ squares_to_sides <- function(data, closed) {
       from = translate_endpoints(.data$from, .data$to, closed),
       to = translate_endpoints(.data$to, .data$from, closed)
     ) %>%
-    dplyr::select(-.data$xmid, -.data$ymid)
+    dplyr::select(-"xmid", -"ymid")
 
   # compute drawn sides
   dplyr::full_join(sides_all, sides_not_drawn, by = character()) %>%
@@ -199,7 +199,7 @@ squares_to_sides <- function(data, closed) {
       .data$side != dplyr::coalesce(.data$from, "endcap"),
       .data$side != dplyr::coalesce(.data$to, "endcap")
     ) %>%
-    dplyr::select(-.data$from, -.data$to)
+    dplyr::select(-"from", -"to")
 }
 
 #' Transforms a sequence of square sides into a sequence of line segments.
@@ -224,7 +224,7 @@ sides_to_segments <- function(data, coord) {
       xend = snap_to_grid(.data$xend, .data$side != "left", coord$limits$x),
       yend = snap_to_grid(.data$yend, .data$side != "down", coord$limits$y)
     ) %>%
-    dplyr::select(.data$x, .data$y, .data$xend, .data$yend)
+    dplyr::select("x", "y", "xend", "yend")
 }
 
 
