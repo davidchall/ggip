@@ -4,7 +4,7 @@ pkgdown_sha: ~
 articles:
   ggip: ggip.html
   visualizing-ip-data: visualizing-ip-data.html
-last_built: 2022-09-26T15:52Z
+last_built: 2022-09-27T15:15Z
 urls:
   reference: https://davidchall.github.io/ggip/reference
   article: https://davidchall.github.io/ggip/articles
