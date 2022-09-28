@@ -70,7 +70,7 @@ These two techniques become even more important in the IPv6 address space, which
 This means the `coord_ip()` arguments must satisfy:
 
 ```
-pixel_prefix - prefix_length(canvas_prefix) <= 24
+pixel_prefix - prefix_length(canvas_network) <= 24
 ```
 
 ## Space-filling curves
@@ -147,7 +147,7 @@ Finally, let's consider a specific example.
 
 ```{r, echo=TRUE, eval=FALSE}
 coord_ip(
-  canvas_prefix = ip_network("0.0.0.0/0"),
+  canvas_network = ip_network("0.0.0.0/0"),
   pixel_prefix = 4,
   curve = "hilbert"
 )
