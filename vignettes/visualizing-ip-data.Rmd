@@ -48,7 +48,7 @@ knitr::include_graphics("bits_raw.png")
 ```
 
 To reduce the visualized information, we could only show a subnetwork of the full address space.
-In our example, we could only display the `192.0.0.0/8` network.
+In our example, we could only display the `192.0.0.0/8` network using `coord_ip(canvas_network = ip_network("192.0.0.0/8"))`.
 This would effectively filter addresses where the leading 8 bits match the specified network, thereby reducing the number of discrete levels to $2^{24}$ (roughly 16.8 million).
 
 ```{r, out.width="100%"}
@@ -57,7 +57,7 @@ knitr::include_graphics("bits_half_reduced.png")
 
 Alternatively, we could make each discrete level represent a network of addresses.
 To do this, we'd need to use a summary function to reduce the network data to a single value.
-In our example, we could make each discrete level represent a network with a prefix length of 24.
+In our example, we could make each discrete level represent a network with a prefix length of 24 using `coord_ip(pixel_prefix = 24)`.
 This would effectively neglect the trailing 8 bits of the 32-bit address, thereby further reducing the number of discrete levels to $2^{16}$ (65,536).
 
 ```{r, out.width="100%"}
@@ -70,7 +70,7 @@ These two techniques become even more important in the IPv6 address space, which
 This means the `coord_ip()` arguments must satisfy:
 
 ```
-pixel_prefix - prefix_length(canvas_prefix) <= 24
+pixel_prefix - prefix_length(canvas_network) <= 24
 ```
 
 ## Space-filling curves
@@ -117,6 +117,7 @@ plot_curve <- function(curve, curve_order) {
 IP data is most commonly displayed on a Hilbert curve because it has optimal locality preservation.
 
 This curve starts in the top-left corner and ends in the top-right corner.
+It is chosen using `coord_ip(curve = "hilbert")`.
 
 ```{r hilbert, fig.show="hold", out.width="30%"}
 plot_curve("hilbert", 2)
@@ -133,6 +134,7 @@ In this sense, the Morton curve is a more natural representation of the IP netwo
 For example, the start and end addresses of a network are always located diagonally across from each other.
 
 This curve starts in the top-left corner and ends in the bottom-right corner.
+It is chosen using `coord_ip(curve = "morton")`.
 
 ```{r morton, fig.show="hold", out.width="30%"}
 plot_curve("morton", 2)
@@ -147,7 +149,7 @@ Finally, let's consider a specific example.
 
 ```{r, echo=TRUE, eval=FALSE}
 coord_ip(
-  canvas_prefix = ip_network("0.0.0.0/0"),
+  canvas_network = ip_network("0.0.0.0/0"),
   pixel_prefix = 4,
   curve = "hilbert"
 )
