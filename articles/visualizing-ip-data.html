@@ -40,7 +40,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">ggip</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.2.2</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">0.2.2.9000</span>
       </span>
     </div>
 
@@ -116,13 +116,13 @@
 </h2>
 <p>As an example, consider the 32-bit representation of the IPv4 address <code>192.168.0.124</code>. If we wanted to visualize this single address within the full context of the IPv4 address space, we’d need to simultaneously display <span class="math inline">\(2^{32}\)</span> discrete levels (roughly 4.3 billion).</p>
 <p><img src="bits_raw.png" width="100%"></p>
-<p>To reduce the visualized information, we could only show a subnetwork of the full address space. In our example, we could only display the <code>192.0.0.0/8</code> network. This would effectively filter addresses where the leading 8 bits match the specified network, thereby reducing the number of discrete levels to <span class="math inline">\(2^{24}\)</span> (roughly 16.8 million).</p>
+<p>To reduce the visualized information, we could only show a subnetwork of the full address space. In our example, we could only display the <code>192.0.0.0/8</code> network using <code>coord_ip(canvas_network = ip_network("192.0.0.0/8"))</code>. This would effectively filter addresses where the leading 8 bits match the specified network, thereby reducing the number of discrete levels to <span class="math inline">\(2^{24}\)</span> (roughly 16.8 million).</p>
 <p><img src="bits_half_reduced.png" width="100%"></p>
-<p>Alternatively, we could make each discrete level represent a network of addresses. To do this, we’d need to use a summary function to reduce the network data to a single value. In our example, we could make each discrete level represent a network with a prefix length of 24. This would effectively neglect the trailing 8 bits of the 32-bit address, thereby further reducing the number of discrete levels to <span class="math inline">\(2^{16}\)</span> (65,536).</p>
+<p>Alternatively, we could make each discrete level represent a network of addresses. To do this, we’d need to use a summary function to reduce the network data to a single value. In our example, we could make each discrete level represent a network with a prefix length of 24 using <code>coord_ip(pixel_prefix = 24)</code>. This would effectively neglect the trailing 8 bits of the 32-bit address, thereby further reducing the number of discrete levels to <span class="math inline">\(2^{16}\)</span> (65,536).</p>
 <p><img src="bits_reduced.png" width="100%"></p>
 <p>These two techniques become even more important in the IPv6 address space, which uses 128-bit addresses.</p>
 <p><strong>Note:</strong> To prevent accidentally plotting an unreasonably large number of discrete levels, ggip limits the number of plotted bits to 24. This means the <code><a href="../reference/coord_ip.html">coord_ip()</a></code> arguments must satisfy:</p>
-<pre><code><span><span class="va">pixel_prefix</span> <span class="op">-</span> <span class="fu"><a href="https://davidchall.github.io/ipaddress/reference/netmask.html" class="external-link">prefix_length</a></span><span class="op">(</span><span class="va">canvas_prefix</span><span class="op">)</span> <span class="op">&lt;=</span> <span class="fl">24</span></span></code></pre>
+<pre><code><span><span class="va">pixel_prefix</span> <span class="op">-</span> <span class="fu"><a href="https://davidchall.github.io/ipaddress/reference/netmask.html" class="external-link">prefix_length</a></span><span class="op">(</span><span class="va">canvas_network</span><span class="op">)</span> <span class="op">&lt;=</span> <span class="fl">24</span></span></code></pre>
 </div>
 <div class="section level2">
 <h2 id="space-filling-curves">Space-filling curves<a class="anchor" aria-label="anchor" href="#space-filling-curves"></a>
@@ -133,14 +133,14 @@
 <h3 id="hilbert-curve">Hilbert curve<a class="anchor" aria-label="anchor" href="#hilbert-curve"></a>
 </h3>
 <p>IP data is most commonly displayed on a Hilbert curve because it has optimal locality preservation.</p>
-<p>This curve starts in the top-left corner and ends in the top-right corner.</p>
+<p>This curve starts in the top-left corner and ends in the top-right corner. It is chosen using <code>coord_ip(curve = "hilbert")</code>.</p>
 <p><img src="visualizing-ip-data_files/figure-html/hilbert-1.png" width="30%"><img src="visualizing-ip-data_files/figure-html/hilbert-2.png" width="30%"><img src="visualizing-ip-data_files/figure-html/hilbert-3.png" width="30%"></p>
 </div>
 <div class="section level3">
 <h3 id="morton-curve">Morton curve<a class="anchor" aria-label="anchor" href="#morton-curve"></a>
 </h3>
 <p>The Morton curve technically offers slightly poorer locality preservation than the Hilbert curve. However, the discontinuous jumps in the curve actually correspond to crossing IP network boundaries. In this sense, the Morton curve is a more natural representation of the IP network structure. For example, the start and end addresses of a network are always located diagonally across from each other.</p>
-<p>This curve starts in the top-left corner and ends in the bottom-right corner.</p>
+<p>This curve starts in the top-left corner and ends in the bottom-right corner. It is chosen using <code>coord_ip(curve = "morton")</code>.</p>
 <p><img src="visualizing-ip-data_files/figure-html/morton-1.png" width="30%"><img src="visualizing-ip-data_files/figure-html/morton-2.png" width="30%"><img src="visualizing-ip-data_files/figure-html/morton-3.png" width="30%"></p>
 </div>
 </div>
@@ -150,7 +150,7 @@
 <p>Finally, let’s consider a specific example.</p>
 <div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="../reference/coord_ip.html">coord_ip</a></span><span class="op">(</span></span>
-<span>  canvas_prefix <span class="op">=</span> <span class="fu"><a href="https://davidchall.github.io/ipaddress/reference/ip_network.html" class="external-link">ip_network</a></span><span class="op">(</span><span class="st">"0.0.0.0/0"</span><span class="op">)</span>,</span>
+<span>  canvas_network <span class="op">=</span> <span class="fu"><a href="https://davidchall.github.io/ipaddress/reference/ip_network.html" class="external-link">ip_network</a></span><span class="op">(</span><span class="st">"0.0.0.0/0"</span><span class="op">)</span>,</span>
 <span>  pixel_prefix <span class="op">=</span> <span class="fl">4</span>,</span>
 <span>  curve <span class="op">=</span> <span class="st">"hilbert"</span></span>
 <span><span class="op">)</span></span></code></pre></div>
