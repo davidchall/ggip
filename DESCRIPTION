@@ -15,12 +15,12 @@ URL: https://davidchall.github.io/ggip/,
 BugReports: https://github.com/davidchall/ggip/issues
 Depends: 
     ggplot2 (>= 3.3.0),
-    ipaddress (>= 0.5.1)
+    ipaddress
 Imports: 
-    dplyr (>= 1.0.0),
-    glue,
+    cli,
+    dplyr,
     Rcpp,
-    rlang (>= 0.4.2),
+    rlang (>= 1.0.0),
     tidyr,
     vctrs (>= 0.5.0)
 Suggests: 

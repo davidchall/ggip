@@ -1,10 +1,10 @@
 # Input validation of mapping parameters
 
-    `canvas_network` must be a scalar with type <ip_network>.
+    `canvas_network` must be an <ip_network> scalar.
 
 ---
 
-    `canvas_network` must be a scalar with type <ip_network>.
+    `canvas_network` must be an <ip_network> scalar.
 
 ---
 
@@ -32,13 +32,13 @@
 
     Pixel prefix length must not be greater than 32.
     i Canvas uses IPv4 address space.
-    x Pixel has prefix length 33.
+    x Pixel prefix length is 33.
 
 ---
 
     Pixel prefix length must not be greater than 128.
     i Canvas uses IPv6 address space.
-    x Pixel has prefix length 129.
+    x Pixel prefix length is 129.
 
 ---
 
@@ -61,9 +61,25 @@
 
 # Other input validation
 
-    `address` must be a vector with type <ip_address>.
+    `address` must be an <ip_address> vector.
 
 ---
 
-    `network` must be a vector with type <ip_network>.
+    `network` must be an <ip_network> vector.
+
+# Missing values
+
+    `canvas_network` cannot be NA.
+
+---
+
+    `canvas_network` cannot be NA.
+
+---
+
+    `pixel_prefix` must be a positive integer scalar.
+
+---
+
+    `pixel_prefix` must be a positive integer scalar.
 
