@@ -1,5 +1,9 @@
 # ggip (development version)
 
+Compatible with latest {ggplot2}.
+This introduced a **breaking change**, where an aesthetic of `stat_summary_address()` was renamed from `size` to `linewidth`.
+
+
 # ggip 0.2.2
 
 Minor changes for compatibility with latest {tidyselect}.
