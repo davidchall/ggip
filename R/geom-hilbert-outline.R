@@ -16,7 +16,7 @@
 #'  - `alpha`
 #'  - `colour`
 #'  - `linetype`
-#'  - `size`
+#'  - `linewidth`
 #'
 #' @section Computed variables:
 #'
@@ -72,7 +72,7 @@ GeomHilbertOutline <- ggplot2::ggproto("GeomHilbertOutline", ggplot2::Geom,
     curve_order = 3,
     closed = FALSE,
     colour = "black",
-    size = 0.5,
+    linewidth = 0.5,
     linetype = 1,
     alpha = NA
   ),
