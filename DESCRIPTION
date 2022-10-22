@@ -22,7 +22,7 @@ Imports:
     Rcpp,
     rlang (>= 0.4.2),
     tidyr,
-    vctrs (>= 0.3.0)
+    vctrs (>= 0.5.0)
 Suggests: 
     knitr,
     rmarkdown,
