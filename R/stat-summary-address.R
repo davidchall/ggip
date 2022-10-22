@@ -78,16 +78,18 @@ stat_summary_address <- function(mapping = NULL, data = NULL, ...,
 
 StatSummaryAddress <- ggplot2::ggproto("StatSummaryAddress", ggplot2::Stat,
 
+  default_aes = ggplot2::aes(
+   ip = NULL,
+   z = NULL,
+   fill = ggplot2::after_stat(value)
+  ),
+
   # The `ip` aesthetic is required, but putting it in required_aes causes a very
   # slow check for missing values. It's much faster to simply check `x` and `y`
   # for missing values. These are always NA when `ip` is NA.
   required_aes = c("x", "y"),
 
-  default_aes = ggplot2::aes(
-    ip = NULL,
-    z = NULL,
-    fill = ggplot2::after_stat(value)
-  ),
+  dropped_aes = c("ip", "z"),
 
   extra_params = c("na.rm", "fun", "fun.args"),
 

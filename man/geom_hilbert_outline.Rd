@@ -69,7 +69,7 @@ entire Hilbert curve is shown.
 \item \code{alpha}
 \item \code{colour}
 \item \code{linetype}
-\item \code{size}
+\item \code{linewidth}
 }
 }
 
