@@ -95,24 +95,27 @@ StatSummaryAddress <- ggplot2::ggproto("StatSummaryAddress", ggplot2::Stat,
 
   compute_layer = function(self, data, params, layout) {
     if (!is_CoordIp(layout$coord)) {
-      stop_missing_coord()
+      cli::cli_abort("{.pkg ggip} plots require {.fn coord_ip}.")
     }
 
     # validate ip aesthetic
     if (is.null(data$ip)) {
-      stop_missing_aes("stat_summary_address", "ip")
+      cli::cli_abort("{.fn {snake_class(self)}} requires an {.field ip} aesthetic.")
     } else if (is_ip_address_coords(data$ip)) {
       data$x <- data$ip$x
       data$y <- data$ip$y
       data$ip <- data$ip$ip
     } else if (is_ip_address(data$ip)) {
-      abort("The `ip` aesthetic of `stat_summary_address()` must map to a `data` variable.")
+      cli::cli_abort("The {.field ip} aesthetic of {.fn {snake_class(self)}} must map to a {.arg data} variable.")
     } else {
-      stop_bad_aes_type("stat_summary_address", "ip", "ip_address")
+      cli::cli_abort(c(
+        "The {.field ip} aesthetic of {.fn {snake_class(self)}} must be {.type {ip_address()}}.",
+        "x" = "You supplied {.type {data$ip}}."
+      ))
     }
 
     if (!is.null(params$fun) && !("z" %in% colnames(data))) {
-      abort("`stat_summary_address()` must have `z` aesthetic when using `fun` argument.")
+      cli::cli_abort("{.fn {snake_class(self)}} requires a {.field z} aesthetic when using the {.arg fun} argument.")
     }
 
     # add coord to the params, so it reaches compute_group()

@@ -181,20 +181,16 @@ test_that("Missing values", {
     network_to_cartesian(ip_network(NA)),
     data.frame(xmin = NA_integer_, ymin = NA_integer_, xmax = NA_integer_, ymax = NA_integer_)
   )
-  expect_error(
-    address_to_cartesian(ip_address("0.0.0.0"), canvas_network = ip_network(NA)),
-    "`canvas_network` cannot be NA"
+  expect_snapshot_error(
+    address_to_cartesian(ip_address("0.0.0.0"), canvas_network = ip_network(NA))
   )
-  expect_error(
-    network_to_cartesian(ip_network("0.0.0.0/32"), canvas_network = ip_network(NA)),
-    "`canvas_network` cannot be NA"
+  expect_snapshot_error(
+    network_to_cartesian(ip_network("0.0.0.0/32"), canvas_network = ip_network(NA))
   )
-  expect_error(
-    address_to_cartesian(ip_address("0.0.0.0"), pixel_prefix = NA),
-    "`pixel_prefix` must be a positive integer scalar"
+  expect_snapshot_error(
+    address_to_cartesian(ip_address("0.0.0.0"), pixel_prefix = NA)
   )
-  expect_error(
-    network_to_cartesian(ip_network("0.0.0.0/32"), pixel_prefix = NA),
-    "`pixel_prefix` must be a positive integer scalar"
+  expect_snapshot_error(
+    network_to_cartesian(ip_network("0.0.0.0/32"), pixel_prefix = NA)
   )
 })

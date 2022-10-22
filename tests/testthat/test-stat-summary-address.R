@@ -2,43 +2,35 @@ test_that("input validation", {
   network_data <- data.frame(network = ip_network("0.0.0.0/16"))
   address_data <- data.frame(address = ip_address("0.0.0.0"))
 
-  expect_error(
+  expect_snapshot_error(
     ggplot_build(ggplot(address_data) +
-      stat_summary_address(aes(ip = address))),
-    class = "ggip_error_missing_coord"
+      stat_summary_address(aes(ip = address)))
   )
-  expect_error(
+  expect_snapshot_error(
     ggplot_build(ggplot(network_data) +
       coord_ip() +
-      stat_summary_address(aes(ip = network))),
-    class = "ggip_error_bad_aes_type"
+      stat_summary_address(aes(ip = network)))
   )
 
-  expect_error(
+  expect_snapshot_error(
     ggplot_build(ggplot(address_data) +
       coord_ip() +
-      stat_summary_address()),
-    class = "ggip_error_missing_aes"
+      stat_summary_address())
   )
-  expect_error(
+  expect_snapshot_error(
     ggplot_build(ggplot(address_data, aes(ip = address)) +
       coord_ip() +
-      stat_summary_address(inherit.aes = FALSE)),
-    class = "ggip_error_missing_aes"
+      stat_summary_address(inherit.aes = FALSE))
   )
-  expect_error(
+  expect_snapshot_error(
     ggplot_build(ggplot(address_data) +
       coord_ip() +
-      stat_summary_address(aes(ip = ip_address("0.0.0.0")))),
-    "The `ip` aesthetic of `stat_summary_address()` must map to a `data` variable.",
-    fixed = TRUE
+      stat_summary_address(aes(ip = ip_address("0.0.0.0"))))
   )
-  expect_error(
+  expect_snapshot_error(
     ggplot_build(ggplot(address_data) +
       coord_ip() +
-      stat_summary_address(aes(ip = address), fun = sum)),
-    "`stat_summary_address()` must have `z` aesthetic when using `fun` argument.",
-    fixed = TRUE
+      stat_summary_address(aes(ip = address), fun = sum))
   )
 })
 

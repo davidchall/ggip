@@ -77,13 +77,13 @@ GeomHilbertOutline <- ggplot2::ggproto("GeomHilbertOutline", ggplot2::Geom,
     alpha = NA
   ),
 
-  draw_panel = function(data, panel_params, coord, na.rm = FALSE) {
+  draw_panel = function(self, data, panel_params, coord, na.rm = FALSE) {
 
     if (!is_CoordIp(coord)) {
-      stop_missing_coord()
+      cli::cli_abort("{.pkg ggip} plots require {.fn coord_ip}.")
     }
     if (coord$curve != "hilbert") {
-      abort('`geom_hilbert_outline()` requires `coord_ip(curve = "hilbert")`.')
+      cli::cli_abort('{.fn {snake_class(self)}} only works with {.code coord_ip(curve = "hilbert")}.')
     }
 
     # validate ip aesthetic
@@ -93,7 +93,10 @@ GeomHilbertOutline <- ggplot2::ggproto("GeomHilbertOutline", ggplot2::Geom,
       data$ip <- data$ip$ip
     }
     if (!is_ip_network(data$ip)) {
-      stop_bad_aes_type("geom_hilbert_outline", "ip", "ip_network")
+      cli::cli_abort(c(
+        "The {.field ip} aesthetic of {.fn {snake_class(self)}} must be {.type {ip_network()}}.",
+        "x" = "You supplied {.type {data$ip}}."
+      ))
     }
 
     segments <- data %>%
@@ -226,24 +229,3 @@ sides_to_segments <- function(data, coord) {
     ) %>%
     dplyr::select("x", "y", "xend", "yend")
 }
-
-
-#--- copied from ggplot2
-
-# Convenience function used by `stat_function()` and
-# `geom_function()` to convert empty input data into
-# non-empty input data without touching any non-empty
-# input data that may have been provided.
-ensure_nonempty_data <- function(data) {
-  if (empty(data)) {
-    data.frame(group = 1)
-  } else {
-    data
-  }
-}
-
-empty <- function(df) {
-  is.null(df) || nrow(df) == 0 || ncol(df) == 0 || is.waive(df)
-}
-
-is.waive <- function(x) inherits(x, "waiver")

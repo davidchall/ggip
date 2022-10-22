@@ -33,7 +33,7 @@ address_to_cartesian <- function(address,
                                  pixel_prefix = 16,
                                  curve = c("hilbert", "morton")) {
   if (!is_ip_address(address)) {
-    abort("`address` must be a vector with type <ip_address>.")
+    cli::cli_abort("{.arg address} must be an {.cls ip_address} vector.")
   }
   validate_mapping_params(canvas_network, pixel_prefix)
   curve <- arg_match(curve)
@@ -48,7 +48,7 @@ network_to_cartesian <- function(network,
                                  pixel_prefix = 16,
                                  curve = c("hilbert", "morton")) {
   if (!is_ip_network(network)) {
-    abort("`network` must be a vector with type <ip_network>.")
+    cli::cli_abort("{.arg network} must be an {.cls ip_network} vector.")
   }
   validate_mapping_params(canvas_network, pixel_prefix)
   curve <- arg_match(curve)
@@ -59,54 +59,50 @@ network_to_cartesian <- function(network,
 
 validate_mapping_params <- function(canvas_network, pixel_prefix) {
   if (!(is_ip_network(canvas_network) && length(canvas_network) == 1)) {
-    abort("`canvas_network` must be a scalar with type <ip_network>.")
+    cli::cli_abort("{.arg canvas_network} must be an {.cls ip_network} scalar.")
   }
   if (is.na(canvas_network)) {
-    abort("`canvas_network` cannot be NA.")
+    cli::cli_abort("{.arg canvas_network} cannot be NA.")
   }
 
   if (!is_scalar_integerish(pixel_prefix) || pixel_prefix < 0 || is.na(pixel_prefix)) {
-    abort("`pixel_prefix` must be a positive integer scalar.")
+    cli::cli_abort("{.arg pixel_prefix} must be a positive integer scalar.")
   }
 
   if (pixel_prefix < 0 || pixel_prefix > max_prefix_length(canvas_network)) {
     space <- ifelse(is_ipv6(canvas_network), "IPv6", "IPv4")
-    msg <- glue::glue("Pixel prefix length must not be greater than {max_prefix_length(canvas_network)}.")
-    bullets <- format_error_bullets(c(
-      "i" = glue::glue("Canvas uses {space} address space."),
-      "x" = glue::glue("Pixel has prefix length {pixel_prefix}.")
+    cli::cli_abort(c(
+      "Pixel prefix length must not be greater than {max_prefix_length(canvas_network)}.",
+      "i" = "Canvas uses {space} address space.",
+      "x" = "Pixel prefix length is {pixel_prefix}."
     ))
-    abort(msg, body = bullets)
   }
 
   n_bits <- pixel_prefix - prefix_length(canvas_network)
   if (n_bits < 0) {
-    msg <- "Pixel prefix length must be greater than canvas."
-    bullets <- format_error_bullets(c(
-      "x" = glue::glue("Canvas has prefix length {prefix_length(canvas_network)}."),
-      "x" = glue::glue("Pixel has prefix length {pixel_prefix}.")
+    cli::cli_abort(c(
+      "Pixel prefix length must be greater than canvas.",
+      "x" = "Canvas has prefix length {prefix_length(canvas_network)}.",
+      "x" = "Pixel has prefix length {pixel_prefix}."
     ))
-    abort(msg, body = bullets)
   }
 
   if (n_bits %% 2 != 0) {
-    msg <- "The difference between canvas and pixel prefix lengths must be even."
-    bullets <- format_error_bullets(c(
-      "x" = glue::glue("Canvas has prefix length {prefix_length(canvas_network)}."),
-      "x" = glue::glue("Pixel has prefix length {pixel_prefix}.")
+    cli::cli_abort(c(
+      "The difference between canvas and pixel prefix lengths must be even.",
+      "x" = "Canvas has prefix length {prefix_length(canvas_network)}.",
+      "x" = "Pixel has prefix length {pixel_prefix}."
     ))
-    abort(msg, body = bullets)
   }
 
   # enforce a sensible maximum resolution (16.7 million pixels)
   if (n_bits > 24) {
     n_pixels <- format(2^(n_bits / 2), big.mark = ",")
-    msg <- "The difference between canvas and pixel prefix lengths must not be greater than 24."
-    bullets <- format_error_bullets(c(
-      "x" = glue::glue("Canvas has prefix length {prefix_length(canvas_network)}."),
-      "x" = glue::glue("Pixel has prefix length {pixel_prefix}."),
-      "i" = glue::glue("These values would produce a plot with {n_pixels} x {n_pixels} pixels.")
+    cli::cli_abort(c(
+      "The difference between canvas and pixel prefix lengths must not be greater than 24.",
+      "x" = "Canvas has prefix length {prefix_length(canvas_network)}.",
+      "x" = "Pixel has prefix length {pixel_prefix}.",
+      "i" = "These values would produce a plot with {n_pixels} x {n_pixels} pixels."
     ))
-    abort(msg, body = bullets)
   }
 }
