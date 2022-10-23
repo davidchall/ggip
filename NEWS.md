@@ -1,7 +1,7 @@
 # ggip (development version)
 
-Compatible with latest {ggplot2}.
-This introduced a **breaking change**, where an aesthetic of `stat_summary_address()` was renamed from `size` to `linewidth`.
+* Compatible with latest {ggplot2}. This introduced a **breaking change**, where an aesthetic of `stat_summary_address()` was renamed from `size` to `linewidth`.
+* Use {cli} to format error messages.
 
 
 # ggip 0.2.2

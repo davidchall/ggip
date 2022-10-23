@@ -39,7 +39,7 @@ DataFrame wrap_address_to_cartesian(List address_r, List canvas_network_r, int p
   bool is_morton = (curve == "morton");
 
   for (std::size_t i=0; i<vsize; ++i) {
-    if (i % 10000 == 0) {
+    if (i % 8192 == 0) {
       checkUserInterrupt();
     }
 
