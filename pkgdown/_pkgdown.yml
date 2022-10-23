@@ -4,6 +4,9 @@ home:
   title: ggip
   description: R package for data visualization of IP addresses and networks
 
+template:
+  bootstrap: 5
+
 reference:
   - title: "Fundamentals"
     desc: "These components must be included in _every_ ggip plot."
