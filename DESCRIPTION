@@ -14,7 +14,7 @@ URL: https://davidchall.github.io/ggip/,
     https://github.com/davidchall/ggip
 BugReports: https://github.com/davidchall/ggip/issues
 Depends: 
-    ggplot2 (>= 3.3.0),
+    ggplot2 (>= 3.4.0),
     ipaddress
 Imports: 
     cli,
@@ -22,7 +22,7 @@ Imports:
     Rcpp,
     rlang (>= 1.0.0),
     tidyr,
-    vctrs (>= 0.5.0)
+    vctrs
 Suggests: 
     knitr,
     rmarkdown,
@@ -32,8 +32,6 @@ LinkingTo:
     Rcpp
 VignetteBuilder: 
     knitr
-Remotes:
-    tidyverse/ggplot2@v3.4.0-rc
 Config/testthat/edition: 3
 Encoding: UTF-8
 Roxygen: list(markdown = TRUE)
