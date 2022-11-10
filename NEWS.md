@@ -1,4 +1,4 @@
-# ggip (development version)
+# ggip 0.3.0
 
 * Compatible with latest {ggplot2}. This introduced a **breaking change**, where an aesthetic of `stat_summary_address()` was renamed from `size` to `linewidth`.
 * Use {cli} to format error messages.
