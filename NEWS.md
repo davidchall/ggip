@@ -1,5 +1,8 @@
 # ggip (development version)
 
+* Compatible with ipaddress 1.0.0.
+
+
 # ggip 0.3.0
 
 * Compatible with latest {ggplot2}. This introduced a **breaking change**, where an aesthetic of `geom_hilbert_outline()` was renamed from `size` to `linewidth`.
