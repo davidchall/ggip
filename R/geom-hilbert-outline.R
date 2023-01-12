@@ -101,9 +101,9 @@ GeomHilbertOutline <- ggplot2::ggproto("GeomHilbertOutline", ggplot2::Geom,
 
     segments <- data %>%
       dplyr::distinct() %>%
-      dplyr::rowwise(-ip, -curve_order, -closed) %>%
-      dplyr::summarize(generate_curve_outline(ip, curve_order, coord, closed)) %>%
-      dplyr::ungroup() %>%
+      networks_to_squares(coord) %>%
+      squares_to_sides() %>%
+      sides_to_segments(coord) %>%
       dplyr::distinct()
 
     ggplot2::GeomSegment$draw_panel(segments, panel_params, coord,
@@ -113,33 +113,29 @@ GeomHilbertOutline <- ggplot2::ggproto("GeomHilbertOutline", ggplot2::Geom,
   draw_key = ggplot2::draw_key_path
 )
 
-#' Generate a set of line segments that should be drawn to show the outline of
-#' the Hilbert curve for a single network.
+#' Translate IP networks to paths of squares, to visualize their Hilbert curves.
 #'
-#' @param network `ip_network` scalar
-#' @param curve_order Integer scalar
+#' @param data A data.frame with 3 columns: `ip`, `curve_order`, `closed`.
+#'   There is 1 row per network.
 #' @param coord The `CoordIp` coordinate system.
-#' @param closed Logical scalar indicating whether to visualize the sides at
-#'   the beginning and end of the path.
-#' @return A data.frame with 4 columns: `x`, `y`, `xend`, `yend`.
+#' @return A data.frame with 4 additional columns: `xmin`, `ymin`, `xmax`, `ymax`.
+#'   There is 1 row per square of the path.
 #'
 #' @noRd
-generate_curve_outline <- function(network, curve_order, coord, closed) {
-  curve_prefix <- (2 * curve_order) + prefix_length(coord$canvas_network)
-
-  if (curve_prefix > prefix_length(network)) {
-    network %>%
-      subnets(new_prefix = curve_prefix) %>%
-      network_to_cartesian(
-        canvas_network = coord$canvas_network,
-        pixel_prefix = coord$pixel_prefix,
-        curve = coord$curve
-      ) %>%
-      squares_to_sides(closed) %>%
-      sides_to_segments(coord)
-  } else {
-    data.frame(x = double(), y = double(), xend = double(), yend = double())
-  }
+networks_to_squares <- function(data, coord) {
+  data %>%
+    dplyr::mutate(prefix_curve = (2 * .data$curve_order) + prefix_length(coord$canvas_network)) %>%
+    dplyr::filter(prefix_length(.data$ip) < .data$prefix_curve) %>%
+    dplyr::mutate(network_curve = subnets(.data$ip, new_prefix = .data$prefix_curve)) %>%
+    tidyr::unchop("network_curve") %>%
+    dplyr::mutate(coords = network_to_cartesian(
+      .data$network_curve,
+      canvas_network = coord$canvas_network,
+      pixel_prefix = coord$pixel_prefix,
+      curve = coord$curve
+    )) %>%
+    dplyr::select(-"prefix_curve", -"network_curve") %>%
+    tidyr::unnest("coords")
 }
 
 path_direction <- function(x_from, y_from, x_to, y_to) {
@@ -171,33 +167,33 @@ snap_to_grid <- function(x, add_offset, limits) {
   )
 }
 
-#' Translate a path of squares into a sequence of square sides to be drawn,
-#' in order to visualize the path outline.
+#' Translate paths of squares to square sides (N sides per square).
+#' This accounts for path direction and closed/open endcaps.
 #'
-#' @param data A data.frame with 4 columns: `xmin`, `ymin`, `xmax`, `ymax`.
+#' @param data A data.frame with 5 columns: `xmin`, `ymin`, `xmax`, `ymax`, `closed`.
 #'   There is 1 row per square of the path.
-#' @param closed Logical scalar indicating whether to visualize the sides at
-#'   the beginning and end of the path.
 #' @return A data.frame with 5 columns: `xmin`, `ymin`, `xmax`, `ymax`, `side`.
 #'   There is 1 row per side of the path outline.
 #'
 #' @noRd
-squares_to_sides <- function(data, closed) {
-  sides_all <- data.frame(side = factor(c("right", "left", "up", "down")))
-
-  sides_not_drawn <- data %>%
+squares_to_sides <- function(data) {
+  data %>%
     dplyr::mutate(
       xmid = (.data$xmin + .data$xmax) / 2,
-      ymid = (.data$ymin + .data$ymax) / 2,
-      from = path_direction(.data$xmid, .data$ymid, dplyr::lag(.data$xmid), dplyr::lag(.data$ymid)),
-      to = path_direction(.data$xmid, .data$ymid, dplyr::lead(.data$xmid), dplyr::lead(.data$ymid)),
-      from = translate_endpoints(.data$from, .data$to, closed),
-      to = translate_endpoints(.data$to, .data$from, closed)
+      ymid = (.data$ymin + .data$ymax) / 2
     ) %>%
-    dplyr::select(-"xmid", -"ymid")
-
-  # compute drawn sides
-  dplyr::full_join(sides_all, sides_not_drawn, by = character()) %>%
+    dplyr::group_by(.data$ip) %>%
+    dplyr::mutate(
+      from = path_direction(.data$xmid, .data$ymid, dplyr::lag(.data$xmid), dplyr::lag(.data$ymid)),
+      to = path_direction(.data$xmid, .data$ymid, dplyr::lead(.data$xmid), dplyr::lead(.data$ymid))
+    ) %>%
+    dplyr::ungroup() %>%
+    dplyr::mutate(
+      from = translate_endpoints(.data$from, .data$to, .data$closed),
+      to = translate_endpoints(.data$to, .data$from, .data$closed)
+    ) %>%
+    dplyr::select(-"xmid", -"ymid") %>%
+    tidyr::expand_grid(side = factor(c("right", "left", "up", "down"))) %>%
     dplyr::filter(
       .data$side != dplyr::coalesce(.data$from, "endcap"),
       .data$side != dplyr::coalesce(.data$to, "endcap")
@@ -205,7 +201,7 @@ squares_to_sides <- function(data, closed) {
     dplyr::select(-"from", -"to")
 }
 
-#' Transforms a sequence of square sides into a sequence of line segments.
+#' Translate square sides into line segments (1 segment per side).
 #'
 #' @param data A data.frame with 5 columns: `xmin`, `ymin`, `xmax`, `ymax`, `side`.
 #'   There is 1 row per side of the path outline.
@@ -227,5 +223,5 @@ sides_to_segments <- function(data, coord) {
       xend = snap_to_grid(.data$xend, .data$side != "left", coord$limits$x),
       yend = snap_to_grid(.data$yend, .data$side != "down", coord$limits$y)
     ) %>%
-    dplyr::select("x", "y", "xend", "yend")
+    dplyr::select(-"xmin", -"ymin", -"xmax", -"ymax", -"side")
 }
