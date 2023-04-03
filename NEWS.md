@@ -1,24 +1,26 @@
 # ggip (development version)
 
+Fix for CRAN checks.
+
 # ggip 0.3.1
 
-* Compatible with ipaddress 1.0.0.
+Compatible with ipaddress 1.0.0.
 
 
 # ggip 0.3.0
 
-* Compatible with latest {ggplot2}. This introduced a **breaking change**, where an aesthetic of `geom_hilbert_outline()` was renamed from `size` to `linewidth`.
+* Compatible with ggplot2 3.4.0. This introduced a **breaking change**, where an aesthetic of `geom_hilbert_outline()` was renamed from `size` to `linewidth`.
 * Use {cli} to format error messages.
 
 
 # ggip 0.2.2
 
-Minor changes for compatibility with latest {tidyselect}.
+Compatible with tidyselect 1.2.0.
 
 
 # ggip 0.2.1
 
-Resolve CRAN check notes about HTML5 by upgrading to latest {roxygen}.
+Fix for CRAN checks.
 
 
 # ggip 0.2.0
